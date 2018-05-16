@@ -17,8 +17,7 @@ namespace La_Game.Controllers
         // GET: Questions
         public ActionResult Index()
         {
-            var questions = db.Questions.Include(q => q.QuestionList);
-            return View(questions.ToList());
+            return View(db.Questions.ToList());
         }
 
         // GET: Questions/Details/5
@@ -39,7 +38,6 @@ namespace La_Game.Controllers
         // GET: Questions/Create
         public ActionResult Create()
         {
-            ViewBag.QuestionList_idQuestionList = new SelectList(db.QuestionLists, "idQuestionList", "participationCode");
             return View();
         }
 
@@ -48,7 +46,7 @@ namespace La_Game.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idQuestion,QuestionList_idQuestionList,picture,audio,questionText")] Question question)
+        public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question)
         {
             if (ModelState.IsValid)
             {
@@ -57,7 +55,6 @@ namespace La_Game.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.QuestionList_idQuestionList = new SelectList(db.QuestionLists, "idQuestionList", "participationCode", question.QuestionList_idQuestionList);
             return View(question);
         }
 
@@ -73,7 +70,6 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.QuestionList_idQuestionList = new SelectList(db.QuestionLists, "idQuestionList", "participationCode", question.QuestionList_idQuestionList);
             return View(question);
         }
 
@@ -82,7 +78,7 @@ namespace La_Game.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idQuestion,QuestionList_idQuestionList,picture,audio,questionText")] Question question)
+        public ActionResult Edit([Bind(Include = "idQuestion,picture,audio,questionText")] Question question)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +86,6 @@ namespace La_Game.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.QuestionList_idQuestionList = new SelectList(db.QuestionLists, "idQuestionList", "participationCode", question.QuestionList_idQuestionList);
             return View(question);
         }
 

@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Users\nibor\Source\Repos\Kennismanagement\La-Game\La-Game\Models\DatabaseModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Users\ppiep\Source\Repos\Kennismanagement\La-Game\La-Game\Models\DatabaseModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

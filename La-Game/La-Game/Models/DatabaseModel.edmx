@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AnswerOption">
           <Key>
             <PropertyRef Name="idAnswer" />
@@ -68,7 +68,6 @@
             <PropertyRef Name="idQuestion" />
           </Key>
           <Property Name="idQuestion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="QuestionList_idQuestionList" Type="int" Nullable="false" />
           <Property Name="picture" Type="varbinary(max)" />
           <Property Name="audio" Type="varbinary(max)" />
           <Property Name="questionText" Type="varchar" MaxLength="200" />
@@ -81,6 +80,16 @@
           <Property Name="Lesson_idLesson" Type="int" Nullable="false" />
           <Property Name="participationCode" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="isActive" Type="smallint" />
+          <Property Name="questionListName" Type="varchar" MaxLength="100" />
+          <Property Name="questionListDescription" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="QuestionList_Question">
+          <Key>
+            <PropertyRef Name="idQuestionList_Question" />
+          </Key>
+          <Property Name="idQuestionList_Question" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Question_idQuestion" Type="int" Nullable="false" />
+          <Property Name="QuestionList_idQuestionList" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="QuestionResult">
           <Key>
@@ -165,18 +174,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_Question_QuestionList1">
-          <End Role="QuestionList" Type="Self.QuestionList" Multiplicity="1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="QuestionList">
-              <PropertyRef Name="idQuestionList" />
-            </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="QuestionList_idQuestionList" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_QuestionList_Lesson1">
           <End Role="Lesson" Type="Self.Lesson" Multiplicity="1" />
           <End Role="QuestionList" Type="Self.QuestionList" Multiplicity="*" />
@@ -186,6 +183,30 @@
             </Principal>
             <Dependent Role="QuestionList">
               <PropertyRef Name="Lesson_idLesson" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_QuestionList_Question_Question1">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="QuestionList_Question" Type="Self.QuestionList_Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="idQuestion" />
+            </Principal>
+            <Dependent Role="QuestionList_Question">
+              <PropertyRef Name="Question_idQuestion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_QuestionList_Question_QuestionList1">
+          <End Role="QuestionList" Type="Self.QuestionList" Multiplicity="1" />
+          <End Role="QuestionList_Question" Type="Self.QuestionList_Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionList">
+              <PropertyRef Name="idQuestionList" />
+            </Principal>
+            <Dependent Role="QuestionList_Question">
+              <PropertyRef Name="QuestionList_idQuestionList" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -235,6 +256,7 @@
           <EntitySet Name="Participant" EntityType="Self.Participant" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Question" EntityType="Self.Question" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QuestionList" EntityType="Self.QuestionList" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="QuestionList_Question" EntityType="Self.QuestionList_Question" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QuestionResult" EntityType="Self.QuestionResult" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="fk_Answer_Question1" Association="Self.fk_Answer_Question1">
             <End Role="Question" EntitySet="Question" />
@@ -260,13 +282,17 @@
             <End Role="Language" EntitySet="Language" />
             <End Role="Lesson" EntitySet="Lesson" />
           </AssociationSet>
-          <AssociationSet Name="fk_Question_QuestionList1" Association="Self.fk_Question_QuestionList1">
-            <End Role="QuestionList" EntitySet="QuestionList" />
-            <End Role="Question" EntitySet="Question" />
-          </AssociationSet>
           <AssociationSet Name="fk_QuestionList_Lesson1" Association="Self.fk_QuestionList_Lesson1">
             <End Role="Lesson" EntitySet="Lesson" />
             <End Role="QuestionList" EntitySet="QuestionList" />
+          </AssociationSet>
+          <AssociationSet Name="fk_QuestionList_Question_Question1" Association="Self.fk_QuestionList_Question_Question1">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="QuestionList_Question" EntitySet="QuestionList_Question" />
+          </AssociationSet>
+          <AssociationSet Name="fk_QuestionList_Question_QuestionList1" Association="Self.fk_QuestionList_Question_QuestionList1">
+            <End Role="QuestionList" EntitySet="QuestionList" />
+            <End Role="QuestionList_Question" EntitySet="QuestionList_Question" />
           </AssociationSet>
           <AssociationSet Name="fk_QuestionResult_Answer1" Association="Self.fk_QuestionResult_Answer1">
             <End Role="AnswerOption" EntitySet="AnswerOption" />
@@ -281,8 +307,7 @@
             <End Role="QuestionResult" EntitySet="QuestionResult" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -363,24 +388,25 @@
             <PropertyRef Name="idQuestion" />
           </Key>
           <Property Name="idQuestion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="QuestionList_idQuestionList" Type="Int32" Nullable="false" />
           <Property Name="picture" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="audio" Type="Binary" MaxLength="Max" FixedLength="false" />
           <Property Name="questionText" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AnswerOptions" Relationship="Self.fk_Answer_Question1" FromRole="Question" ToRole="AnswerOption" />
-          <NavigationProperty Name="QuestionList" Relationship="Self.fk_Question_QuestionList1" FromRole="Question" ToRole="QuestionList" />
+          <NavigationProperty Name="QuestionList_Question" Relationship="Model.fk_QuestionList_Question_Question1" FromRole="Question" ToRole="QuestionList_Question" />
         </EntityType>
         <EntityType Name="QuestionList">
           <Key>
             <PropertyRef Name="idQuestionList" />
           </Key>
           <Property Name="idQuestionList" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="questionListName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="questionListDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Lesson_idLesson" Type="Int32" Nullable="false" />
           <Property Name="participationCode" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="isActive" Type="Int16" />
           <NavigationProperty Name="Lesson" Relationship="Self.fk_QuestionList_Lesson1" FromRole="QuestionList" ToRole="Lesson" />
-          <NavigationProperty Name="Questions" Relationship="Self.fk_Question_QuestionList1" FromRole="QuestionList" ToRole="Question" />
           <NavigationProperty Name="QuestionResults" Relationship="Self.fk_QuestionResult_QuestionList1" FromRole="QuestionList" ToRole="QuestionResult" />
+          <NavigationProperty Name="QuestionList_Question" Relationship="Model.fk_QuestionList_Question_QuestionList1" FromRole="QuestionList" ToRole="QuestionList_Question" />
         </EntityType>
         <EntityType Name="QuestionResult">
           <Key>
@@ -504,18 +530,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="fk_Question_QuestionList1">
-          <End Role="QuestionList" Type="Self.QuestionList" Multiplicity="1" />
-          <End Role="Question" Type="Self.Question" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="QuestionList">
-              <PropertyRef Name="idQuestionList" />
-            </Principal>
-            <Dependent Role="Question">
-              <PropertyRef Name="QuestionList_idQuestionList" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="fk_QuestionResult_QuestionList1">
           <End Role="QuestionList" Type="Self.QuestionList" Multiplicity="1" />
           <End Role="QuestionResult" Type="Self.QuestionResult" Multiplicity="*" />
@@ -575,15 +589,54 @@
             <End Role="Participant" EntitySet="Participants" />
             <End Role="QuestionResult" EntitySet="QuestionResults" />
           </AssociationSet>
-          <AssociationSet Name="fk_Question_QuestionList1" Association="Self.fk_Question_QuestionList1">
-            <End Role="QuestionList" EntitySet="QuestionLists" />
-            <End Role="Question" EntitySet="Questions" />
-          </AssociationSet>
           <AssociationSet Name="fk_QuestionResult_QuestionList1" Association="Self.fk_QuestionResult_QuestionList1">
             <End Role="QuestionList" EntitySet="QuestionLists" />
             <End Role="QuestionResult" EntitySet="QuestionResults" />
           </AssociationSet>
+          <EntitySet Name="QuestionList_Question" EntityType="Model.QuestionList_Question" />
+          <AssociationSet Name="fk_QuestionList_Question_Question1" Association="Model.fk_QuestionList_Question_Question1">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="QuestionList_Question" EntitySet="QuestionList_Question" />
+          </AssociationSet>
+          <AssociationSet Name="fk_QuestionList_Question_QuestionList1" Association="Model.fk_QuestionList_Question_QuestionList1">
+            <End Role="QuestionList" EntitySet="QuestionLists" />
+            <End Role="QuestionList_Question" EntitySet="QuestionList_Question" />
+          </AssociationSet>
         </EntityContainer>
+        <EntityType Name="QuestionList_Question">
+          <Key>
+            <PropertyRef Name="idQuestionList_Question" />
+          </Key>
+          <Property Name="idQuestionList_Question" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Question_idQuestion" Type="Int32" Nullable="false" />
+          <Property Name="QuestionList_idQuestionList" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="Model.fk_QuestionList_Question_Question1" FromRole="QuestionList_Question" ToRole="Question" />
+          <NavigationProperty Name="QuestionList" Relationship="Model.fk_QuestionList_Question_QuestionList1" FromRole="QuestionList_Question" ToRole="QuestionList" />
+        </EntityType>
+        <Association Name="fk_QuestionList_Question_Question1">
+          <End Type="Model.Question" Role="Question" Multiplicity="1" />
+          <End Type="Model.QuestionList_Question" Role="QuestionList_Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="idQuestion" />
+            </Principal>
+            <Dependent Role="QuestionList_Question">
+              <PropertyRef Name="Question_idQuestion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_QuestionList_Question_QuestionList1">
+          <End Type="Model.QuestionList" Role="QuestionList" Multiplicity="1" />
+          <End Type="Model.QuestionList_Question" Role="QuestionList_Question" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="QuestionList">
+              <PropertyRef Name="idQuestionList" />
+            </Principal>
+            <Dependent Role="QuestionList_Question">
+              <PropertyRef Name="QuestionList_idQuestionList" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -659,7 +712,6 @@
             <EntityTypeMapping TypeName="Model.Question">
               <MappingFragment StoreEntitySet="Question">
                 <ScalarProperty Name="idQuestion" ColumnName="idQuestion" />
-                <ScalarProperty Name="QuestionList_idQuestionList" ColumnName="QuestionList_idQuestionList" />
                 <ScalarProperty Name="picture" ColumnName="picture" />
                 <ScalarProperty Name="audio" ColumnName="audio" />
                 <ScalarProperty Name="questionText" ColumnName="questionText" />
@@ -669,6 +721,8 @@
           <EntitySetMapping Name="QuestionLists">
             <EntityTypeMapping TypeName="Model.QuestionList">
               <MappingFragment StoreEntitySet="QuestionList">
+                <ScalarProperty Name="questionListDescription" ColumnName="questionListDescription" />
+                <ScalarProperty Name="questionListName" ColumnName="questionListName" />
                 <ScalarProperty Name="idQuestionList" ColumnName="idQuestionList" />
                 <ScalarProperty Name="Lesson_idLesson" ColumnName="Lesson_idLesson" />
                 <ScalarProperty Name="participationCode" ColumnName="participationCode" />
@@ -685,6 +739,15 @@
                 <ScalarProperty Name="Participant_idParticipant" ColumnName="Participant_idParticipant" />
                 <ScalarProperty Name="startTime" ColumnName="startTime" />
                 <ScalarProperty Name="endTime" ColumnName="endTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QuestionList_Question">
+            <EntityTypeMapping TypeName="Model.QuestionList_Question">
+              <MappingFragment StoreEntitySet="QuestionList_Question">
+                <ScalarProperty Name="QuestionList_idQuestionList" ColumnName="QuestionList_idQuestionList" />
+                <ScalarProperty Name="Question_idQuestion" ColumnName="Question_idQuestion" />
+                <ScalarProperty Name="idQuestionList_Question" ColumnName="idQuestionList_Question" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

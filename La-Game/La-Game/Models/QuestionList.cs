@@ -17,19 +17,21 @@ namespace La_Game.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public QuestionList()
         {
-            this.Questions = new HashSet<Question>();
             this.QuestionResults = new HashSet<QuestionResult>();
+            this.QuestionList_Question = new HashSet<QuestionList_Question>();
         }
     
         public int idQuestionList { get; set; }
+        public string questionListName { get; set; }
+        public string questionListDescription { get; set; }
         public int Lesson_idLesson { get; set; }
         public string participationCode { get; set; }
         public Nullable<short> isActive { get; set; }
     
         public virtual Lesson Lesson { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Question> Questions { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuestionResult> QuestionResults { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<QuestionList_Question> QuestionList_Question { get; set; }
     }
 }

@@ -35,5 +35,6 @@ namespace La_Game.Models
         public virtual DbSet<Question> Questions { get; set; }
         public virtual DbSet<QuestionList> QuestionLists { get; set; }
         public virtual DbSet<QuestionResult> QuestionResults { get; set; }
+        public virtual DbSet<QuestionList_Question> QuestionList_Question { get; set; }
     }
 }

@@ -18,16 +18,17 @@ namespace La_Game.Models
         public Question()
         {
             this.AnswerOptions = new HashSet<AnswerOption>();
+            this.QuestionList_Question = new HashSet<QuestionList_Question>();
         }
     
         public int idQuestion { get; set; }
-        public int QuestionList_idQuestionList { get; set; }
         public byte[] picture { get; set; }
         public byte[] audio { get; set; }
         public string questionText { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnswerOption> AnswerOptions { get; set; }
-        public virtual QuestionList QuestionList { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<QuestionList_Question> QuestionList_Question { get; set; }
     }
 }

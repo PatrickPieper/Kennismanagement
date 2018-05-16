@@ -201,6 +201,7 @@
     <Compile Include="Controllers\AnswerOptionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\QuestionList_QuestionController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -248,6 +249,9 @@
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuestionList.cs">
+      <DependentUpon>DatabaseModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\QuestionList_Question.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\QuestionResult.cs">
@@ -342,6 +346,11 @@
     <Content Include="Views\Questions\Details.cshtml" />
     <Content Include="Views\Questions\Edit.cshtml" />
     <Content Include="Views\Questions\Index.cshtml" />
+    <Content Include="Views\QuestionList_Question\Create.cshtml" />
+    <Content Include="Views\QuestionList_Question\Delete.cshtml" />
+    <Content Include="Views\QuestionList_Question\Details.cshtml" />
+    <Content Include="Views\QuestionList_Question\Edit.cshtml" />
+    <Content Include="Views\QuestionList_Question\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
