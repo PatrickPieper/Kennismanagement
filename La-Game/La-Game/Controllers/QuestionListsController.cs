@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
 
-namespace La_Game.Views.QuestionLists
+namespace La_Game.Controllers
 {
     public class QuestionListsController : Controller
     {
@@ -48,7 +48,7 @@ namespace La_Game.Views.QuestionLists
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idQuestionList,Lesson_idLesson,participationCode,isActive,questionListName,questionListDescription")] QuestionList questionList)
+        public ActionResult Create([Bind(Include = "idQuestionList,Lesson_idLesson,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
         {
             if (ModelState.IsValid)
             {
@@ -82,7 +82,7 @@ namespace La_Game.Views.QuestionLists
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idQuestionList,Lesson_idLesson,participationCode,isActive,questionListName,questionListDescription")] QuestionList questionList)
+        public ActionResult Edit([Bind(Include = "idQuestionList,Lesson_idLesson,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
         {
             if (ModelState.IsValid)
             {
