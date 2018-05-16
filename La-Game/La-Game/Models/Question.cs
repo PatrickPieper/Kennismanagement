@@ -22,8 +22,8 @@ namespace La_Game.Models
         }
     
         public int idQuestion { get; set; }
-        public byte[] picture { get; set; }
-        public byte[] audio { get; set; }
+        public string picture { get; set; }
+        public string audio { get; set; }
         public string questionText { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

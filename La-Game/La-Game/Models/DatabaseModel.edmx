@@ -68,8 +68,8 @@
             <PropertyRef Name="idQuestion" />
           </Key>
           <Property Name="idQuestion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="picture" Type="varbinary(max)" />
-          <Property Name="audio" Type="varbinary(max)" />
+          <Property Name="picture" Type="varchar" MaxLength="250" />
+          <Property Name="audio" Type="varchar" MaxLength="250" />
           <Property Name="questionText" Type="varchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="QuestionList">
@@ -388,8 +388,8 @@
             <PropertyRef Name="idQuestion" />
           </Key>
           <Property Name="idQuestion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="picture" Type="Binary" MaxLength="Max" FixedLength="false" />
-          <Property Name="audio" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="picture" Type="String" MaxLength="250" Unicode="false" FixedLength="false" />
+          <Property Name="audio" Type="String" MaxLength="250" Unicode="false" FixedLength="false" />
           <Property Name="questionText" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="AnswerOptions" Relationship="Self.fk_Answer_Question1" FromRole="Question" ToRole="AnswerOption" />
           <NavigationProperty Name="QuestionList_Question" Relationship="Model.fk_QuestionList_Question_Question1" FromRole="Question" ToRole="QuestionList_Question" />
