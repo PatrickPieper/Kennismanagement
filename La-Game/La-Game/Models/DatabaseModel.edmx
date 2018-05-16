@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AnswerOption">
           <Key>
             <PropertyRef Name="idAnswer" />
@@ -81,6 +81,8 @@
           <Property Name="Lesson_idLesson" Type="int" Nullable="false" />
           <Property Name="participationCode" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="isActive" Type="smallint" />
+          <Property Name="questionListName" Type="varchar" MaxLength="100" />
+          <Property Name="questionListDescription" Type="varchar" MaxLength="255" />
         </EntityType>
         <EntityType Name="QuestionResult">
           <Key>
@@ -281,8 +283,7 @@
             <End Role="QuestionResult" EntitySet="QuestionResult" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -381,6 +382,8 @@
           <NavigationProperty Name="Lesson" Relationship="Self.fk_QuestionList_Lesson1" FromRole="QuestionList" ToRole="Lesson" />
           <NavigationProperty Name="Questions" Relationship="Self.fk_Question_QuestionList1" FromRole="QuestionList" ToRole="Question" />
           <NavigationProperty Name="QuestionResults" Relationship="Self.fk_QuestionResult_QuestionList1" FromRole="QuestionList" ToRole="QuestionResult" />
+          <Property Name="questionListName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="questionListDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="QuestionResult">
           <Key>
@@ -669,6 +672,8 @@
           <EntitySetMapping Name="QuestionLists">
             <EntityTypeMapping TypeName="Model.QuestionList">
               <MappingFragment StoreEntitySet="QuestionList">
+                <ScalarProperty Name="questionListDescription" ColumnName="questionListDescription" />
+                <ScalarProperty Name="questionListName" ColumnName="questionListName" />
                 <ScalarProperty Name="idQuestionList" ColumnName="idQuestionList" />
                 <ScalarProperty Name="Lesson_idLesson" ColumnName="Lesson_idLesson" />
                 <ScalarProperty Name="participationCode" ColumnName="participationCode" />
