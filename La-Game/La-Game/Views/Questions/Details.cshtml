@@ -1,0 +1,50 @@
+﻿@model La_Game.Models.Question
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Question</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.picture)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.picture)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.audio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.audio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.questionText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.questionText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionList.participationCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuestionList.participationCode)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestion }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

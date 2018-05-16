@@ -1,0 +1,51 @@
+﻿@model IEnumerable<La_Game.Models.Question>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.picture)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.audio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.questionText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionList.participationCode)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.picture)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.audio)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.questionText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.QuestionList.participationCode)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.idQuestion }) |
+            @Html.ActionLink("Details", "Details", new { id=item.idQuestion }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.idQuestion })
+        </td>
+    </tr>
+}
+
+</table>

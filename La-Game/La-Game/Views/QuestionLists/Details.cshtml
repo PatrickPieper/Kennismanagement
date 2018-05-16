@@ -1,0 +1,42 @@
+﻿@model La_Game.Models.QuestionList
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>QuestionList</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.participationCode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.participationCode)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.isActive)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.isActive)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Lesson.lessonName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lesson.lessonName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestionList }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
