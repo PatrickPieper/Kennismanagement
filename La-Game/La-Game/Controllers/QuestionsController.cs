@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -13,6 +14,7 @@ namespace La_Game.Controllers
     public class QuestionsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
+        private string fileName;
 
         // GET: Questions
         public ActionResult Index()
@@ -46,10 +48,19 @@ namespace La_Game.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question)
+        public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase FileUpload)
         {
             if (ModelState.IsValid)
             {
+                FileUpload = Request.Files[0];
+                if (FileUpload.ContentLength > 0)
+                {
+                    fileName = Path.GetFileName(FileUpload.FileName);
+                    question.picture = fileName;
+                }
+
+               
+                
                 db.Questions.Add(question);
                 db.SaveChanges();
                 return RedirectToAction("Index");
