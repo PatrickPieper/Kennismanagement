@@ -40,8 +40,20 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
+
+            ViewBag.questions = data.ToList();
+            
             return View(questionList);
         }
+
+        //public ActionResult getQuestionList(int? id)
+        //{
+        //    String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+        //    IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
+        //    return View(data.ToList());
+        //}
 
         // GET: QuestionLists/Create
         public ActionResult Create()
