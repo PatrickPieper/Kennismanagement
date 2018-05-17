@@ -12,6 +12,13 @@ namespace La_Game.Controllers
 {
     public class QuestionListsController : Controller
     {
+        /*SELECT *
+          FROM Question
+          WHERE idQuestion IN (SELECT Question_idQuestion
+					FROM QuestionList_Question
+					WHERE QuestionList_idQuestionList = 2);
+        */
+
         private LaGameDBContext db = new LaGameDBContext();
 
         // GET: QuestionLists
