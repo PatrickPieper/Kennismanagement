@@ -24,7 +24,9 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.audio)
+            <audio controls controlsList="nodownload">
+                <source src="~/Files/@Html.Raw(Model.idQuestion)/Audio/@Html.Raw(Model.audio)" type="audio/mpeg" />
+            </audio>
         </dd>
 
         <dt>
@@ -37,6 +39,7 @@
 
     </dl>
 </div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestion }) |
     @Html.ActionLink("Back to List", "Index")
