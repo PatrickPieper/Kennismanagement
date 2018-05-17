@@ -3,7 +3,11 @@
 @{
     ViewBag.Title = "Index";
 }
-
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
 <h2>Index</h2>
 
 <p>
@@ -28,30 +32,31 @@
         </th>
         <th></th>
     </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.questionListName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.questionListDescription)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.participationCode)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.isActive)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lesson.lessonName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idQuestionList }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idQuestionList }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idQuestionList })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        var link = Url.Action("Details", "QuestionLists", new { id = item.idQuestionList });
+        <tr onclick="Redirect('@link')">
+            <td>
+                @Html.DisplayFor(modelItem => item.questionListName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.questionListDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.participationCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.isActive)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lesson.lessonName)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.idQuestionList }) |
+                @Html.ActionLink("Details", "Details", new { id = item.idQuestionList }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.idQuestionList })
+            </td>
+        </tr>
+    }
 
 </table>
