@@ -15,7 +15,9 @@ namespace La_Game.Controllers
     {
         private LaGameDBContext db = new LaGameDBContext();
         private string fileName;
-        private Stream inputStream;
+        private string audioName;
+        private Stream audioStream;
+        private Stream imageStream;
 
         // GET: Questions
         public ActionResult Index()
@@ -49,22 +51,30 @@ namespace La_Game.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase FileUpload)
+        public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase FileImage, HttpPostedFileBase FileAudio)
         {
             if (ModelState.IsValid)
             {
-                FileUpload = Request.Files[0];
-                if (FileUpload.ContentLength > 0)
+                FileImage = Request.Files[0];
+                if (FileImage.ContentLength > 0)
                 {
-                    fileName = Path.GetFileName(FileUpload.FileName);
-                    inputStream = FileUpload.InputStream;
+                    fileName = Path.GetFileName(FileImage.FileName);
+                    imageStream = FileImage.InputStream;
                     BlobsController blobsController = new BlobsController();
-                    blobsController.UploadBlob(fileName, inputStream);
+                    blobsController.UploadBlob(fileName, imageStream);
                     question.picture = fileName;
                 }
 
-               
-                
+                FileAudio = Request.Files[1];
+                if (FileAudio.ContentLength > 0)
+                {
+                    audioName = Path.GetFileName(FileAudio.FileName);
+                    audioStream = FileAudio.InputStream;
+                    BlobsController blobsController = new BlobsController();
+                    blobsController.UploadBlob(audioName, audioStream);
+                    question.audio = audioName;
+                }             
+
                 db.Questions.Add(question);
                 db.SaveChanges();
                 return RedirectToAction("Index");
