@@ -38,9 +38,11 @@ namespace La_Game.Controllers
 
         public string UploadBlob()
         {
+            String fileName = "File.jpg";
             CloudBlobContainer container = GetCloudBlobContainer();
-            CloudBlockBlob blob = container.GetBlockBlobReference("LaGame");
+            CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
             blob.Properties.ContentType = "image/jpg";
+            
 
             //Use filename from uploaded file here
             using (var fileStream = System.IO.File.OpenRead(@"c:\Users\ppiep\Downloads\La-Game.jpg"))
@@ -59,12 +61,29 @@ namespace La_Game.Controllers
                 if (item.GetType() == typeof(CloudBlockBlob))
                 {
                     CloudBlockBlob blob = (CloudBlockBlob)item;
-                    blobs.Add(blob.Name + "" + blob.Properties.ContentType);
+                    blobs.Add(blob.Name + "" + blob.Properties.ContentLanguage);
                     
                 }
             }
 
             return View(blobs);
+        }
+
+        public CloudBlockBlob GetCloudBlockBlob(String fileName)
+        {
+            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+            blockBlob.Properties.ContentType = "image/jpg";
+            blockBlob.SetProperties();
+            return blockBlob;
+        }
+
+        public string DeleteBlob()
+        {
+            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlockBlob blob = container.GetBlockBlobReference("myBlob");
+            blob.Delete();
+            return "success!";
         }
     }
 }
