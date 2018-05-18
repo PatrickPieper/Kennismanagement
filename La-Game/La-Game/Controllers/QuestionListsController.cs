@@ -149,6 +149,11 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult AddQuestionToList()
+        {
+            return View(db.Questions.ToList());
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

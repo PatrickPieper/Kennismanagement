@@ -1,0 +1,53 @@
+﻿@model IEnumerable<La_Game.Models.Question>
+
+@{
+    ViewBag.Title = "AddQuestionToList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+
+<h2>Add Question To List</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.picture)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.audio)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.questionText)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+        <tr>
+            <td onclick="Redirect('@link')">
+                @Html.DisplayFor(modelItem => item.picture)
+            </td>
+            <td onclick="Redirect('@link')">
+                @Html.DisplayFor(modelItem => item.audio)
+            </td>
+            <td onclick="Redirect('@link')">
+                @Html.DisplayFor(modelItem => item.questionText)
+            </td>
+            <td>
+                <button type="button" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-remove"></span> Delete
+                </button>
+            </td>
+        </tr>
+    }
+
+</table>
+

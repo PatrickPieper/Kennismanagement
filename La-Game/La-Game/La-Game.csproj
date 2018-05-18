@@ -351,6 +351,7 @@
     <Content Include="Views\QuestionList_Question\Details.cshtml" />
     <Content Include="Views\QuestionList_Question\Edit.cshtml" />
     <Content Include="Views\QuestionList_Question\Index.cshtml" />
+    <Content Include="Views\QuestionLists\AddQuestionToList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

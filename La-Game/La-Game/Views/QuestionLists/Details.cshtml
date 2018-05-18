@@ -66,7 +66,12 @@
 
     </dl>
 
-    <h3>Questions</h3>
+    <h3> Questions
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddQuestionToList", "QuestionLists") + "'");">
+            <span class="glyphicon glyphicon-list-alt"></span> Add/Remove Questions
+        </button>
+    </h3>
+
     <table class="table">
         <tr>
             <th>
@@ -83,7 +88,6 @@
 
         @foreach (var item in questionList)
         {
-
             var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
             <tr>
                 <td onclick="Redirect('@link')">
@@ -97,7 +101,7 @@
                 </td>
                 <td>
                     <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-remove"></span> Delete 
+                        <span class="glyphicon glyphicon-remove"></span> Delete
                     </button>
                 </td>
             </tr>
@@ -105,6 +109,5 @@
     </table>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestionList }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
