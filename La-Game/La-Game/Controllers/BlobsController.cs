@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -36,19 +37,16 @@ namespace La_Game.Controllers
             return View();
         }
 
-        public string UploadBlob()
+        public string UploadBlob(String fileName, Stream inputStream)
         {
-            String fileName = "File.jpg";
             CloudBlobContainer container = GetCloudBlobContainer();
             CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
             blob.Properties.ContentType = "image/jpg";
             
 
             //Use filename from uploaded file here
-            using (var fileStream = System.IO.File.OpenRead(@"c:\Users\ppiep\Downloads\La-Game.jpg"))
-            {
-                blob.UploadFromStream(fileStream);
-            }
+            blob.UploadFromStream(inputStream);
+
             return "success!";
         }
 

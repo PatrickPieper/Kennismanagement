@@ -15,6 +15,7 @@ namespace La_Game.Controllers
     {
         private LaGameDBContext db = new LaGameDBContext();
         private string fileName;
+        private Stream inputStream;
 
         // GET: Questions
         public ActionResult Index()
@@ -56,6 +57,9 @@ namespace La_Game.Controllers
                 if (FileUpload.ContentLength > 0)
                 {
                     fileName = Path.GetFileName(FileUpload.FileName);
+                    inputStream = FileUpload.InputStream;
+                    BlobsController blobsController = new BlobsController();
+                    blobsController.UploadBlob(fileName, inputStream);
                     question.picture = fileName;
                 }
 
