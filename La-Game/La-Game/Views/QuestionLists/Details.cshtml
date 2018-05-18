@@ -5,10 +5,14 @@
     var questionList = ViewBag.questions;
 }
 
-<h2>Details</h2>
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
 
 <div>
-    <h4>QuestionList</h4>
+    <h2>Questionlist Details</h2>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -40,7 +44,16 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.isActive)
+            @{
+                if (Model.isActive == 0 || Model.isActive == null)
+                {
+                    <t>No</t>
+                }
+                else
+                {
+                    <t>Yes</t>
+                }
+            }
         </dd>
 
         <dt>
@@ -52,36 +65,40 @@
         </dd>
 
     </dl>
+
+    <h3>Questions</h3>
     <table class="table">
         <tr>
+            <th>
+                Question Text
+            </th>
             <th>
                 Picture
             </th>
             <th>
                 Audio
             </th>
-            <th>
-                Question Text
-            </th>
             <th></th>
         </tr>
 
         @foreach (var item in questionList)
         {
+
+            var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
             <tr>
-                <td>
+                <td onclick="Redirect('@link')">
+                    @item.questionText
+                </td>
+                <td onclick="Redirect('@link')">
                     @item.picture
                 </td>
-                <td>
+                <td onclick="Redirect('@link')">
                     @item.audio
                 </td>
                 <td>
-                    @item.questionText
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.idQuestion }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.idQuestion }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.idQuestion })
+                    <button type="button" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-remove"></span> Delete 
+                    </button>
                 </td>
             </tr>
         }

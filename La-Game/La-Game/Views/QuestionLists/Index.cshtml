@@ -37,33 +37,38 @@
     @foreach (var item in Model)
     {
         var link = Url.Action("Details", "QuestionLists", new { id = item.idQuestionList });
-        <tr onclick="Redirect('@link')">
-            <td>
+        <tr>
+            <td onclick="Redirect('@link')">
                 @Html.DisplayFor(modelItem => item.questionListName)
             </td>
-            <td>
+            <td onclick="Redirect('@link')">
                 @Html.DisplayFor(modelItem => item.questionListDescription)
             </td>
-            <td>
+            <td onclick="Redirect('@link')">
                 @Html.DisplayFor(modelItem => item.participationCode)
             </td>
-            <td>
+            <td onclick="Redirect('@link')">
                 @if (item.isActive == 0 || item.isActive == null)
                 {
-                    <p>No</p>
+                    <t>No</t>
                 }
                 else
                 {
-                    <p>Yes</p>
+                    <t>Yes</t>
                 }
             </td>
-            <td>
+            <td onclick="Redirect('@link')">
                 @Html.DisplayFor(modelItem => item.Lesson.lessonName)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.idQuestionList }) |
-                @Html.ActionLink("Details", "Details", new { id = item.idQuestionList }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.idQuestionList })
+                <button type="button" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-wrench"></span>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.idQuestionList })
+                </button>
+                <button type="button" class="btn btn-default btn-sm">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    @Html.ActionLink("Delete", "Delete", new { id = item.idQuestionList })
+                </button>
             </td>
         </tr>
     }

@@ -12,13 +12,6 @@ namespace La_Game.Controllers
 {
     public class QuestionListsController : Controller
     {
-        /*SELECT *
-          FROM Question
-          WHERE idQuestion IN (SELECT Question_idQuestion
-					FROM QuestionList_Question
-					WHERE QuestionList_idQuestionList = 2);
-        */
-
         private LaGameDBContext db = new LaGameDBContext();
 
         // GET: QuestionLists
@@ -44,16 +37,9 @@ namespace La_Game.Controllers
             IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
 
             ViewBag.questions = data.ToList();
-            
+
             return View(questionList);
         }
-
-        //public ActionResult getQuestionList(int? id)
-        //{
-        //    String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
-        //    IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
-        //    return View(data.ToList());
-        //}
 
         // GET: QuestionLists/Create
         public ActionResult Create()
@@ -114,18 +100,42 @@ namespace La_Game.Controllers
         }
 
         // GET: QuestionLists/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? id, int? listId)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
             QuestionList questionList = db.QuestionLists.Find(id);
+
             if (questionList == null)
             {
                 return HttpNotFound();
             }
+
             return View(questionList);
+        }
+
+        // GET: QuestionLists/DeleteQuestionFromList/5
+        public ActionResult DeleteQuestionFromList(int? id, int? listId)
+        {
+            if (id == null || listId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            QuestionList_Question question = db.QuestionList_Question.Find(id);
+
+            if (question == null)
+            {
+                return HttpNotFound();
+            }
+
+            db.QuestionList_Question.Remove(question);
+            db.SaveChanges();
+            
+            return View();
         }
 
         // POST: QuestionLists/Delete/5
