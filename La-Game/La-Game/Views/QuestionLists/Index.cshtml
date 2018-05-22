@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<La_Game.Models.QuestionList>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Overview";
 }
 <script type="text/javascript">
     function Redirect(link) {
@@ -9,10 +9,12 @@
     }
 </script>
 
-<h2>Index</h2>
+<h2>Questionlist Overview</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "QuestionLists") + "'");">
+        <span class="glyphicon glyphicon-plus"></span> Create New
+    </button>
 </p>
 <table class="table">
     <tr>
@@ -61,13 +63,11 @@
                 @Html.DisplayFor(modelItem => item.Lesson.lessonName)
             </td>
             <td>
-                <button type="button" class="btn btn-default btn-sm">
-                    <span class="glyphicon glyphicon-wrench"></span>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.idQuestionList })
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "QuestionLists", new { id = item.idQuestionList }) + "'");">
+                    <span class="glyphicon glyphicon-wrench"></span> Edit
                 </button>
-                <button type="button" class="btn btn-default btn-sm">
-                    <span class="glyphicon glyphicon-remove"></span>
-                    @Html.ActionLink("Delete", "Delete", new { id = item.idQuestionList })
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "QuestionLists", new { id = item.idQuestionList }) + "'");">
+                    <span class="glyphicon glyphicon-remove"></span> Delete
                 </button>
             </td>
         </tr>

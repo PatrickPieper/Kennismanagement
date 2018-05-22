@@ -66,8 +66,9 @@
 
     </dl>
 
-    <h3> Questions
-        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddQuestionToList", "QuestionLists") + "'");">
+    <h3>
+        Questions
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddQuestionToList", "QuestionLists", new { id = Model.idQuestionList }) + "'");">
             <span class="glyphicon glyphicon-list-alt"></span> Add/Remove Questions
         </button>
     </h3>
@@ -75,7 +76,7 @@
     <table class="table">
         <tr>
             <th>
-                Question Text
+                Question
             </th>
             <th>
                 Picture
@@ -83,7 +84,6 @@
             <th>
                 Audio
             </th>
-            <th></th>
         </tr>
 
         @foreach (var item in questionList)
@@ -99,15 +99,12 @@
                 <td onclick="Redirect('@link')">
                     @item.audio
                 </td>
-                <td>
-                    <button type="button" class="btn btn-default btn-sm">
-                        <span class="glyphicon glyphicon-remove"></span> Delete
-                    </button>
-                </td>
             </tr>
         }
     </table>
 </div>
 <p>
-    @Html.ActionLink("Back to List", "Index")
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Return to list
+    </button>
 </p>

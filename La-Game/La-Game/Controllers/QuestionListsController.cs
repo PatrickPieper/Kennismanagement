@@ -149,9 +149,24 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
-        public ActionResult AddQuestionToList()
+        public ActionResult AddQuestionToList(int? id, string filter)
         {
-            return View(db.Questions.ToList());
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            //Filter by name
+            var questions = from q in db.Questions
+                            select q;
+
+            //If a name was given, use it to filter the results
+            if (!String.IsNullOrEmpty(filter))
+            {
+                questions = questions.Where(s => s.questionText.Contains(filter));
+            }
+
+            return View(questions);
         }
 
         protected override void Dispose(bool disposing)
