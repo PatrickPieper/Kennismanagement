@@ -25,6 +25,8 @@ namespace La_Game.Models
         public string questionListName { get; set; }
         public string questionListDescription { get; set; }
         public int Lesson_idLesson { get; set; }
+        public string questionListName { get; set; }
+        public string questionListDescription { get; set; }
         public string participationCode { get; set; }
         public Nullable<short> isActive { get; set; }
     

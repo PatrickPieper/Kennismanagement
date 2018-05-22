@@ -1,0 +1,110 @@
+﻿@model La_Game.Models.QuestionList
+
+@{
+    ViewBag.Title = "Details";
+    var questionList = ViewBag.questions;
+}
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<div>
+    <h2>Questionlist Details</h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Name
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.questionListName)
+        </dd>
+
+        <dt>
+            Description
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.questionListDescription)
+        </dd>
+
+        <dt>
+            Code
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.participationCode)
+        </dd>
+
+        <dt>
+            Active
+        </dt>
+
+        <dd>
+            @{
+                if (Model.isActive == 0 || Model.isActive == null)
+                {
+                    <t>No</t>
+                }
+                else
+                {
+                    <t>Yes</t>
+                }
+            }
+        </dd>
+
+        <dt>
+            Lesson
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Lesson.lessonName)
+        </dd>
+
+    </dl>
+
+    <h3>
+        Questions
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddQuestionToList", "QuestionLists", new { id = Model.idQuestionList }) + "'");">
+            <span class="glyphicon glyphicon-list-alt"></span> Add/Remove Questions
+        </button>
+    </h3>
+
+    <table class="table">
+        <tr>
+            <th>
+                Question
+            </th>
+            <th>
+                Picture
+            </th>
+            <th>
+                Audio
+            </th>
+        </tr>
+
+        @foreach (var item in questionList)
+        {
+            var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+            <tr>
+                <td onclick="Redirect('@link')">
+                    @item.questionText
+                </td>
+                <td onclick="Redirect('@link')">
+                    @item.picture
+                </td>
+                <td onclick="Redirect('@link')">
+                    @item.audio
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Return to list
+    </button>
+</p>

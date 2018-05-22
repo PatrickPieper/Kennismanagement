@@ -402,6 +402,8 @@
           <Property Name="questionListName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="questionListDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Lesson_idLesson" Type="Int32" Nullable="false" />
+          <Property Name="questionListName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="questionListDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="participationCode" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="isActive" Type="Int16" />
           <NavigationProperty Name="Lesson" Relationship="Self.fk_QuestionList_Lesson1" FromRole="QuestionList" ToRole="Lesson" />

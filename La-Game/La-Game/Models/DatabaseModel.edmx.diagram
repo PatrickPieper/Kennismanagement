@@ -25,7 +25,7 @@
         <AssociationConnector Association="Model.fk_Language_Participant_Participant1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.fk_QuestionResult_Participant1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.fk_QuestionResult_QuestionList1" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="Model.QuestionList_Question" Width="1.5" PointX="6.75" PointY="13.5" />
+        <EntityTypeShape EntityType="Model.QuestionList_Question" Width="1.5" PointX="6.125" PointY="13.375" />
         <AssociationConnector Association="Model.fk_QuestionList_Question_Question1" />
         <AssociationConnector Association="Model.fk_QuestionList_Question_QuestionList1" />
       </Diagram>
