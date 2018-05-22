@@ -399,8 +399,6 @@
             <PropertyRef Name="idQuestionList" />
           </Key>
           <Property Name="idQuestionList" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="questionListName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="questionListDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Lesson_idLesson" Type="Int32" Nullable="false" />
           <Property Name="questionListName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="questionListDescription" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />

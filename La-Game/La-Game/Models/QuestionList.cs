@@ -22,8 +22,6 @@ namespace La_Game.Models
         }
     
         public int idQuestionList { get; set; }
-        public string questionListName { get; set; }
-        public string questionListDescription { get; set; }
         public int Lesson_idLesson { get; set; }
         public string questionListName { get; set; }
         public string questionListDescription { get; set; }

@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using Microsoft.Azure;
 using Microsoft.WindowsAzure.Storage;
@@ -21,7 +19,7 @@ namespace La_Game.Controllers
         public CloudBlobContainer GetCloudBlobContainer(String containerName = "")
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
-                    CloudConfigurationManager.GetSetting("lagame2_AzureStorageConnectionString"));
+            CloudConfigurationManager.GetSetting("lagame2_AzureStorageConnectionString"));
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
             CloudBlobContainer container = blobClient.GetContainerReference(containerName);
             return container;
