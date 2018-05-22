@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -17,18 +18,18 @@ namespace La_Game.Controllers
             return View();
         }
 
-        private CloudBlobContainer GetCloudBlobContainer()
+        public CloudBlobContainer GetCloudBlobContainer(String containerName = "")
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
                     CloudConfigurationManager.GetSetting("lagame2_AzureStorageConnectionString"));
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("test-blob-container");
+            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
             return container;
         }
 
-        public ActionResult CreateBlobContainer()
+        public ActionResult CreateBlobContainer(String name)
         {
-            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlobContainer container = GetCloudBlobContainer(name);
 
             ViewBag.Success = container.CreateIfNotExists();
             ViewBag.BlobContainerName = container.Name;
@@ -36,17 +37,21 @@ namespace La_Game.Controllers
             return View();
         }
 
-        public string UploadBlob()
+        public string UploadBlob(String fileName, Stream inputStream, String questionNumber)
         {
-            CloudBlobContainer container = GetCloudBlobContainer();
-            CloudBlockBlob blob = container.GetBlockBlobReference("LaGame");
-            blob.Properties.ContentType = "image/jpg";
-
-            //Use filename from uploaded file here
-            using (var fileStream = System.IO.File.OpenRead(@"c:\Users\ppiep\Downloads\La-Game.jpg"))
+            CloudBlobContainer container = GetCloudBlobContainer(questionNumber);
+            CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
+            string[] strings = fileName.Split('.');
+            
+            switch(strings[strings.Length - 1])
             {
-                blob.UploadFromStream(fileStream);
+                case "jpg":
+                    blob.Properties.ContentType = "image/jpg";
+                    break;
             }
+
+            blob.UploadFromStream(inputStream);
+
             return "success!";
         }
 
@@ -59,12 +64,29 @@ namespace La_Game.Controllers
                 if (item.GetType() == typeof(CloudBlockBlob))
                 {
                     CloudBlockBlob blob = (CloudBlockBlob)item;
-                    blobs.Add(blob.Name + "" + blob.Properties.ContentType);
+                    blobs.Add(blob.Name);
                     
                 }
             }
 
             return View(blobs);
+        }
+
+        public CloudBlockBlob GetCloudBlockBlob(String fileName)
+        {
+            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
+            blockBlob.Properties.ContentType = "image/jpg";
+            blockBlob.SetProperties();
+            return blockBlob;
+        }
+
+        public string DeleteBlob()
+        {
+            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlockBlob blob = container.GetBlockBlobReference("myBlob");
+            blob.Delete();
+            return "success!";
         }
     }
 }
