@@ -4,21 +4,19 @@
     ViewBag.Title = "Edit";
 }
 
-<h2>Edit</h2>
-
+<h2>Edit Questionlist</h2>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>QuestionList</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.idQuestionList)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Lesson_idLesson, "Lesson_idLesson", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Lesson_idLesson, "Lesson", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownList("Lesson_idLesson", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Lesson_idLesson, "", new { @class = "text-danger" })
@@ -26,7 +24,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.questionListName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.questionListName, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.questionListName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.questionListName, "", new { @class = "text-danger" })
@@ -34,7 +32,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.questionListDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.questionListDescription, "Description", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.questionListDescription, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.questionListDescription, "", new { @class = "text-danger" })
@@ -42,7 +40,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.participationCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.participationCode, "Code", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.participationCode, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.participationCode, "", new { @class = "text-danger" })
@@ -50,7 +48,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.isActive, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.isActive, "Active", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.isActive, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.isActive, "", new { @class = "text-danger" })
@@ -66,7 +64,11 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+            <span class="glyphicon glyphicon-menu-left"></span> Back to List
+        </button>
+    </p>
 </div>
 
 @section Scripts {
