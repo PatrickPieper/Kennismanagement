@@ -62,7 +62,6 @@ namespace La_Game.Controllers
                 FileImage = Request.Files[0];
                 BlobsController blobsController = new BlobsController();
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
-                blobsController.CreateBlobContainer();
                 bool created  = container.CreateIfNotExists();
                 containerName = container.Name;
 
