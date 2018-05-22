@@ -8,6 +8,8 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
+using La_Game.ViewModels;
+using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace La_Game.Controllers
 {
@@ -18,6 +20,7 @@ namespace La_Game.Controllers
         private string audioName;
         private Stream audioStream;
         private Stream imageStream;
+        private string containerName;
 
         // GET: Questions
         public ActionResult Index()
@@ -55,13 +58,26 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+                var max = db.Questions.Max(q => q.idQuestion);
                 FileImage = Request.Files[0];
+                BlobsController blobsController = new BlobsController();
+                CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
+                blobsController.CreateBlobContainer();
+                bool created  = container.CreateIfNotExists();
+                containerName = container.Name;
+
+                if (created)
+                {
+                    
+                }
+
                 if (FileImage.ContentLength > 0)
                 {
                     fileName = Path.GetFileName(FileImage.FileName);
                     imageStream = FileImage.InputStream;
-                    BlobsController blobsController = new BlobsController();
-                    blobsController.UploadBlob(fileName, imageStream);
+                
+                    //Use questionnumber as last parameter to search right container
+                    blobsController.UploadBlob(fileName, imageStream,containerName);
                     question.picture = fileName;
                 }
 
@@ -70,8 +86,9 @@ namespace La_Game.Controllers
                 {
                     audioName = Path.GetFileName(FileAudio.FileName);
                     audioStream = FileAudio.InputStream;
-                    BlobsController blobsController = new BlobsController();
-                    blobsController.UploadBlob(audioName, audioStream);
+                    
+                    //Use questionnumber as last parameter to search right container
+                    blobsController.UploadBlob(audioName, audioStream,"test-blob-container");
                     question.audio = audioName;
                 }             
 
@@ -86,6 +103,7 @@ namespace La_Game.Controllers
         // GET: Questions/Edit/5
         public ActionResult Edit(int? id)
         {
+            String idString = id.ToString();
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -95,6 +113,16 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
+            BlobsController blobsController = new BlobsController();
+            
+            CloudBlobContainer container = blobsController.GetCloudBlobContainer(idString);
+
+            CloudBlockBlob blob = container.GetBlockBlobReference(question.picture);
+            blob.Properties.ContentType = "image/png";
+            
+
+
+            ViewData["Blob"] = blob;
             return View(question);
         }
 

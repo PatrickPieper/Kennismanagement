@@ -18,18 +18,18 @@ namespace La_Game.Controllers
             return View();
         }
 
-        private CloudBlobContainer GetCloudBlobContainer()
+        public CloudBlobContainer GetCloudBlobContainer(String containerName = "")
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
                     CloudConfigurationManager.GetSetting("lagame2_AzureStorageConnectionString"));
             CloudBlobClient blobClient = storageAccount.CreateCloudBlobClient();
-            CloudBlobContainer container = blobClient.GetContainerReference("test-blob-container");
+            CloudBlobContainer container = blobClient.GetContainerReference(containerName);
             return container;
         }
 
-        public ActionResult CreateBlobContainer()
+        public ActionResult CreateBlobContainer(String name)
         {
-            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlobContainer container = GetCloudBlobContainer(name);
 
             ViewBag.Success = container.CreateIfNotExists();
             ViewBag.BlobContainerName = container.Name;
@@ -37,14 +37,19 @@ namespace La_Game.Controllers
             return View();
         }
 
-        public string UploadBlob(String fileName, Stream inputStream)
+        public string UploadBlob(String fileName, Stream inputStream, String questionNumber)
         {
-            CloudBlobContainer container = GetCloudBlobContainer();
+            CloudBlobContainer container = GetCloudBlobContainer(questionNumber);
             CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
-            blob.Properties.ContentType = "image/jpg";
+            string[] strings = fileName.Split('.');
             
+            switch(strings[strings.Length - 1])
+            {
+                case "jpg":
+                    blob.Properties.ContentType = "image/jpg";
+                    break;
+            }
 
-            //Use filename from uploaded file here
             blob.UploadFromStream(inputStream);
 
             return "success!";
@@ -59,7 +64,7 @@ namespace La_Game.Controllers
                 if (item.GetType() == typeof(CloudBlockBlob))
                 {
                     CloudBlockBlob blob = (CloudBlockBlob)item;
-                    blobs.Add(blob.Name + "" + blob.Properties.ContentLanguage);
+                    blobs.Add(blob.Name);
                     
                 }
             }
