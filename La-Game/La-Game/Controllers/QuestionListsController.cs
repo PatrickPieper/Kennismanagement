@@ -134,7 +134,7 @@ namespace La_Game.Controllers
 
             db.QuestionList_Question.Remove(question);
             db.SaveChanges();
-            
+
             return View();
         }
 
@@ -157,8 +157,8 @@ namespace La_Game.Controllers
             }
 
             //Filter by name
-            var questions = from q in db.Questions
-                            select q;
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            IEnumerable<Question> questions = db.Database.SqlQuery<Question>(selectQuery);
 
             //If a name was given, use it to filter the results
             if (!String.IsNullOrEmpty(filter))
@@ -172,14 +172,19 @@ namespace La_Game.Controllers
         public PartialViewResult GetQuestionTable(int? id)
         {
             //Filter by name
-            var questions = from q in db.Questions
-                            select q;
+            List<Question> allQuestions = (from q in db.Questions select q).ToList();
 
-            questions = questions.Where(s => s.questionText.Contains("morgen"));
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            List<Question> questionsAlreadyInQuestionList = db.Database.SqlQuery<Question>(selectQuery).ToList();
+
+            foreach (Question questionToRemove in questionsAlreadyInQuestionList)
+            {
+                allQuestions.RemoveAll(item => item.idQuestion == questionToRemove.idQuestion);
+            }
 
             //If a name was given, use it to filter the results
 
-            return PartialView("_AddQuestionTable",questions);
+            return PartialView("_AddQuestionTable", allQuestions);
         }
 
         protected override void Dispose(bool disposing)
