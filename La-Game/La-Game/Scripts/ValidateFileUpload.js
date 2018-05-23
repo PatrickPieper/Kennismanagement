@@ -2,7 +2,7 @@
     var fuData = document.getElementById('fileImage');
     var FileUploadPath = fuData.value;
     //To check if user upload any file
-    if (FileUploadPath == '') {
+    if (FileUploadPath === '') {
         alert("Please upload an image");
     } else {
         var Extension = FileUploadPath.substring(

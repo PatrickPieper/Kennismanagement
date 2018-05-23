@@ -75,7 +75,6 @@ namespace La_Game.Controllers
                     fileName = Path.GetFileName(FileImage.FileName);
                     imageStream = FileImage.InputStream;
                 
-                    //Use questionnumber as last parameter to search right container
                     blobsController.UploadBlob(fileName, imageStream,containerName);
                     question.picture = fileName;
                 }
@@ -87,7 +86,7 @@ namespace La_Game.Controllers
                     audioStream = FileAudio.InputStream;
                     
                     //Use questionnumber as last parameter to search right container
-                    blobsController.UploadBlob(audioName, audioStream,"test-blob-container");
+                    blobsController.UploadBlob(audioName, audioStream,containerName);
                     question.audio = audioName;
                 }             
 
