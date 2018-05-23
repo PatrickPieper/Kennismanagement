@@ -1,8 +1,9 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-
-<form method="get" action="@Url.Action("index", "StudentTest")">
-    <input id="participationCode" name="participationCode" type="text"/>
-    <input value="go" type="submit"/>
-</form>
+<div class="container-code">
+    <form method="get" action="@Url.Action("index", "StudentTest")">
+        <input id="participationCode" name="participationCode" type="text" />
+        <input value="go" type="submit" />
+    </form>
+</div>
