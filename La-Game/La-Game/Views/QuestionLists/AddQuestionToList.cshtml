@@ -46,14 +46,24 @@
                                 @Html.DisplayFor(modelItem => item.questionText)
                             </td>
                             <td onclick="Redirect('@link')">
-                                @Html.DisplayFor(modelItem => item.picture)
+                                @{
+                                    if (!String.IsNullOrEmpty(item.picture))
+                                    {
+                                        <p><span class="glyphicon glyphicon-ok"></span></p>
+                                    }
+                                }
                             </td>
                             <td onclick="Redirect('@link')">
-                                @Html.DisplayFor(modelItem => item.audio)
+                                @{
+                                    if (!String.IsNullOrEmpty(item.audio))
+                                    {
+                                        <p><span class="glyphicon glyphicon-ok"></span></p>
+                                    }
+                                }
                             </td>
                             <td>
                                 <button type="button" class="btn btn-default btn-sm">
-                                    <span class="glyphicon glyphicon-remove"></span> Delete
+                                    <span class="glyphicon glyphicon-remove"></span> Remove
                                 </button>
                             </td>
                         </tr>
@@ -61,7 +71,7 @@
                 </table>
             </div>
             <div class="table-responsive col-md-6">
-                @{Html.RenderAction("GetQuestionTable", "QuestionLists");};
+                @{Html.RenderAction("GetQuestionTable", "QuestionLists");}
             </div>
         </div>
     </div>
