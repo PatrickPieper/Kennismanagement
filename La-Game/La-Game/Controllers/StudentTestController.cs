@@ -15,11 +15,27 @@ namespace La_Game.Controllers
         // GET: StudentTest
         public ActionResult Index(string participationCode)
         {
-            if (participationCode == null)            
+            if (participationCode == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + participationCode.ToString() + "'";
+
+            List<QuestionList> data = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
+            
+            if (data.Count != 0)
+            {
                 return View();
+            }
+            else {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+        
+        
+
+             
+                
         }
     }
 }
