@@ -12,7 +12,7 @@
         </th>
         <th></th>
     </tr>
-
+    
     @foreach (var item in Model)
     {
         var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
@@ -37,7 +37,7 @@
                 }
             </td>
             <td>
-                <button type="button" class="btn btn-default btn-sm">
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddQuestionToList", "QuestionLists", new { id = item.idQuestion, listId = ViewBag.listId }) + "'");">
                     <span class="glyphicon glyphicon-plus"></span> Add
                 </button>
             </td>

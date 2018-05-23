@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
 
@@ -41,6 +40,7 @@ namespace La_Game.Controllers
             return View(questionList);
         }
 
+        #region Create QuestionList
         // GET: QuestionLists/Create
         public ActionResult Create()
         {
@@ -65,7 +65,9 @@ namespace La_Game.Controllers
             ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
+        #endregion
 
+        #region Edit QuestionList
         // GET: QuestionLists/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -98,7 +100,9 @@ namespace La_Game.Controllers
             ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
+        #endregion
 
+        #region Delete Questionlist
         // GET: QuestionLists/Delete/5
         public ActionResult Delete(int? id, int? listId)
         {
@@ -117,27 +121,6 @@ namespace La_Game.Controllers
             return View(questionList);
         }
 
-        // GET: QuestionLists/DeleteQuestionFromList/5
-        public ActionResult DeleteQuestionFromList(int? id, int? listId)
-        {
-            if (id == null || listId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            QuestionList_Question question = db.QuestionList_Question.Find(id);
-
-            if (question == null)
-            {
-                return HttpNotFound();
-            }
-
-            db.QuestionList_Question.Remove(question);
-            db.SaveChanges();
-
-            return View();
-        }
-
         // POST: QuestionLists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -148,8 +131,10 @@ namespace La_Game.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        #endregion
 
-        public ActionResult AddQuestionToList(int? id, string filter)
+        #region Adding/Deleting questions from the list
+        public ActionResult ModifyQuestionList(int? id, string filter)
         {
             if (id == null)
             {
@@ -166,7 +151,51 @@ namespace La_Game.Controllers
                 questions = questions.Where(s => s.questionText.Contains(filter));
             }
 
+            ViewBag.listId = id;
             return View(questions);
+        }
+
+        public ActionResult AddQuestionToList(int? id, int? listId)
+        {
+            try
+            {
+                if (id == null || listId == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                
+                var add = "INSERT INTO QuestionList_Question (Question_idQuestion, QuestionList_idQuestionList) VALUES (" + id + ", " + listId + ");"; 
+                db.Database.ExecuteSqlCommand(add);
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Failed to add
+            }
+
+            return RedirectToAction("ModifyQuestionList", new { id = listId });
+        }
+
+        // GET: QuestionLists/DeleteQuestionFromList/5?listId=2
+        public ActionResult DeleteQuestionFromList(int? id, int? listId)
+        {
+            try
+            {
+                if (id == null || listId == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var delete = "DELETE FROM QuestionList_Question WHERE Question_idQuestion = " + id + " AND QuestionList_idQuestionList = " + listId + ";";
+                db.Database.ExecuteSqlCommand(delete);
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Failed to delete
+            }
+
+            return RedirectToAction("ModifyQuestionList", new { id = listId });
         }
 
         public PartialViewResult GetQuestionTable(int? id)
@@ -183,9 +212,10 @@ namespace La_Game.Controllers
             }
 
             //If a name was given, use it to filter the results
-
+            ViewBag.listId = id;
             return PartialView("_AddQuestionTable", allQuestions);
         }
+        #endregion
 
         protected override void Dispose(bool disposing)
         {

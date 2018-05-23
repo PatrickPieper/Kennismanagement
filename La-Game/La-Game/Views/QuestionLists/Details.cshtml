@@ -68,7 +68,7 @@
 
     <h3>
         Questions
-        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddQuestionToList", "QuestionLists", new { id = Model.idQuestionList }) + "'");">
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("ModifyQuestionList", "QuestionLists", new { id = Model.idQuestionList }) + "'");">
             <span class="glyphicon glyphicon-list-alt"></span> Add/Remove Questions
         </button>
     </h3>

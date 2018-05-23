@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<La_Game.Models.Question>
 
 @{
-    ViewBag.Title = "AddQuestionToList";
+    ViewBag.Title = "Modify Questionlist";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -14,7 +14,7 @@
 <div>
     <h2>Add/Remove Question</h2>
 
-    @using (Html.BeginForm("AddQuestionToList", "QuestionLists", FormMethod.Get))
+    @using (Html.BeginForm("ModifyQuestionList", "QuestionLists", FormMethod.Get))
     {
         <p>
             Question @Html.TextBox("filter")
@@ -62,7 +62,7 @@
                                 }
                             </td>
                             <td>
-                                <button type="button" class="btn btn-default btn-sm">
+                                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("DeleteQuestionFromList", "QuestionLists", new { id = item.idQuestion, listId = ViewBag.listId }) + "'");">    
                                     <span class="glyphicon glyphicon-remove"></span> Remove
                                 </button>
                             </td>
@@ -78,7 +78,7 @@
 
 </div>
 <p>
-    <button type="button" class="btn btn-default btn-sm">
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
         <span class="glyphicon glyphicon-menu-left"></span> Back to list
     </button>
 </p>
