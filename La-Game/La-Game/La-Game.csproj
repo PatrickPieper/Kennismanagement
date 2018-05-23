@@ -365,6 +365,8 @@
     <Content Include="Views\QuestionLists\AddQuestionToList.cshtml" />
     <Content Include="Views\Index.cshtml" />
     <Content Include="Views\StudentTest\Index.cshtml" />
+    <Content Include="Views\Home\LikertScale.cshtml" />
+    <Content Include="Views\Home\MultipleChoice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
