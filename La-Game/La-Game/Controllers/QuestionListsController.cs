@@ -169,6 +169,19 @@ namespace La_Game.Controllers
             return View(questions);
         }
 
+        public PartialViewResult GetQuestionTable(int? id)
+        {
+            //Filter by name
+            var questions = from q in db.Questions
+                            select q;
+
+            questions = questions.Where(s => s.questionText.Contains("morgen"));
+
+            //If a name was given, use it to filter the results
+
+            return PartialView("_AddQuestionTable",questions);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
