@@ -1,30 +1,20 @@
 ﻿@model La_Game.Models.QuestionList
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Create Questionlist";
 }
 
-<h2>Create</h2>
+<h2>Create new Questionlist</h2>
 
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>QuestionList</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.Lesson_idLesson, "Lesson_idLesson", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("Lesson_idLesson", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Lesson_idLesson, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.questionListName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.questionListName, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.questionListName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.questionListName, "", new { @class = "text-danger" })
@@ -32,7 +22,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.questionListDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.questionListDescription, "Description", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.questionListDescription, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.questionListDescription, "", new { @class = "text-danger" })
@@ -40,32 +30,25 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.participationCode, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Lesson_idLesson, "Lesson", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.participationCode, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.participationCode, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.isActive, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.isActive, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.isActive, "", new { @class = "text-danger" })
+                @Html.DropDownList("Lesson_idLesson", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Lesson_idLesson, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+                    <span class="glyphicon glyphicon-menu-left"></span> Back
+                </button>
+                <button type="submit" value="Create" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> Create
+                </button>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

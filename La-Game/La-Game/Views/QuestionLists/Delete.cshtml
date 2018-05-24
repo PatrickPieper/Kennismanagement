@@ -1,18 +1,17 @@
 ﻿@model La_Game.Models.QuestionList
 
 @{
-    ViewBag.Title = "Delete";
+    ViewBag.Title = "Delete Questionlist";
 }
 
-<h2>Delete</h2>
+<h2>Delete Questionlist</h2>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>QuestionList</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.questionListName)
+            Name
         </dt>
 
         <dd>
@@ -20,27 +19,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.questionListDescription)
+            Description
         </dt>
 
         <dd>
             @Html.DisplayFor(model => model.questionListDescription)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.participationCode)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.participationCode)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.isActive)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.isActive)
         </dd>
 
         <dt>
@@ -51,14 +34,34 @@
             @Html.DisplayFor(model => model.Lesson.lessonName)
         </dd>
 
+        <dt>
+            Active
+        </dt>
+
+        <dd>
+            @if (Model.isActive == 0 || Model.isActive == null)
+            {
+                <t>No</t>
+            }
+            else
+            {
+                <t>Yes</t>
+            }
+        </dd>
+
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
-        </div>
+    <div class="form-actions no-color">
+        <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+            <span class="glyphicon glyphicon-menu-left"></span> Back
+        </button>
+        <button type="submit" value="Delete" class="btn btn-default">
+            <span class="glyphicon glyphicon-trash"></span> Delete
+        </button>
+    </div>
     }
 </div>
