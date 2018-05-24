@@ -15,12 +15,17 @@ namespace La_Game.Controllers
         {
 
             string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + participationCode + "'";
-            List<QuestionList> data = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
+            List<QuestionList> questionListData = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
 
-
-            if (data.Count != 0)
+            
+            if (questionListData.Count != 0)
             {
-                ViewBag.data = data;
+                int questionListID = questionListData[0].idQuestionList;
+                String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
+                List<Question> questionData = db.Questions.SqlQuery(selectQuery).ToList<Question>();
+
+                ViewBag.questionListData = questionListData;
+                ViewBag.questionData = questionData;
                 return View("../StudentTest/MultipleChoice");
             }
             else if(participationCode != null)
