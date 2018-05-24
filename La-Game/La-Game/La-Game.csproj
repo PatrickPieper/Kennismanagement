@@ -209,7 +209,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
-    <Compile Include="Controllers\QuestionList_QuestionController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -356,11 +355,6 @@
     <Content Include="Views\QuestionLists\Details.cshtml" />
     <Content Include="Views\QuestionLists\Edit.cshtml" />
     <Content Include="Views\QuestionLists\Index.cshtml" />
-    <Content Include="Views\QuestionList_Question\Create.cshtml" />
-    <Content Include="Views\QuestionList_Question\Delete.cshtml" />
-    <Content Include="Views\QuestionList_Question\Details.cshtml" />
-    <Content Include="Views\QuestionList_Question\Edit.cshtml" />
-    <Content Include="Views\QuestionList_Question\Index.cshtml" />
     <Content Include="Views\QuestionLists\ModifyQuestionList.cshtml" />
     <Content Include="Views\Shared\_AddQuestionTable.cshtml" />
   </ItemGroup>
