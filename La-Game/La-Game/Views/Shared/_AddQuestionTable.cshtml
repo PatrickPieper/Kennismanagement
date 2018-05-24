@@ -12,7 +12,7 @@
         </th>
         <th></th>
     </tr>
-    
+
     @foreach (var item in Model)
     {
         var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
@@ -37,9 +37,15 @@
                 }
             </td>
             <td>
-                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddQuestionToList", "QuestionLists", new { id = item.idQuestion, listId = ViewBag.listId }) + "'");">
-                    <span class="glyphicon glyphicon-plus"></span> Add
-                </button>
+                @using (Html.BeginForm("AddQuestionToList", "QuestionLists", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-plus"></span> Add
+                    </button>
+                    <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
+                    <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
+                }
             </td>
         </tr>
     }

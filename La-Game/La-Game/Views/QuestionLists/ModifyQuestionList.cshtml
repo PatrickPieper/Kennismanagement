@@ -62,9 +62,15 @@
                                 }
                             </td>
                             <td>
-                                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("DeleteQuestionFromList", "QuestionLists", new { id = item.idQuestion, listId = ViewBag.listId }) + "'");">    
-                                    <span class="glyphicon glyphicon-remove"></span> Remove
-                                </button>
+                                @using (Html.BeginForm("DeleteQuestionFromList", "QuestionLists", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-remove"></span> Remove
+                                    </button>
+                                    <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
+                                    <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
+                                }
                             </td>
                         </tr>
                     }

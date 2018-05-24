@@ -154,17 +154,18 @@ namespace La_Game.Controllers
             ViewBag.listId = id;
             return View(questions);
         }
-
-        public ActionResult AddQuestionToList(int? id, int? listId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddQuestionToList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList")] FormCollection collection)
         {
             try
             {
-                if (id == null || listId == null)
+                if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
                 
-                var add = "INSERT INTO QuestionList_Question (Question_idQuestion, QuestionList_idQuestionList) VALUES (" + id + ", " + listId + ");"; 
+                var add = "INSERT INTO QuestionList_Question (Question_idQuestion, QuestionList_idQuestionList) VALUES (" + collection.Get("Question_idQuestion") + ", " + collection.Get("QuestionList_idQuestionList") + ");"; 
                 db.Database.ExecuteSqlCommand(add);
                 db.SaveChanges();
             }
@@ -173,20 +174,21 @@ namespace La_Game.Controllers
                 // Failed to add
             }
 
-            return RedirectToAction("ModifyQuestionList", new { id = listId });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
-        // GET: QuestionLists/DeleteQuestionFromList/5?listId=2
-        public ActionResult DeleteQuestionFromList(int? id, int? listId)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteQuestionFromList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList")] FormCollection collection)
         {
             try
             {
-                if (id == null || listId == null)
+                if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
 
-                var delete = "DELETE FROM QuestionList_Question WHERE Question_idQuestion = " + id + " AND QuestionList_idQuestionList = " + listId + ";";
+                var delete = "DELETE FROM QuestionList_Question WHERE Question_idQuestion = " + collection.Get("Question_idQuestion") + " AND QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + ";";
                 db.Database.ExecuteSqlCommand(delete);
                 db.SaveChanges();
             }
@@ -195,7 +197,7 @@ namespace La_Game.Controllers
                 // Failed to delete
             }
 
-            return RedirectToAction("ModifyQuestionList", new { id = listId });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
         public PartialViewResult GetQuestionTable(int? id)
