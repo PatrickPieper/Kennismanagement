@@ -2,8 +2,10 @@
     ViewBag.Title = "Home Page";
 }
 <div class="container-code">
-    <form method="get" action="@Url.Action("index", "StudentTest")">
+    <form method="get" >
         <input id="participationCode" name="participationCode" type="text" />
-        <input value="go" type="submit" />
+        <input value="go" type="submit"/>
     </form>
 </div>
+
+<p>@ViewBag.Message</p>

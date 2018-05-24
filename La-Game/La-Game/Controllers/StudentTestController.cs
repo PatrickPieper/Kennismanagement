@@ -10,32 +10,11 @@ namespace La_Game.Controllers
 {
     public class StudentTestController : Controller
     {
-        private readonly LaGameDBContext db = new LaGameDBContext();
 
         // GET: StudentTest
-        public ActionResult Index(string participationCode)
+        public ActionResult Index()
         {
-            if (participationCode == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + participationCode.ToString() + "'";
-
-            List<QuestionList> data = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
-            
-            if (data.Count != 0)
-            {
-                return View();
-            }
-            else {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-        
-        
-
-             
-                
+            return View();
         }
     }
 }
