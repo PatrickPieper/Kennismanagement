@@ -12,7 +12,12 @@
 </script>
 
 <div>
-    <h2>Add/Remove Question</h2>
+    <h2>
+        Add/Remove Question
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
+                <span class="glyphicon glyphicon-menu-left"></span> Back to list
+            </button>
+    </h2>
 
     @using (Html.BeginForm("ModifyQuestionList", "QuestionLists", FormMethod.Get))
     {
@@ -83,9 +88,3 @@
     </div>
 
 </div>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
-        <span class="glyphicon glyphicon-menu-left"></span> Back to list
-    </button>
-</p>
-

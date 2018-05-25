@@ -60,7 +60,7 @@ namespace La_Game.Controllers
             {
                 db.QuestionLists.Add(questionList);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("ModifyQuestionList", new { id = questionList.idQuestionList });
             }
 
             //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
