@@ -34,6 +34,46 @@
                 @Html.ValidationMessageFor(model => model.questionText, "", new { @class = "text-danger" })
             </div>
         </div>
+        
+    </div>
+    <div class="col-md-12">
+        <div class="form-horizontal">
+            <h4>Antwoorden</h4>
+            <hr />
+            <div class="form-check col-md-4">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="answerType" id="likert" value="likert">
+                    Likert schaal
+                </label>
+            </div>
+            <div class="form-check col-md-4">
+                <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="answerType" id="multiplechoice" value="meerkeuze">
+                    Meerkeuze
+                </label>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="createMcAnswer col-md-12">
+            <div class="form-horizontal">
+                <hr />
+                <div id="Option" style="display:none">
+                    <div class="form-group col-md-6">
+                        <label>
+                            Antwoord:
+                            <input type="text" name="answer" value="" class="form-control" />
+                        </label>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>
+                            <input type="checkbox" name="isCorrect" value="1" />
+                            Antwoord is correct
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
@@ -42,46 +82,9 @@
     </div>
 }
 
-<div class="col-md-12">
-    <div class="form-horizontal">
-        <h4>Antwoorden</h4>
-        <hr />
-        <div class="form-check col-md-4">
-            <label class="form-check-label">
-                <input type="radio" class="form-check-input" name="answerType" id="likert" value="likert">
-                Likert schaal
-            </label>
-        </div>
-        <div class="form-check col-md-4">
-            <label class="form-check-label">
-                <input type="radio" class="form-check-input" name="answerType" id="multiplechoice" value="meerkeuze">
-                Meerkeuze
-            </label>
-        </div>
-    </div>
-</div>
 
-<div>
-    <div class="createMcAnswer col-md-12">
-        <div class="form-horizontal">            
-            <hr />
-            <div id="Option" style="display:none">
-                <div class="form-group col-md-6">
-                    <label>
-                        Antwoord:
-                        <input type="text" name="answer" value="" class="form-control" />
-                    </label>
-                </div>
-                <div class="form-group col-md-6">
-                    <label>
-                        <input type="checkbox" name="isCorrect" value="1" />
-                        Antwoord is correct
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+
 
 <div>
     @Html.ActionLink("Back to List", "Index")
