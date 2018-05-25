@@ -22,7 +22,6 @@ namespace La_Game.Controllers
         private Stream imageStream;
         private string containerName;
 
-
         // GET: Questions
         public ActionResult Index()
         {
@@ -59,32 +58,43 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
-
-                AnswerOptionsController answerOptionsController = new AnswerOptionsController();
-                AnswerOption answerOption = new AnswerOption();
-                string text = Request.Form["answerText"];
-                answerOption.answerText = text;
-                answerOptionsController.Create(answerOption);
-
-
-
-                //string m = String.Format("{0}", Request.Form["multiplechoice"]);
-                string n = String.Format("{0}", Request.Form["answer"]);
+                db.Questions.Add(question);
+                db.SaveChanges();
                 var max = db.Questions.Max(q => q.idQuestion);
+                String answerType = Request.Form["answerType"];
                 FileImage = Request.Files[0];
                 BlobsController blobsController = new BlobsController();
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
                 containerName = container.Name;
+                AnswerOptionsController answerOptionsController = new AnswerOptionsController();
+                
+                if (answerType == "likert")
+                {
+                    int count = -2;
 
-                answerOption.answerText = n;
+                    while (count <= 2)
+                    {
+                        AnswerOption option = new AnswerOption();
+                        String text = count.ToString();
+                        option.answerText = text;
+                        option.correctAnswer = 0;
+                        option.Question_idQuestion = max;
+                        answerOptionsController.Create(option);
+                        count++;
+                    }
+                    
+                }
+                else if (answerType == "meerkeuze")
+                {
 
+                }
 
                 if (FileImage.ContentLength > 0)
                 {
                     fileName = Path.GetFileName(FileImage.FileName);
                     imageStream = FileImage.InputStream;
-                
-                    blobsController.UploadBlob(fileName, imageStream,containerName);
+
+                    blobsController.UploadBlob(fileName, imageStream, containerName);
                     question.picture = fileName;
                 }
 
@@ -93,14 +103,11 @@ namespace La_Game.Controllers
                 {
                     audioName = Path.GetFileName(FileAudio.FileName);
                     audioStream = FileAudio.InputStream;
-                    
-                    //Use questionnumber as last parameter to search right container
-                    blobsController.UploadBlob(audioName, audioStream,containerName);
-                    question.audio = audioName;
-                }             
 
-                db.Questions.Add(question);
-                db.SaveChanges();
+                    //Use questionnumber as last parameter to search right container
+                    blobsController.UploadBlob(audioName, audioStream, containerName);
+                    question.audio = audioName;
+                }
                 return RedirectToAction("Index");
             }
 
@@ -121,15 +128,20 @@ namespace La_Game.Controllers
                 return HttpNotFound();
             }
             BlobsController blobsController = new BlobsController();
-            
+
             CloudBlobContainer container = blobsController.GetCloudBlobContainer(idString);
 
-            CloudBlockBlob blob = container.GetBlockBlobReference(question.picture);
-            blob.Properties.ContentType = "image/png";
+            if(question.picture != "" && question.picture != null)
+            {
+                CloudBlockBlob blob = container.GetBlockBlobReference(question.picture);
+                ViewData["Blob"] = blob;
+            }
+            
             
 
 
-            ViewData["Blob"] = blob;
+
+            
             return View(question);
         }
 

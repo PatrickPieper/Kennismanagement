@@ -19,19 +19,24 @@ namespace La_Game.Models
         {
             this.QuestionResults = new HashSet<QuestionResult>();
             this.QuestionList_Question = new HashSet<QuestionList_Question>();
+            this.Lesson_QuestionList = new HashSet<Lesson_QuestionList>();
+            this.QuestionOrders = new HashSet<QuestionOrder>();
         }
     
         public int idQuestionList { get; set; }
-        public int Lesson_idLesson { get; set; }
         public string questionListName { get; set; }
         public string questionListDescription { get; set; }
         public string participationCode { get; set; }
         public Nullable<short> isActive { get; set; }
+        public Nullable<short> isHidden { get; set; }
     
-        public virtual Lesson Lesson { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuestionResult> QuestionResults { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuestionList_Question> QuestionList_Question { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Lesson_QuestionList> Lesson_QuestionList { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<QuestionOrder> QuestionOrders { get; set; }
     }
 }
