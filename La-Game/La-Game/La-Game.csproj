@@ -370,6 +370,8 @@
     <Content Include="Views\AnswerOptions\Index.cshtml" />
     <Content Include="Views\Blobs\CreateBlobContainer.cshtml" />
     <Content Include="Views\Blobs\ListBlobs.cshtml" />
+    <Content Include="Views\Shared\CreatePartielView.cshtml" />
+    <Content Include="Views\Shared\_PartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

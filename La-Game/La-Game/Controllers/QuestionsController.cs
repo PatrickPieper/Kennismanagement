@@ -22,6 +22,7 @@ namespace La_Game.Controllers
         private Stream imageStream;
         private string containerName;
 
+
         // GET: Questions
         public ActionResult Index()
         {
@@ -58,17 +59,25 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                AnswerOptionsController answerOptionsController = new AnswerOptionsController();
+                AnswerOption answerOption = new AnswerOption();
+                string text = Request.Form["answerText"];
+                answerOption.answerText = text;
+                answerOptionsController.Create(answerOption);
+
+
+
+                //string m = String.Format("{0}", Request.Form["multiplechoice"]);
+                string n = String.Format("{0}", Request.Form["answer"]);
                 var max = db.Questions.Max(q => q.idQuestion);
                 FileImage = Request.Files[0];
                 BlobsController blobsController = new BlobsController();
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
-                bool created  = container.CreateIfNotExists();
                 containerName = container.Name;
 
-                if (created)
-                {
-                    
-                }
+                answerOption.answerText = n;
+
 
                 if (FileImage.ContentLength > 0)
                 {

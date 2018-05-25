@@ -37,7 +37,7 @@ namespace La_Game.Controllers
 
         public string UploadBlob(String fileName, Stream inputStream, String questionNumber)
         {
-            CloudBlobContainer container = GetCloudBlobContainer(questionNumber);
+            CloudBlobContainer container = GetCloudBlobContainer("questions");
             CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
             string[] strings = fileName.Split('.');
             
