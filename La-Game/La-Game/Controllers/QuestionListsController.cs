@@ -16,9 +16,7 @@ namespace La_Game.Controllers
         // GET: QuestionLists
         public ActionResult Index()
         {
-            //String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + 0 + "); ";
-            //IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
-            return View(db.QuestionLists.ToList());
+            return View(db.QuestionLists.ToList().Where(s => s.isHidden != 1));
         }
 
         // GET: QuestionLists/Details/5
@@ -33,7 +31,7 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
-            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ");";
             IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
 
             ViewBag.questions = data.ToList();
@@ -45,7 +43,7 @@ namespace La_Game.Controllers
         // GET: QuestionLists/Create
         public ActionResult Create()
         {
-            ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName");
+            //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName");
             return View();
         }
 
@@ -127,9 +125,20 @@ namespace La_Game.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            QuestionList questionList = db.QuestionLists.Find(id);
-            db.QuestionLists.Remove(questionList);
-            db.SaveChanges();
+            try
+            {
+                QuestionList questionList = db.QuestionLists.Find(id);
+                questionList.isHidden = 1;
+
+                db.Entry(questionList).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Delete failed
+            }
+
+            // Redirect to index
             return RedirectToAction("Index");
         }
         #endregion
