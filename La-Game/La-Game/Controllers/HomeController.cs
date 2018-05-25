@@ -26,7 +26,10 @@ namespace La_Game.Controllers
 
                 ViewBag.questionListData = questionListData;
                 ViewBag.questionData = questionData;
-                return View("../StudentTest/MultipleChoice");
+                TempData["questionListData"] = questionListData;
+                TempData["questionData"] = questionData;
+                return RedirectToAction("MultipleChoice", "StudentTest");
+                    //View("~/Views/StudentTest/MultipleChoice.cshtml");
             }
             else if(participationCode != null)
             {

@@ -12,8 +12,10 @@ namespace La_Game.Controllers
     {
 
         // GET: StudentTest
-        public ActionResult Index()
+        [HttpPost]
+        public ActionResult Index(int? index)
         {
+            ViewBag.index = index;
             return View();
         }
     }

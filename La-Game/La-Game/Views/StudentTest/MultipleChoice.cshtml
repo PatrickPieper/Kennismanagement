@@ -6,12 +6,27 @@
 <h2>MultipleChoice</h2>
 
 @{
+    int index;
+    if(ViewBag.index == null)
+    {
+        index = 0;
+    }
+    else
+    {
+        index = ViewBag.index;
+    }
+
     foreach (var data in ViewBag.questionListData) {
         <li>@data.idQuestionList</li>
     }
 
-    for (int i = 0; i < ViewBag.questionData.Count-1 ; i++) {
-        <li>@ViewBag.questionData[i].questionText</li>
-    }
+
+    <p>@ViewBag.questionData[index].questionText</p>
+    
+    <form method="post" action="">
+        <input type="hidden" name="index" value="@index"/>;
+        <input type="submit" value="next" />
+    </form>
+
 
 }
