@@ -19,6 +19,7 @@ namespace La_Game.Models
         {
             this.AnswerOptions = new HashSet<AnswerOption>();
             this.QuestionList_Question = new HashSet<QuestionList_Question>();
+            this.QuestionOrders = new HashSet<QuestionOrder>();
         }
     
         public int idQuestion { get; set; }
@@ -31,5 +32,7 @@ namespace La_Game.Models
         public virtual ICollection<AnswerOption> AnswerOptions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<QuestionList_Question> QuestionList_Question { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<QuestionOrder> QuestionOrders { get; set; }
     }
 }

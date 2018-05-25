@@ -50,7 +50,7 @@
           <Key>
             <PropertyRef Name="idLesson_QuestionList" />
           </Key>
-          <Property Name="idLesson_QuestionList" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="idLesson_QuestionList" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Lesson_idLesson" Type="int" Nullable="false" />
           <Property Name="QuestionList_idQuestionList" Type="int" Nullable="false" />
         </EntityType>
@@ -107,6 +107,7 @@
           <Property Name="idQuestionOrder" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="order" Type="float" />
           <Property Name="QuestionList_idQuestionList" Type="int" Nullable="false" />
+          <Property Name="Question_idQuestion" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="QuestionResult">
           <Key>
@@ -239,6 +240,18 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_QuestionOrder_Question1">
+          <End Role="Question" Type="Self.Question" Multiplicity="1" />
+          <End Role="QuestionOrder" Type="Self.QuestionOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="idQuestion" />
+            </Principal>
+            <Dependent Role="QuestionOrder">
+              <PropertyRef Name="Question_idQuestion" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_QuestionOrder_QuestionList1">
           <End Role="QuestionList" Type="Self.QuestionList" Multiplicity="1" />
           <End Role="QuestionOrder" Type="Self.QuestionOrder" Multiplicity="*" />
@@ -340,6 +353,10 @@
           <AssociationSet Name="fk_QuestionList_Question_QuestionList1" Association="Self.fk_QuestionList_Question_QuestionList1">
             <End Role="QuestionList" EntitySet="QuestionList" />
             <End Role="QuestionList_Question" EntitySet="QuestionList_Question" />
+          </AssociationSet>
+          <AssociationSet Name="fk_QuestionOrder_Question1" Association="Self.fk_QuestionOrder_Question1">
+            <End Role="Question" EntitySet="Question" />
+            <End Role="QuestionOrder" EntitySet="QuestionOrder" />
           </AssociationSet>
           <AssociationSet Name="fk_QuestionOrder_QuestionList1" Association="Self.fk_QuestionOrder_QuestionList1">
             <End Role="QuestionList" EntitySet="QuestionList" />
@@ -445,6 +462,7 @@
           <NavigationProperty Name="AnswerOptions" Relationship="Self.fk_Answer_Question1" FromRole="Question" ToRole="AnswerOption" />
           <NavigationProperty Name="QuestionList_Question" Relationship="Model.fk_QuestionList_Question_Question1" FromRole="Question" ToRole="QuestionList_Question" />
           <Property Name="isHidden" Type="Int16" />
+          <NavigationProperty Name="QuestionOrders" Relationship="Model.fk_QuestionOrder_Question1" FromRole="Question" ToRole="QuestionOrder" />
         </EntityType>
         <EntityType Name="QuestionList">
           <Key>
@@ -653,6 +671,10 @@
             <End Role="QuestionList" EntitySet="QuestionLists" />
             <End Role="QuestionOrder" EntitySet="QuestionOrders" />
           </AssociationSet>
+          <AssociationSet Name="fk_QuestionOrder_Question1" Association="Model.fk_QuestionOrder_Question1">
+            <End Role="Question" EntitySet="Questions" />
+            <End Role="QuestionOrder" EntitySet="QuestionOrders" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="QuestionList_Question">
           <Key>
@@ -706,6 +728,8 @@
           <Property Name="order" Type="Double" />
           <Property Name="QuestionList_idQuestionList" Type="Int32" Nullable="false" />
           <NavigationProperty Name="QuestionList" Relationship="Model.fk_QuestionOrder_QuestionList1" FromRole="QuestionOrder" ToRole="QuestionList" />
+          <Property Name="Question_idQuestion" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Question" Relationship="Model.fk_QuestionOrder_Question1" FromRole="QuestionOrder" ToRole="Question" />
         </EntityType>
         <Association Name="fk_Lesson_QuestionList_Lesson1">
           <End Type="Model.Lesson" Role="Lesson" Multiplicity="1" />
@@ -740,6 +764,18 @@
             </Principal>
             <Dependent Role="QuestionOrder">
               <PropertyRef Name="QuestionList_idQuestionList" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_QuestionOrder_Question1">
+          <End Type="Model.Question" Role="Question" Multiplicity="1" />
+          <End Type="Model.QuestionOrder" Role="QuestionOrder" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Question">
+              <PropertyRef Name="idQuestion" />
+            </Principal>
+            <Dependent Role="QuestionOrder">
+              <PropertyRef Name="Question_idQuestion" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -870,6 +906,7 @@
           <EntitySetMapping Name="QuestionOrders">
             <EntityTypeMapping TypeName="Model.QuestionOrder">
               <MappingFragment StoreEntitySet="QuestionOrder">
+                <ScalarProperty Name="Question_idQuestion" ColumnName="Question_idQuestion" />
                 <ScalarProperty Name="QuestionList_idQuestionList" ColumnName="QuestionList_idQuestionList" />
                 <ScalarProperty Name="order" ColumnName="order" />
                 <ScalarProperty Name="idQuestionOrder" ColumnName="idQuestionOrder" />

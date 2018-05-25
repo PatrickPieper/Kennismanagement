@@ -174,9 +174,19 @@ namespace La_Game.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                
+                //Add question to questionlink query                                                
                 var add = "INSERT INTO QuestionList_Question (Question_idQuestion, QuestionList_idQuestionList) VALUES (" + collection.Get("Question_idQuestion") + ", " + collection.Get("QuestionList_idQuestionList") + ");"; 
                 db.Database.ExecuteSqlCommand(add);
+
+                //Get all questions linked to questionlist
+                String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + "); ";
+                IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
+                List<Question> allPresentQuestions = data.ToList();
+                //Get QuestionOrders for the current questionlist, ordered by "order" weight
+                List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == int.Parse(collection.Get("QuestionList_idQuestionList"))).OrderBy(o => o.order).ToList();
+
+
+
                 db.SaveChanges();
             }
             catch
