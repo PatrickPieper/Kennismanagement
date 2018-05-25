@@ -18,7 +18,7 @@ namespace La_Game.Models
         public Lesson()
         {
             this.Lesson_Participant = new HashSet<Lesson_Participant>();
-            this.QuestionLists = new HashSet<QuestionList>();
+            this.Lesson_QuestionList = new HashSet<Lesson_QuestionList>();
         }
     
         public int idLesson { get; set; }
@@ -30,6 +30,6 @@ namespace La_Game.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Lesson_Participant> Lesson_Participant { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<QuestionList> QuestionLists { get; set; }
+        public virtual ICollection<Lesson_QuestionList> Lesson_QuestionList { get; set; }
     }
 }
