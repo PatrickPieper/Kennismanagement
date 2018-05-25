@@ -17,8 +17,9 @@ namespace La_Game.Controllers
         // GET: QuestionLists
         public ActionResult Index()
         {
-            var questionLists = db.QuestionLists.Include(q => q.Lesson);
-            return View(questionLists.ToList());
+            //String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + 0 + "); ";
+            //IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
+            return View(db.QuestionLists.ToList());
         }
 
         // GET: QuestionLists/Details/5
@@ -62,7 +63,7 @@ namespace La_Game.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
+            //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
 
@@ -78,7 +79,7 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
+           // ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
 
@@ -95,7 +96,7 @@ namespace La_Game.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
+            //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
 
