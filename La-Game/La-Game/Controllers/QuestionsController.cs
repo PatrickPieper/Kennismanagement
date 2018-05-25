@@ -87,6 +87,15 @@ namespace La_Game.Controllers
                 else if (answerType == "meerkeuze")
                 {
 
+                    var data = Request;
+                    
+                    AnswerOption answerOption = new AnswerOption();
+                    string text = Request.Form["answerText"];
+                    string text2 = Request.Form["correctAnswer"];
+                    answerOption.answerText = text;
+                    answerOption.Question_idQuestion = max;
+                    answerOption.correctAnswer = 0;
+                    answerOptionsController.Create(answerOption);
                 }
 
                 if (FileImage.ContentLength > 0)

@@ -59,19 +59,10 @@
             <div class="form-horizontal">
                 <hr />
                 <div id="Option" style="display:none">
-                    <div class="form-group col-md-6">
-                        <label>
-                            Antwoord:
-                            <input type="text" name="answer" value="" class="form-control" />
-                        </label>
-                    </div>
-                    <div class="form-group col-md-6">
-                        <label>
-                            <input type="checkbox" name="isCorrect" value="1" />
-                            Antwoord is correct
-                        </label>
-                    </div>
+                    @Html.Partial("_PartialView")
                 </div>
+                <input type="button" style="display:none" id="AddAnswer" value="Add another question" data-url='@Url.Action("AddAnswerOption", "AnswerOptions")'/>
+
             </div>
         </div>
         <div class="form-group">
