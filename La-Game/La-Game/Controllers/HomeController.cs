@@ -24,11 +24,9 @@ namespace La_Game.Controllers
                 String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
                 List<Question> questionData = db.Questions.SqlQuery(selectQuery).ToList<Question>();
 
-                ViewBag.questionListData = questionListData;
-                ViewBag.questionData = questionData;
                 TempData["questionListData"] = questionListData;
                 TempData["questionData"] = questionData;
-                return RedirectToAction("MultipleChoice", "StudentTest");
+                return RedirectToAction("Index", "StudentTest");
                     //View("~/Views/StudentTest/MultipleChoice.cshtml");
             }
             else if(participationCode != null)

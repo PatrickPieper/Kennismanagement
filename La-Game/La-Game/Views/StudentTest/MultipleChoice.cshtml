@@ -1,32 +1,36 @@
 ﻿
 @{
+    
     ViewBag.Title = "MultipleChoice";
+  
 }
 
 <h2>MultipleChoice</h2>
 
 @{
-    int index;
-    if(ViewBag.index == null)
-    {
-        index = 0;
-    }
-    else
-    {
-        index = ViewBag.index;
-    }
 
-    foreach (var data in ViewBag.questionListData) {
-        <li>@data.idQuestionList</li>
-    }
+        // foreach (var data in TempData[]) {
+        //   <li>@data.idQuestionList</li>
+        // }
 
-
-    <p>@ViewBag.questionData[index].questionText</p>
     
-    <form method="post" action="">
-        <input type="hidden" name="index" value="@index"/>;
-        <input type="submit" value="next" />
-    </form>
+    
 
+    <p>@ViewBag.index</p>
+
+
+    if (ViewBag.questionData.Count > ViewBag.index)
+    {
+        <p>@ViewBag.questionData[ViewBag.index].questionText</p>
+    }
+
+
+    using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
+    {
+        <input type="hidden" value="@ViewBag.index" name="index" />
+        <input value="next" type="submit" />
+    }
+    TempData["questionData"] = ViewBag.questionData;
+    TempData["questionListData"] = ViewBag.questionListData;
 
 }
