@@ -25,17 +25,16 @@ namespace La_Game.Controllers
             }
 
             if (TempData["questionListData"] != null && TempData["questionData"] != null)
+            { 
                 ViewBag.questionListData = TempData["questionListData"];
                 ViewBag.questionData = TempData["questionData"];
             }
 
             if(TempData["answerOptions"] == null)
             {
-            TempData["participationCode"]
-            
-                //String selectQuery = "SELECT * FROM AnswerOption WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
-                //List<AnswerOption> answerOptions = db.AnswerOptions.SqlQuery(selectQuery).ToList<AnswerOption>();
-           //     TempData["answerOptions"] = answerOptions;
+                string selectQuery = "SELECT * FROM AnswerOption INNER JOIN Question on AnswerOption.Question_idQuestion=Question.idQuestion;";
+                List<AnswerOption> answerOptions = db.AnswerOptions.SqlQuery(selectQuery).ToList<AnswerOption>();
+                TempData["answerOptions"] = answerOptions;
             }
             //to do: when we have a boolean for LikertScale or MultipleChoice return the right view
             return View("MultipleChoice");
