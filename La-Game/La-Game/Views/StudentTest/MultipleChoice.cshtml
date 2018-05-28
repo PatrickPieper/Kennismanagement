@@ -24,7 +24,7 @@
         <p>@ViewBag.questionData[ViewBag.index].questionText</p>
     }
 
-
+    
     using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
     {
         <input type="hidden" value="@ViewBag.index" name="index" />
