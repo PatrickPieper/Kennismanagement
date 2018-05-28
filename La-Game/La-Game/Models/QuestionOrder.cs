@@ -17,7 +17,9 @@ namespace La_Game.Models
         public int idQuestionOrder { get; set; }
         public Nullable<double> order { get; set; }
         public int QuestionList_idQuestionList { get; set; }
+        public int Question_idQuestion { get; set; }
     
         public virtual QuestionList QuestionList { get; set; }
+        public virtual Question Question { get; set; }
     }
 }

@@ -77,7 +77,7 @@ namespace La_Game.Controllers
                         AnswerOption option = new AnswerOption();
                         String text = count.ToString();
                         option.answerText = text;
-                        option.correctAnswer = 0;
+                        option.correctAnswer = false;
                         option.Question_idQuestion = max;
                         answerOptionsController.Create(option);
                         count++;
@@ -94,7 +94,7 @@ namespace La_Game.Controllers
                     string text2 = Request.Form["correctAnswer"];
                     answerOption.answerText = text;
                     answerOption.Question_idQuestion = max;
-                    answerOption.correctAnswer = 0;
+                    answerOption.correctAnswer = false;
                     answerOptionsController.Create(answerOption);
                 }
 

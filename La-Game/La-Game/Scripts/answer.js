@@ -1,4 +1,6 @@
-﻿var answerType = $('input[name=answerType]');
+﻿var count = 1;
+console.log(count);
+var answerType = $('input[name=answerType]');
 
 answerType.change(function () {
     var selected = $('input[name=answerType]:checked');
@@ -10,11 +12,12 @@ answerType.change(function () {
         document.getElementById("AddAnswer").style.display = 'none';
     }
 }
-)
+);
 
 $('#AddAnswer').click(function (e) {
     e.preventDefault();
-
+    count++;
+    console.log(count);
 
     url = $(this).data('url');
 
@@ -22,11 +25,23 @@ $('#AddAnswer').click(function (e) {
     console.log(url);
 
     $.get(url, function (data) {
-        console.log("click");
-
         target.append(data);
     });
 }
-
 );
+
+$(document).on('click', '.deleteAnswer', function (e) {
+    e.preventDefault();
+    count--;
+    console.log(count);
+    deleteAnswer($(this));
+}
+);
+
+function deleteAnswer(button) {
+    wrapper = button.closest('.answerWrapper');
+    wrapper.remove();
+    optionDiv = $("#Option");
+    optionDiv.load(optionDiv);
+}
 
