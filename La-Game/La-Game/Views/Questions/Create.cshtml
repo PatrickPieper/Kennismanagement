@@ -58,11 +58,10 @@
         <div class="createMcAnswer col-md-12">
             <div class="form-horizontal">
                 <hr />
-                <div id="Option" style="display:none">
+                <div id="Option" style="display:none" class="col-sm-12">
                     @Html.Partial("_PartialView")
                 </div>
-                <input type="button" style="display:none" id="AddAnswer" value="Add another question" data-url='@Url.Action("AddAnswerOption", "AnswerOptions")'/>
-
+                <a  class="btn btn-success" id="AddAnswer" style="display:none" data-url='@Url.Action("AddAnswerOption", "AnswerOptions")'><i class="fas fa-plus"> Add answer</i></a>
             </div>
         </div>
         <div class="form-group">

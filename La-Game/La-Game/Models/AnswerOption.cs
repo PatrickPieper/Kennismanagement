@@ -22,7 +22,7 @@ namespace La_Game.Models
     
         public int idAnswer { get; set; }
         public int Question_idQuestion { get; set; }
-        public Nullable<short> correctAnswer { get; set; }
+        public bool correctAnswer { get; set; }
         public string answerText { get; set; }
     
         public virtual Question Question { get; set; }
