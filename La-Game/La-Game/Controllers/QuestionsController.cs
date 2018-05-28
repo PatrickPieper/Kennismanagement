@@ -86,16 +86,21 @@ namespace La_Game.Controllers
                 }
                 else if (answerType == "meerkeuze")
                 {
-
-                    var data = Request;
-                    
-                    AnswerOption answerOption = new AnswerOption();
                     string text = Request.Form["answerText"];
-                    string text2 = Request.Form["correctAnswer"];
-                    answerOption.answerText = text;
-                    answerOption.Question_idQuestion = max;
-                    answerOption.correctAnswer = 0;
-                    answerOptionsController.Create(answerOption);
+                    string[] answers = text.Split(',');
+
+                    int count = 0;
+
+                    while (count <= answers.Length - 1)
+                    {
+                        AnswerOption answerOption = new AnswerOption();
+                        string text2 = Request.Form["correctAnswer"];
+                        answerOption.answerText = answers[count];
+                        answerOption.Question_idQuestion = max;
+                        answerOption.correctAnswer = 0;
+                        answerOptionsController.Create(answerOption);
+                        count++;
+                    }
                 }
 
                 if (FileImage.ContentLength > 0)
