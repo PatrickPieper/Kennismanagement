@@ -26,7 +26,6 @@ namespace La_Game.Controllers
 
                 TempData["questionListData"] = questionListData;
                 TempData["questionData"] = questionData;
-                TempData["participationCode"] = participationCode;
                 return RedirectToAction("Index", "StudentTest");
                     //View("~/Views/StudentTest/MultipleChoice.cshtml");
             }

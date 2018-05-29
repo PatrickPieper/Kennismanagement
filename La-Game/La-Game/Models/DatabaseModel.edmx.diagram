@@ -32,6 +32,7 @@
         <AssociationConnector Association="Model.fk_Lesson_QuestionList_Lesson1" />
         <AssociationConnector Association="Model.fk_Lesson_QuestionList_QuestionList1" />
         <AssociationConnector Association="Model.fk_QuestionOrder_QuestionList1" />
+        <AssociationConnector Association="Model.fk_QuestionOrder_Question1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

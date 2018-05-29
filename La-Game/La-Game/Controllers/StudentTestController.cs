@@ -12,7 +12,7 @@ namespace La_Game.Controllers
     {
         private LaGameDBContext db = new LaGameDBContext();
         // GET: StudentTest
-        public ActionResult Index(int? index, string participatieCode)
+        public ActionResult Index(int? index, string studentAnswer)
         {
             if (index == null)
             {
@@ -30,11 +30,29 @@ namespace La_Game.Controllers
                 ViewBag.questionData = TempData["questionData"];
             }
 
-            if(TempData["answerOptions"] == null)
+            if (TempData["answerOptions"] == null)
             {
                 string selectQuery = "SELECT * FROM AnswerOption INNER JOIN Question on AnswerOption.Question_idQuestion=Question.idQuestion;";
                 List<AnswerOption> answerOptions = db.AnswerOptions.SqlQuery(selectQuery).ToList<AnswerOption>();
-                TempData["answerOptions"] = answerOptions;
+                ViewBag.answerOptions = answerOptions;
+            }
+            else
+            {
+                ViewBag.answerOptions = TempData["answerOptions"];
+            }
+
+            if(studentAnswer != null)
+            {
+                string[,] studentAnswers = new string[ViewBag.questionData.Count, 2];
+                studentAnswers[(int)index,0] = studentAnswer;
+                studentAnswers[(int)index, 1] = "time";
+                ViewBag.studentAnswers = studentAnswers;
+            }
+
+            if(index != null)
+            {
+                index++;
+                ViewBag.index = index;
             }
             //to do: when we have a boolean for LikertScale or MultipleChoice return the right view
             return View("MultipleChoice");
