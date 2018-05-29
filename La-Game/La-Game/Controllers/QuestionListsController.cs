@@ -215,7 +215,7 @@ namespace La_Game.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult MoveQuestionInList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList,movedTo")] FormCollection collection)
+        public ActionResult MoveQuestionInList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList,movedTo,upDown")] FormCollection collection)
         {
 
             if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
@@ -226,13 +226,34 @@ namespace La_Game.Controllers
             int idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"));
             int idQuestion = int.Parse(collection.Get("Question_idQuestion"));
             int indexMovedTo = int.Parse(collection.Get("movedTo"));
+            int upDown = int.Parse(collection.Get("upDown"));
             List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList).OrderBy(o => o.order).ToList();
 
-            double questionAbove = (double)allQuestionListOrder[indexMovedTo + 1].order;
+            double questionToWeigh = 0;
+            //upDown 0 is up, 1 is down
+            if (upDown == 0)
+            {
+                if (indexMovedTo != 0)
+                {
+                    questionToWeigh = (double)allQuestionListOrder[indexMovedTo - 1].order;
+                }
+            }
+            else
+            {
+                if (indexMovedTo != allQuestionListOrder.Count-1)
+                {
+                    questionToWeigh = (double)allQuestionListOrder[indexMovedTo + 1].order;
+                }
+                else
+                {
+                    questionToWeigh = (double)allQuestionListOrder.Last().order + 100;
+                }
+            }
+
             double questionReplace = (double)allQuestionListOrder[indexMovedTo].order;
 
             QuestionOrder question = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList && s.Question_idQuestion == idQuestion).OrderBy(o => o.order).First();
-            question.order = (questionAbove + questionReplace) / 2;
+            question.order = (questionToWeigh + questionReplace) / 2;
 
             db.Entry(question).State = EntityState.Modified;
 

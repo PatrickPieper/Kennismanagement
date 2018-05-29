@@ -69,7 +69,8 @@
 
                                                 <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
                                                 <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
-                                                <input type="hidden" name="moveTo" value=@(number - 1) />
+                                                <input type="hidden" name="movedTo" value=@(number - 1) />
+                                                <input type="hidden" name="upDown" value=0 />
                                             }
                                         }
                                     </div>
@@ -86,7 +87,8 @@
 
                                                 <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
                                                 <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
-                                                <input type="hidden" name="moveTo" value=@(number + 1) />
+                                                <input type="hidden" name="movedTo" value=@(number + 1) />
+                                                <input type="hidden" name="upDown" value=1 />
                                             }
                                         }
                                     </div>
