@@ -1,0 +1,40 @@
+﻿
+@{
+
+    ViewBag.Title = "MultipleChoice";
+
+}
+
+<h2>MultipleChoice</h2>
+
+@{
+    <p>@ViewBag.index</p>
+
+    if (ViewBag.questionData.Count > ViewBag.index)
+    {
+        <p>@ViewBag.questionData[ViewBag.index].questionText</p>
+    }
+
+
+
+
+    using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
+    {
+        for (int i = 0; i < ViewBag.answerOptions.Count; i++)
+        {
+
+            if (ViewBag.answerOptions[i].Question_idQuestion == ViewBag.questionData[ViewBag.index].idQuestion)
+            {
+                <input type="submit" value="@ViewBag.answerOptions[i].answerText" name="studentAnswer" />
+        
+            }
+
+        }
+        <input type="hidden" value="@ViewBag.index" name="index" />
+        <input type="submit" value="go next" name="studentAnswer" />
+    }
+    TempData["questionData"] = ViewBag.questionData;
+    TempData["questionListData"] = ViewBag.questionListData;
+    TempData["answerOptions"] = ViewBag.answerOptions;
+
+}

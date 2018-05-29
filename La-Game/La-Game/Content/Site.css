@@ -25,3 +25,7 @@ textarea {
 .table tr:hover td {
     background-color: #f2e8da;
 }
+
+.container-code{
+    padding-top:200px;
+}

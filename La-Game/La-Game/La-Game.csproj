@@ -211,6 +211,7 @@
     <Compile Include="Controllers\QuestionListsController.cs" />
     <Compile Include="Controllers\QuestionList_QuestionController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -294,7 +295,6 @@
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
       <LastGenOutput>DatabaseModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\answer.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -369,15 +369,15 @@
     <Content Include="Views\QuestionList_Question\Edit.cshtml" />
     <Content Include="Views\QuestionList_Question\Index.cshtml" />
     <Content Include="Views\QuestionLists\AddQuestionToList.cshtml" />
+    <Content Include="Views\Index.cshtml" />
+    <Content Include="Views\StudentTest\Index.cshtml" />
+    <Content Include="Views\StudentTest\LikertScale.cshtml" />
+    <Content Include="Views\StudentTest\MultipleChoice.cshtml" />
     <Content Include="Views\AnswerOptions\Create.cshtml" />
     <Content Include="Views\AnswerOptions\Delete.cshtml" />
     <Content Include="Views\AnswerOptions\Details.cshtml" />
     <Content Include="Views\AnswerOptions\Edit.cshtml" />
     <Content Include="Views\AnswerOptions\Index.cshtml" />
-    <Content Include="Views\Blobs\CreateBlobContainer.cshtml" />
-    <Content Include="Views\Blobs\ListBlobs.cshtml" />
-    <Content Include="Views\Shared\CreatePartielView.cshtml" />
-    <Content Include="Views\Shared\_PartialView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
