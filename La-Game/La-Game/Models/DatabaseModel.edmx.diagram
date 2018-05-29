@@ -14,7 +14,7 @@
         <EntityTypeShape EntityType="Model.Participant" Width="1.5" PointX="3" PointY="11" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Question" Width="1.5" PointX="7.5" PointY="9.625" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.QuestionList" Width="1.5" PointX="5.5" PointY="9.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.QuestionResult" Width="1.5" PointX="12" PointY="9.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.QuestionResult" Width="2.875" PointX="12" PointY="9.375" IsExpanded="true" />
         <AssociationConnector Association="Model.fk_Answer_Question1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.fk_QuestionResult_Answer1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.fk_Language_User_Language1" ManuallyRouted="false" />
