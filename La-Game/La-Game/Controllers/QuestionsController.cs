@@ -58,25 +58,67 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+                db.Questions.Add(question);
+                db.SaveChanges();
                 var max = db.Questions.Max(q => q.idQuestion);
+                String answerType = Request.Form["answerType"];
                 FileImage = Request.Files[0];
                 BlobsController blobsController = new BlobsController();
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
-                bool created  = container.CreateIfNotExists();
                 containerName = container.Name;
+                AnswerOptionsController answerOptionsController = new AnswerOptionsController();
 
-                if (created)
+                if (answerType == "likert")
                 {
-                    
+                    int count = -2;
+
+                    while (count <= 2)
+                    {
+                        AnswerOption option = new AnswerOption();
+                        String text = count.ToString();
+                        option.answerText = text;
+                        option.correctAnswer = 0;
+                        option.Question_idQuestion = max;
+                        answerOptionsController.Create(option);
+                        count++;
+                    }
+
+                }
+                else if (answerType == "meerkeuze")
+                {
+                    string text = Request.Form["answerText"];
+                    string[] answers = text.Split(',');
+                    string correct = Request.Form["correctAnswer"];
+                    string[] bools = correct.Split(',');
+
+                    int count = 0;
+
+                    while (count <= answers.Length - 1)
+                    {
+                        AnswerOption answerOption = new AnswerOption();
+                        string text2 = Request.Form["correctAnswer"];
+                        answerOption.answerText = answers[count];
+                        answerOption.Question_idQuestion = max;
+                        if (bools[count] == "1")
+                        {
+                            answerOption.correctAnswer = 1;
+                        }
+                        else if (bools[count] == "0")
+                        {
+                            answerOption.correctAnswer = 0;
+                        }
+
+                        answerOptionsController.Create(answerOption);
+                        count++;
+                    }
                 }
 
                 if (FileImage.ContentLength > 0)
                 {
                     fileName = Path.GetFileName(FileImage.FileName);
                     imageStream = FileImage.InputStream;
-                
-                    //Use questionnumber as last parameter to search right container
-                    blobsController.UploadBlob(fileName, imageStream,containerName);
+
+                    blobsController.UploadBlob(fileName, imageStream, containerName);
                     question.picture = fileName;
                 }
 
@@ -85,14 +127,11 @@ namespace La_Game.Controllers
                 {
                     audioName = Path.GetFileName(FileAudio.FileName);
                     audioStream = FileAudio.InputStream;
-                    
-                    //Use questionnumber as last parameter to search right container
-                    blobsController.UploadBlob(audioName, audioStream,"test-blob-container");
-                    question.audio = audioName;
-                }             
 
-                db.Questions.Add(question);
-                db.SaveChanges();
+                    //Use questionnumber as last parameter to search right container
+                    blobsController.UploadBlob(audioName, audioStream, containerName);
+                    question.audio = audioName;
+                }
                 return RedirectToAction("Index");
             }
 
@@ -113,15 +152,20 @@ namespace La_Game.Controllers
                 return HttpNotFound();
             }
             BlobsController blobsController = new BlobsController();
-            
+
             CloudBlobContainer container = blobsController.GetCloudBlobContainer(idString);
 
-            CloudBlockBlob blob = container.GetBlockBlobReference(question.picture);
-            blob.Properties.ContentType = "image/png";
-            
+            if (question.picture != "" && question.picture != null)
+            {
+                CloudBlockBlob blob = container.GetBlockBlobReference(question.picture);
+                ViewData["Blob"] = blob;
+            }
 
 
-            ViewData["Blob"] = blob;
+
+
+
+
             return View(question);
         }
 
