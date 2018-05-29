@@ -4,7 +4,6 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
 
@@ -17,9 +16,7 @@ namespace La_Game.Controllers
         // GET: QuestionLists
         public ActionResult Index()
         {
-            //String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + 0 + "); ";
-            //IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
-            return View(db.QuestionLists.ToList());
+            return View(db.QuestionLists.ToList().Where(s => s.isHidden != 1));
         }
 
         // GET: QuestionLists/Details/5
@@ -34,7 +31,7 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
-            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ");";
             IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
 
             ViewBag.questions = data.ToList();
@@ -42,10 +39,11 @@ namespace La_Game.Controllers
             return View(questionList);
         }
 
+        #region Create QuestionList
         // GET: QuestionLists/Create
         public ActionResult Create()
         {
-            ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName");
+            //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName");
             return View();
         }
 
@@ -60,13 +58,15 @@ namespace La_Game.Controllers
             {
                 db.QuestionLists.Add(questionList);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("ModifyQuestionList", new { id = questionList.idQuestionList });
             }
 
             //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
+        #endregion
 
+        #region Edit QuestionList
         // GET: QuestionLists/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -99,7 +99,9 @@ namespace La_Game.Controllers
             //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
+        #endregion
 
+        #region Delete Questionlist
         // GET: QuestionLists/Delete/5
         public ActionResult Delete(int? id, int? listId)
         {
@@ -118,39 +120,31 @@ namespace La_Game.Controllers
             return View(questionList);
         }
 
-        // GET: QuestionLists/DeleteQuestionFromList/5
-        public ActionResult DeleteQuestionFromList(int? id, int? listId)
-        {
-            if (id == null || listId == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            QuestionList_Question question = db.QuestionList_Question.Find(id);
-
-            if (question == null)
-            {
-                return HttpNotFound();
-            }
-
-            db.QuestionList_Question.Remove(question);
-            db.SaveChanges();
-            
-            return View();
-        }
-
         // POST: QuestionLists/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            QuestionList questionList = db.QuestionLists.Find(id);
-            db.QuestionLists.Remove(questionList);
-            db.SaveChanges();
+            try
+            {
+                QuestionList questionList = db.QuestionLists.Find(id);
+                questionList.isHidden = 1;
+
+                db.Entry(questionList).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Delete failed
+            }
+
+            // Redirect to index
             return RedirectToAction("Index");
         }
+        #endregion
 
-        public ActionResult AddQuestionToList(int? id, string filter)
+        #region Adding/Deleting questions from the list
+        public ActionResult ModifyQuestionList(int? id, string filter)
         {
             if (id == null)
             {
@@ -158,8 +152,8 @@ namespace La_Game.Controllers
             }
 
             //Filter by name
-            var questions = from q in db.Questions
-                            select q;
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            IEnumerable<Question> questions = db.Database.SqlQuery<Question>(selectQuery);
 
             //If a name was given, use it to filter the results
             if (!String.IsNullOrEmpty(filter))
@@ -167,8 +161,83 @@ namespace La_Game.Controllers
                 questions = questions.Where(s => s.questionText.Contains(filter));
             }
 
+            ViewBag.listId = id;
             return View(questions);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddQuestionToList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList")] FormCollection collection)
+        {
+            try
+            {
+                if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                //Add question to questionlink query                                                
+                var add = "INSERT INTO QuestionList_Question (Question_idQuestion, QuestionList_idQuestionList) VALUES (" + collection.Get("Question_idQuestion") + ", " + collection.Get("QuestionList_idQuestionList") + ");"; 
+                db.Database.ExecuteSqlCommand(add);
+
+                //Get all questions linked to questionlist
+                String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + "); ";
+                IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
+                List<Question> allPresentQuestions = data.ToList();
+                //Get QuestionOrders for the current questionlist, ordered by "order" weight
+                List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == int.Parse(collection.Get("QuestionList_idQuestionList"))).OrderBy(o => o.order).ToList();
+
+
+
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Failed to add
+            }
+
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteQuestionFromList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList")] FormCollection collection)
+        {
+            try
+            {
+                if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                var delete = "DELETE FROM QuestionList_Question WHERE Question_idQuestion = " + collection.Get("Question_idQuestion") + " AND QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + ";";
+                db.Database.ExecuteSqlCommand(delete);
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Failed to delete
+            }
+
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
+        }
+
+        public PartialViewResult GetQuestionTable(int? id)
+        {
+            //Filter by name
+            List<Question> allQuestions = (from q in db.Questions select q).ToList();
+
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            List<Question> questionsAlreadyInQuestionList = db.Database.SqlQuery<Question>(selectQuery).ToList();
+
+            foreach (Question questionToRemove in questionsAlreadyInQuestionList)
+            {
+                allQuestions.RemoveAll(item => item.idQuestion == questionToRemove.idQuestion);
+            }
+
+            //If a name was given, use it to filter the results
+            ViewBag.listId = id;
+            return PartialView("_AddQuestionTable", allQuestions);
+        }
+        #endregion
 
         protected override void Dispose(bool disposing)
         {

@@ -37,14 +37,26 @@ namespace La_Game.Controllers
 
         public string UploadBlob(String fileName, Stream inputStream, String questionNumber)
         {
-            CloudBlobContainer container = GetCloudBlobContainer(questionNumber);
-            CloudBlockBlob blob = container.GetBlockBlobReference(fileName);
+            CloudBlobContainer container = GetCloudBlobContainer("questions");
+            CloudBlockBlob blob = container.GetBlockBlobReference(questionNumber + "/" + fileName);
             string[] strings = fileName.Split('.');
             
             switch(strings[strings.Length - 1])
             {
                 case "jpg":
                     blob.Properties.ContentType = "image/jpg";
+                    break;
+
+                case "png":
+                    blob.Properties.ContentType = "image/png";
+                    break;
+
+                case "mp3":
+                    blob.Properties.ContentType = "audio/mp3";
+                    break;
+
+                case "mp4":
+                    blob.Properties.ContentType = "audio/mp4";
                     break;
             }
 

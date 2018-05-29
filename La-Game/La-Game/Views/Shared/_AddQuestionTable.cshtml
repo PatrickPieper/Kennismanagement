@@ -1,0 +1,53 @@
+﻿@model IEnumerable<La_Game.Models.Question>
+<table class="table">
+    <tr>
+        <th>
+            Question
+        </th>
+        <th>
+            Picture
+        </th>
+        <th>
+            Audio
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+        <tr>
+            <td onclick="Redirect('@link')">
+                @Html.DisplayFor(modelItem => item.questionText)
+            </td>
+            <td onclick="Redirect('@link')">
+                @{
+                    if (!String.IsNullOrEmpty(item.picture))
+                    {
+                        <p><span class="glyphicon glyphicon-ok"></span></p>
+                    }
+                }
+            </td>
+            <td onclick="Redirect('@link')">
+                @{
+                    if (!String.IsNullOrEmpty(item.audio))
+                    {
+                        <p><span class="glyphicon glyphicon-ok"></span></p>
+                    }
+                }
+            </td>
+            <td>
+                @using (Html.BeginForm("AddQuestionToList", "QuestionLists", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                        <span class="glyphicon glyphicon-plus"></span> Add
+                    </button>
+                    <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
+                    <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
+                }
+            </td>
+        </tr>
+    }
+
+</table>

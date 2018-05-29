@@ -14,6 +14,13 @@ namespace La_Game.Controllers
     {
         private LaGameDBContext db = new LaGameDBContext();
 
+        public ActionResult AddAnswerOption()
+        {
+            return PartialView("_PartialView");
+        }
+
+
+
         // GET: AnswerOptions
         public ActionResult Index()
         {

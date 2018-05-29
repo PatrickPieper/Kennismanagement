@@ -1,0 +1,90 @@
+﻿@model IEnumerable<La_Game.Models.Question>
+
+@{
+    ViewBag.Title = "Modify Questionlist";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<div>
+    <h2>
+        Add/Remove Question
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
+                <span class="glyphicon glyphicon-menu-left"></span> Back to list
+            </button>
+    </h2>
+
+    @using (Html.BeginForm("ModifyQuestionList", "QuestionLists", FormMethod.Get))
+    {
+        <p>
+            Question @Html.TextBox("filter")
+            <input type="submit" value="Filter" />
+        </p>
+    }
+    <div class="container">
+        <div class="row">
+            <div class="table-responsive col-md-6">
+                <table class="table">
+                    <tr>
+                        <th>
+                            Question
+                        </th>
+                        <th>
+                            Picture
+                        </th>
+                        <th>
+                            Audio
+                        </th>
+                        <th></th>
+                    </tr>
+
+                    @foreach (var item in Model)
+                    {
+                        var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+                        <tr>
+                            <td onclick="Redirect('@link')">
+                                @Html.DisplayFor(modelItem => item.questionText)
+                            </td>
+                            <td onclick="Redirect('@link')">
+                                @{
+                                    if (!String.IsNullOrEmpty(item.picture))
+                                    {
+                                        <p><span class="glyphicon glyphicon-ok"></span></p>
+                                    }
+                                }
+                            </td>
+                            <td onclick="Redirect('@link')">
+                                @{
+                                    if (!String.IsNullOrEmpty(item.audio))
+                                    {
+                                        <p><span class="glyphicon glyphicon-ok"></span></p>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @using (Html.BeginForm("DeleteQuestionFromList", "QuestionLists", FormMethod.Post))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                                        <span class="glyphicon glyphicon-remove"></span> Remove
+                                    </button>
+                                    <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
+                                    <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+            </div>
+            <div class="table-responsive col-md-6">
+                @{Html.RenderAction("GetQuestionTable", "QuestionLists");}
+            </div>
+        </div>
+    </div>
+
+</div>
