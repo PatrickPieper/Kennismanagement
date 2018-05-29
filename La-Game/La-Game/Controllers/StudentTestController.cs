@@ -24,6 +24,7 @@ namespace La_Game.Controllers
                 ViewBag.index = index;
             }
 
+
             if (TempData["questionListData"] != null && TempData["questionData"] != null)
             { 
                 ViewBag.questionListData = TempData["questionListData"];
@@ -44,16 +45,11 @@ namespace La_Game.Controllers
             if(studentAnswer != null)
             {
                 string[,] studentAnswers = new string[ViewBag.questionData.Count, 2];
-                studentAnswers[(int)index,0] = studentAnswer;
-                studentAnswers[(int)index, 1] = "time";
+                studentAnswers[(int)index-2,0] = studentAnswer;
+                studentAnswers[(int)index-2, 1] = "timer";
                 ViewBag.studentAnswers = studentAnswers;
             }
-
-            if(index != null)
-            {
-                index++;
-                ViewBag.index = index;
-            }
+            
             //to do: when we have a boolean for LikertScale or MultipleChoice return the right view
             return View("MultipleChoice");
         }
