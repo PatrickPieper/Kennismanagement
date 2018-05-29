@@ -79,7 +79,7 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
-           // ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
+            // ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
             return View(questionList);
         }
 
@@ -154,6 +154,7 @@ namespace La_Game.Controllers
             //Filter by name
             String selectQuery = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ") ORDER BY qo.[order]";
             IEnumerable<Question> questions = db.Database.SqlQuery<Question>(selectQuery);
+            ViewBag.questions = questions;
 
             //If a name was given, use it to filter the results
             if (!String.IsNullOrEmpty(filter))
@@ -170,33 +171,39 @@ namespace La_Game.Controllers
         {
             //try
             //{
-                if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
-                {
-                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-                }
-                //Add question to questionlist query                                                
-                var add = "INSERT INTO QuestionList_Question (Question_idQuestion, QuestionList_idQuestionList) VALUES (" + collection.Get("Question_idQuestion") + ", " + collection.Get("QuestionList_idQuestionList") + ");"; 
-                db.Database.ExecuteSqlCommand(add);
+            if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-                //Get all questions linked to questionlist
-                String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + "); ";
-                IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
-                List<Question> allPresentQuestions = data.ToList();
-                //Get QuestionOrders for the current questionlist, ordered by "order" weight
-                int idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"));
-                List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList).OrderBy(o => o.order).ToList();
+            // Create the connection between question and list and add it to the database
+            QuestionList_Question questionlist_question = new QuestionList_Question
+            {
+                Question_idQuestion = int.Parse(collection.Get("Question_idQuestion")),
+                QuestionList_idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"))
+            };
+            db.QuestionList_Question.Add(questionlist_question);
+            db.SaveChanges();
 
-                QuestionOrder questionOrderToAdd = new QuestionOrder
-                {
-                    //if list count is not 0, highest order + 100, else 100
-                    order = allQuestionListOrder.Count != 0 ? allQuestionListOrder[allQuestionListOrder.Count - 1].order + 100 : 100,
-                    QuestionList_idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList")),
-                    Question_idQuestion = int.Parse(collection.Get("Question_idQuestion"))
-                };
+            //Get all questions linked to questionlist
+            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + "); ";
+            IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
+            List<Question> allPresentQuestions = data.ToList();
+            //Get QuestionOrders for the current questionlist, ordered by "order" weight
+            int idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"));
+            List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList).OrderBy(o => o.order).ToList();
 
-                db.QuestionOrders.Add(questionOrderToAdd);
+            QuestionOrder questionOrderToAdd = new QuestionOrder
+            {
+                //if list count is not 0, highest order + 100, else 100
+                order = allQuestionListOrder.Count != 0 ? allQuestionListOrder[allQuestionListOrder.Count - 1].order + 100 : 100,
+                QuestionList_idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList")),
+                Question_idQuestion = int.Parse(collection.Get("Question_idQuestion"))
+            };
 
-                db.SaveChanges();
+            db.QuestionOrders.Add(questionOrderToAdd);
+
+            db.SaveChanges();
             //}
             //catch(Exception ex)
             //{
@@ -215,13 +222,13 @@ namespace La_Game.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             int idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"));
             int idQuestion = int.Parse(collection.Get("Question_idQuestion"));
             int indexMovedTo = int.Parse(collection.Get("movedTo"));
             List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList).OrderBy(o => o.order).ToList();
 
-            double questionAbove = (double)allQuestionListOrder[indexMovedTo+1].order;
+            double questionAbove = (double)allQuestionListOrder[indexMovedTo + 1].order;
             double questionReplace = (double)allQuestionListOrder[indexMovedTo].order;
 
             QuestionOrder question = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList && s.Question_idQuestion == idQuestion).OrderBy(o => o.order).First();

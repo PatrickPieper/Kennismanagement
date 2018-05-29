@@ -55,15 +55,6 @@
                 }
             }
         </dd>
-
-        <dt>
-            Lesson
-        </dt>
-
-        <dd>
-            @*@Html.DisplayFor(model => model.Lesson.lessonName)*@
-        </dd>
-
     </dl>
 
     <h3>
@@ -75,6 +66,7 @@
 
     <table class="table">
         <tr>
+            <th></th>
             <th>
                 Question
             </th>
@@ -89,7 +81,13 @@
         @foreach (var item in questionList)
         {
             var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+
+            IEnumerable<La_Game.Models.Question> questions = ViewBag.questions;
+            var number = questions.ToList().FindIndex(a => a.idQuestion == item.idQuestion);
             <tr>
+                <td onclick="Redirect('@link')" style="text-align: center">
+                    @(number + 1)
+                </td>
                 <td onclick="Redirect('@link')">
                     @item.questionText
                 </td>
