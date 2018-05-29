@@ -67,7 +67,7 @@ namespace La_Game.Controllers
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
                 containerName = container.Name;
                 AnswerOptionsController answerOptionsController = new AnswerOptionsController();
-                
+
                 if (answerType == "likert")
                 {
                     int count = -2;
@@ -82,12 +82,14 @@ namespace La_Game.Controllers
                         answerOptionsController.Create(option);
                         count++;
                     }
-                    
+
                 }
                 else if (answerType == "meerkeuze")
                 {
                     string text = Request.Form["answerText"];
                     string[] answers = text.Split(',');
+                    string correct = Request.Form["correctAnswer"];
+                    string[] bools = correct.Split(',');
 
                     int count = 0;
 
@@ -97,7 +99,15 @@ namespace La_Game.Controllers
                         string text2 = Request.Form["correctAnswer"];
                         answerOption.answerText = answers[count];
                         answerOption.Question_idQuestion = max;
-                        answerOption.correctAnswer = 0;
+                        if (bools[count] == "1")
+                        {
+                            answerOption.correctAnswer = 1;
+                        }
+                        else if (bools[count] == "0")
+                        {
+                            answerOption.correctAnswer = 0;
+                        }
+
                         answerOptionsController.Create(answerOption);
                         count++;
                     }
@@ -145,17 +155,17 @@ namespace La_Game.Controllers
 
             CloudBlobContainer container = blobsController.GetCloudBlobContainer(idString);
 
-            if(question.picture != "" && question.picture != null)
+            if (question.picture != "" && question.picture != null)
             {
                 CloudBlockBlob blob = container.GetBlockBlobReference(question.picture);
                 ViewData["Blob"] = blob;
             }
-            
-            
 
 
 
-            
+
+
+
             return View(question);
         }
 

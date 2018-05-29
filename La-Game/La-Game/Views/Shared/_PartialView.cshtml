@@ -11,8 +11,11 @@
 
     <div class="form-group col-sm-4">
         @Html.LabelFor(model => model.correctAnswer, "Correct Answer", htmlAttributes: new { @class = "form-check-label col-sm-5" })
-        <div class="col-sm-3">
-            @*@Html.CheckBoxFor(model => model.correctAnswer, htmlAttributes: new { @class = "form-check-input" })*@
+        <div class="col-sm-5">
+            <select class="form-control" name="correctAnswer">
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+            </select>
             @Html.ValidationMessageFor(model => model.correctAnswer, "", new { @class = "text-danger" })
         </div>
     </div>
