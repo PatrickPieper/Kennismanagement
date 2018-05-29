@@ -31,7 +31,7 @@ namespace La_Game.Controllers
             {
                 return HttpNotFound();
             }
-            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ");";
+            String selectQuery = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ") ORDER BY qo.[order]";
             IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
 
             ViewBag.questions = data.ToList();
@@ -152,7 +152,7 @@ namespace La_Game.Controllers
             }
 
             //Filter by name
-            String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + "); ";
+            String selectQuery = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ") ORDER BY qo.[order]";
             IEnumerable<Question> questions = db.Database.SqlQuery<Question>(selectQuery);
 
             //If a name was given, use it to filter the results
@@ -168,13 +168,13 @@ namespace La_Game.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddQuestionToList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList")] FormCollection collection)
         {
-            try
-            {
+            //try
+            //{
                 if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                //Add question to questionlink query                                                
+                //Add question to questionlist query                                                
                 var add = "INSERT INTO QuestionList_Question (Question_idQuestion, QuestionList_idQuestionList) VALUES (" + collection.Get("Question_idQuestion") + ", " + collection.Get("QuestionList_idQuestionList") + ");"; 
                 db.Database.ExecuteSqlCommand(add);
 
@@ -183,16 +183,53 @@ namespace La_Game.Controllers
                 IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
                 List<Question> allPresentQuestions = data.ToList();
                 //Get QuestionOrders for the current questionlist, ordered by "order" weight
-                List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == int.Parse(collection.Get("QuestionList_idQuestionList"))).OrderBy(o => o.order).ToList();
+                int idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"));
+                List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList).OrderBy(o => o.order).ToList();
 
+                QuestionOrder questionOrderToAdd = new QuestionOrder
+                {
+                    //if list count is not 0, highest order + 100, else 100
+                    order = allQuestionListOrder.Count != 0 ? allQuestionListOrder[allQuestionListOrder.Count - 1].order + 100 : 100,
+                    QuestionList_idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList")),
+                    Question_idQuestion = int.Parse(collection.Get("Question_idQuestion"))
+                };
 
+                db.QuestionOrders.Add(questionOrderToAdd);
 
                 db.SaveChanges();
-            }
-            catch
+            //}
+            //catch(Exception ex)
+            //{
+            //    // Failed to add
+            //}
+
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult MoveQuestionInList([Bind(Include = "Question_idQuestion,QuestionList_idQuestionList,movedTo")] FormCollection collection)
+        {
+
+            if (collection.Get("Question_idQuestion") == null || collection.Get("QuestionList_idQuestionList") == null)
             {
-                // Failed to add
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
+            int idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"));
+            int idQuestion = int.Parse(collection.Get("Question_idQuestion"));
+            int indexMovedTo = int.Parse(collection.Get("movedTo"));
+            List<QuestionOrder> allQuestionListOrder = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList).OrderBy(o => o.order).ToList();
+
+            double questionAbove = (double)allQuestionListOrder[indexMovedTo+1].order;
+            double questionReplace = (double)allQuestionListOrder[indexMovedTo].order;
+
+            QuestionOrder question = db.QuestionOrders.Where(s => s.QuestionList_idQuestionList == idQuestionList && s.Question_idQuestion == idQuestion).OrderBy(o => o.order).First();
+            question.order = (questionAbove + questionReplace) / 2;
+
+            db.Entry(question).State = EntityState.Modified;
+
+            db.SaveChanges();
 
             return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
@@ -208,8 +245,12 @@ namespace La_Game.Controllers
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
 
-                var delete = "DELETE FROM QuestionList_Question WHERE Question_idQuestion = " + collection.Get("Question_idQuestion") + " AND QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + ";";
-                db.Database.ExecuteSqlCommand(delete);
+                var deleteQuestionEntry = "DELETE FROM QuestionList_Question WHERE Question_idQuestion = " + collection.Get("Question_idQuestion") + " AND QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + ";";
+                db.Database.ExecuteSqlCommand(deleteQuestionEntry);
+
+                var deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE Question_idQuestion = " + collection.Get("Question_idQuestion") + " AND QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + ";";
+                db.Database.ExecuteSqlCommand(deleteQuestionOrder);
+
                 db.SaveChanges();
             }
             catch
