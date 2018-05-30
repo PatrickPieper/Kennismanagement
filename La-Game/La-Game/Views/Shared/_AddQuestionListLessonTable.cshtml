@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<La_Game.Models.QuestionList>
+
 <table class="table">
     <tr>
         <th>
@@ -13,11 +14,8 @@
         <th>
             <p>Active</p>
         </th>
-        @*<th>
-                <p>Lesson</p>
-            </th>*@
-        <th></th>
     </tr>
+
     @foreach (var item in Model)
     {
         var link = Url.Action("Details", "QuestionLists", new { id = item.idQuestionList });
@@ -40,17 +38,6 @@
                 {
                     <t>Yes</t>
                 }
-            </td>
-            @*<td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.Lesson.lessonName)
-                </td>*@
-            <td>
-                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "QuestionLists", new { id = item.idQuestionList }) + "'");">
-                    <span class="glyphicon glyphicon-wrench"></span> Edit
-                </button>
-                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "QuestionLists", new { id = item.idQuestionList }) + "'");">
-                    <span class="glyphicon glyphicon-remove"></span> Remove
-                </button>
             </td>
         </tr>
     }

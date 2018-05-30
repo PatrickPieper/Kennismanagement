@@ -39,6 +39,9 @@
             @Html.DisplayFor(modelItem => item.description)
         </td>
         <td>
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Lessons", new { id = item.idLesson }) + "'");">
+                <span class="glyphicon glyphicon-wrench"></span> Edit
+            </button>
             <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Lessons", new { id = item.idLesson }) + "'");">
                 <span class="glyphicon glyphicon-remove"></span> Remove
             </button>

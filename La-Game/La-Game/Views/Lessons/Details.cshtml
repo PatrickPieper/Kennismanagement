@@ -1,48 +1,58 @@
 ﻿@model La_Game.Models.Lesson
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Lesson Details";
 }
 
-<h2>Details</h2>
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
 
-<div>
-    <h4> Lesson </h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Lesson
-        </dt>
+<div class="container">
+    <div class="row">
+        <div>
+            <h2>Lesson Details</h2>
+            <div>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        Lesson
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.lessonName)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.lessonName)
+                    </dd>
 
-        <dt>
-            Description
-        </dt>
+                    <dt>
+                        Description
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.description)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.description)
+                    </dd>
 
-        <dt>
-            Language
-        </dt>
+                    <dt>
+                        Language
+                    </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Language.languageName)
-        </dd>
+                    <dd>
+                        @Html.DisplayFor(model => model.Language.languageName)
+                    </dd>
 
-    </dl>
+                </dl>
+            </div>
+            <h3> Questionlists </h3>
+            <div class="table-responsive col-md-6">
+                @{Html.RenderAction("GetQuestionListsTableForLesson", "QuestionLists");}
+            </div>
+        </div>
+    </div>
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons") + "'");">
+            <span class="glyphicon glyphicon-menu-left"></span> Back
+        </button>
+    </p>
+
 </div>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Lessons", new { id = Model.idLesson }) + "'");">
-        <span class="glyphicon glyphicon-wrench"></span> Edit
-    </button>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons") + "'");">
-        <span class="glyphicon glyphicon-menu-left"></span> Back to list
-    </button>
-</p>
-
-<!-- TODO - QUESTIONLISTS HERE -->
