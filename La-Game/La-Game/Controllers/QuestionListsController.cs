@@ -127,9 +127,18 @@ namespace La_Game.Controllers
         {
             try
             {
+                // Find the questionlist and set it to hidden
                 QuestionList questionList = db.QuestionLists.Find(id);
                 questionList.isHidden = 1;
 
+                // Check if the questionlist is active, if true deactivate the list
+                if (questionList.isActive == 1)
+                {
+                    questionList.participationCode = null;
+                    questionList.isActive = 0;
+                }
+                
+                // Save the changes
                 db.Entry(questionList).State = EntityState.Modified;
                 db.SaveChanges();
             }
