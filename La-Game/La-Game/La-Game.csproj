@@ -209,6 +209,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
+    <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -380,6 +381,11 @@
     <Content Include="Views\QuestionLists\ModifyQuestionList.cshtml" />
     <Content Include="Views\Shared\_AddQuestionTable.cshtml" />
     <Content Include="Views\Shared\_PartialView.cshtml" />
+    <Content Include="Views\QuestionResults\Create.cshtml" />
+    <Content Include="Views\QuestionResults\Delete.cshtml" />
+    <Content Include="Views\QuestionResults\Details.cshtml" />
+    <Content Include="Views\QuestionResults\Edit.cshtml" />
+    <Content Include="Views\QuestionResults\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

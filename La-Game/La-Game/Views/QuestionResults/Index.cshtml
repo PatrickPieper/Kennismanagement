@@ -1,0 +1,58 @@
+﻿@model IEnumerable<La_Game.Models.QuestionResult>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.startTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.endTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AnswerOption.answerText)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Participant.firstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.QuestionList.questionListName)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.startTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.endTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AnswerOption.answerText)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Participant.firstName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.QuestionList.questionListName)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.idQuestionResult }) |
+            @Html.ActionLink("Details", "Details", new { id=item.idQuestionResult }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.idQuestionResult })
+        </td>
+    </tr>
+}
+
+</table>
