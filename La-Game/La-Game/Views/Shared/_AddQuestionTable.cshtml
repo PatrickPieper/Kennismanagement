@@ -1,13 +1,14 @@
-﻿@model IEnumerable<La_Game.Models.Question>
+﻿
+@model IEnumerable<La_Game.Models.Question>
 <table class="table">
     <tr>
         <th>
             Question
         </th>
-        <th>
+        <th style="text-align: center">
             Picture
         </th>
-        <th>
+        <th style="text-align: center">
             Audio
         </th>
         <th></th>
@@ -20,7 +21,7 @@
             <td onclick="Redirect('@link')">
                 @Html.DisplayFor(modelItem => item.questionText)
             </td>
-            <td onclick="Redirect('@link')">
+            <td onclick="Redirect('@link')" style="text-align: center">
                 @{
                     if (!String.IsNullOrEmpty(item.picture))
                     {
@@ -28,7 +29,7 @@
                     }
                 }
             </td>
-            <td onclick="Redirect('@link')">
+            <td onclick="Redirect('@link')" style="text-align: center">
                 @{
                     if (!String.IsNullOrEmpty(item.audio))
                     {

@@ -30,9 +30,6 @@
         <th>
             <p>Active</p>
         </th>
-        @*<th>
-            <p>Lesson</p>
-        </th>*@
         <th></th>
     </tr>
 
@@ -59,9 +56,6 @@
                     <t>Yes</t>
                 }
             </td>
-            @*<td onclick="Redirect('@link')">
-                @Html.DisplayFor(modelItem => item.Lesson.lessonName)
-            </td>*@
             <td>
                 <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "QuestionLists", new { id = item.idQuestionList }) + "'");">
                     <span class="glyphicon glyphicon-wrench"></span> Edit
