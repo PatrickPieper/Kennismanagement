@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
@@ -58,10 +59,19 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+
+                String answerType = Request.Form["answerType"];
+
+                if (answerType == "likert")
+                {                  
+                    byte test = byte.Parse(Request.Form["likertOption"]);                    
+                    question.likertScale = test;
+                }
+
                 db.Questions.Add(question);
                 db.SaveChanges();
                 var max = db.Questions.Max(q => q.idQuestion);
-                String answerType = Request.Form["answerType"];
+                
                 FileImage = Request.Files[0];
                 BlobsController blobsController = new BlobsController();
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
@@ -76,6 +86,7 @@ namespace La_Game.Controllers
                     {
                         AnswerOption option = new AnswerOption();
                         String text = count.ToString();
+                        
                         option.answerText = text;
                         option.correctAnswer = 0;
                         option.Question_idQuestion = max;
