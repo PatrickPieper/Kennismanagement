@@ -317,6 +317,16 @@ namespace La_Game.Controllers
         }
         #endregion
 
+        public PartialViewResult GetQuestionListsTableForLesson(int? id)
+        {
+            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + id + ");";
+            IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
+
+            //If a name was given, use it to filter the results
+            ViewBag.lessonID = id;
+            return PartialView("_AddQuestionListLessonTable", data);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
