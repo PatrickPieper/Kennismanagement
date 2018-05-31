@@ -42,12 +42,12 @@ namespace La_Game.Controllers
                 ViewBag.answerOptions = TempData["answerOptions"];
             }
 
-            if(studentAnswer != null)
+            if(studentAnswer != null && TempData["startTime"] != null)
             {
-                string[,] studentAnswers = new string[ViewBag.questionData.Count, 2];
-                studentAnswers[(int)index-2,0] = studentAnswer;
-                studentAnswers[(int)index-2, 1] = "timer";
-                ViewBag.studentAnswers = studentAnswers;
+                string endTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
+                DateTime startTime = DateTime.ParseExact((string)TempData["startTime"],"yyyy:MM:dd HH:mm:ss:fff",null);
+                
+
             }
             
             //to do: when we have a boolean for LikertScale or MultipleChoice return the right view

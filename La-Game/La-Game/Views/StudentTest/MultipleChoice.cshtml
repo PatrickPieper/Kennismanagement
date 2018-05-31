@@ -13,28 +13,34 @@
     if (ViewBag.questionData.Count > ViewBag.index)
     {
         <p>@ViewBag.questionData[ViewBag.index].questionText</p>
-    }
 
-
-
-
-    using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
-    {
-        for (int i = 0; i < ViewBag.answerOptions.Count; i++)
+        using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
         {
-
-            if (ViewBag.answerOptions[i].Question_idQuestion == ViewBag.questionData[ViewBag.index].idQuestion)
+            for (int i = 0; i < ViewBag.answerOptions.Count; i++)
             {
-                <input type="submit" value="@ViewBag.answerOptions[i].answerText" name="studentAnswer" />
-        
+                if (ViewBag.answerOptions[i].Question_idQuestion != null)
+                {
+                    if (ViewBag.answerOptions[i].Question_idQuestion == ViewBag.questionData[ViewBag.index].idQuestion)
+                    {
+                        <input type="submit" value="@ViewBag.answerOptions[i].answerText" name="studentAnswer" />
+
+                    }
+                }
+
             }
 
+            <input type="hidden" value="@ViewBag.index" name="index" />
+            <input type="submit" value="go next" name="studentAnswer" />
+            
         }
-        <input type="hidden" value="@ViewBag.index" name="index" />
-        <input type="submit" value="go next" name="submit" />
+         string startTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
+        TempData["startTime"] = startTime;
     }
+
+
+    TempData["studentAnswers"] = ViewBag.studentAnswers;
     TempData["questionData"] = ViewBag.questionData;
     TempData["questionListData"] = ViewBag.questionListData;
     TempData["answerOptions"] = ViewBag.answerOptions;
 
-}
+    }
