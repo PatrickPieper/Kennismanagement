@@ -27,6 +27,7 @@ namespace La_Game.Models
         public string audio { get; set; }
         public string questionText { get; set; }
         public Nullable<short> isHidden { get; set; }
+        public Nullable<byte> likertScale { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<AnswerOption> AnswerOptions { get; set; }
