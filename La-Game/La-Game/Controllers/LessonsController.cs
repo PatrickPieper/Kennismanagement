@@ -1,4 +1,6 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
@@ -9,84 +11,122 @@ namespace La_Game.Controllers
     public class LessonsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
-
-        // GET: Lessons
-        public ActionResult Index()
+        
+        /// <summary>
+        /// GET: Lessons
+        /// Get a overview of all the active lessons.
+        /// </summary>
+        public ActionResult Index(int? languageId)
         {
+            // Include the language and then return the list of all active lessons
             var lessons = db.Lessons.Include(l => l.Language);
             return View(lessons.ToList().Where(s => s.isHidden != 1));
         }
-
-        // GET: Lessons/Details/5
+        
+        /// <summary>
+        /// GET: Lessons/Details/[id]
+        /// Get the details of a lesson and show it on a seperate page.
+        /// </summary>
+        /// <param name="id"> Id of the lesson. </param>
         public ActionResult Details(int? id)
         {
+            // Check if id was given
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            
+            // Try to find the lesson, if it does not exist return 404
             Lesson lesson = db.Lessons.Find(id);
             if (lesson == null)
             {
                 return HttpNotFound();
             }
+
+            // Redirect to the detail page
             return View(lesson);
         }
-
-        // GET: Lessons/Create
+        
+        /// <summary>
+        /// GET: Lessons/Create
+        /// Redirect to the creation page to add a new lesson to the database.
+        /// </summary>
         public ActionResult Create()
         {
-            ViewBag.Language_idLanguage = new SelectList(db.Languages, "idLanguage", "languageName");
+            // Go to create page
+            ViewBag.Language = 1; //Test
             return View();
         }
 
-        // POST: Lessons/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// POST: Lessons/Create/[id]
+        /// After pressing the button check if the data is valid then add it to database.
+        /// </summary>
+        /// <param name="lesson"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idLesson,Language_idLanguage,lessonName,description")] Lesson lesson)
         {
+            // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // If valid, add it to the database
                 db.Lessons.Add(lesson);
                 db.SaveChanges();
+
+                // Redirect to index
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Language_idLanguage = new SelectList(db.Languages, "idLanguage", "languageName", lesson.Language_idLanguage);
+            // If not valid, stay on the edit page with the current data
             return View(lesson);
         }
 
-        // GET: Lessons/Edit/5
+        /// <summary>
+        /// GET: Lessons/Edit/[id]
+        /// Find the lesson that has to be changed and redirect to a seperate edit page.
+        /// </summary>
+        /// <param name="id"> Id of the lesson that has to be changed. </param>
         public ActionResult Edit(int? id)
         {
+            // Check if id was given
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            // Try to find the lesson, if it does not exist return 404
             Lesson lesson = db.Lessons.Find(id);
             if (lesson == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.Language_idLanguage = new SelectList(db.Languages, "idLanguage", "languageName", lesson.Language_idLanguage);
+
+            // Redirect to the edit page
             return View(lesson);
         }
 
-        // POST: Lessons/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// POST: Lessons/Edit/[id]
+        /// After pressing the button check if the data is valid then save it to database.
+        /// </summary>
+        /// <param name="lesson"> The data that has to be saved. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "idLesson,Language_idLanguage,lessonName,description")] Lesson lesson)
         {
+            // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // If valid, save it to the database
                 db.Entry(lesson).State = EntityState.Modified;
                 db.SaveChanges();
+
+                // Redirect to index
                 return RedirectToAction("Index");
             }
-            ViewBag.Language_idLanguage = new SelectList(db.Languages, "idLanguage", "languageName", lesson.Language_idLanguage);
+
+            // If not valid, stay on the edit page with the current data
             return View(lesson);
         }
 
@@ -142,19 +182,28 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// GET: Lessons/ParticipantLessonOverview/[id]
+        /// Get a list of all participants that have done the questionlist. 
+        /// </summary>
+        /// <param name="id"> Id of the lesson. </param>
         public ActionResult ParticipantLessonOverview(int? id)
         {
+            // Check if id was given
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            // Get list of participants
             String selectQuery = "SELECT * FROM Participant WHERE idParticipant IN(SELECT Participant_idParticipant FROM Lesson_Participant WHERE Lesson_idLesson = " + id + ");";
             IEnumerable<Participant> data = db.Database.SqlQuery<Participant>(selectQuery);  
 
-            //If a name was given, use it to filter the results
+            // Return the overview containing the data
             ViewBag.questionListID = id;
             return View(data);
         }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

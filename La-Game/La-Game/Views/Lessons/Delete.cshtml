@@ -12,7 +12,7 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.lessonName)
+            Lesson
         </dt>
 
         <dd>
@@ -20,7 +20,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.description)
+            Description
         </dt>
 
         <dd>
@@ -28,7 +28,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Language.languageName)
+            Language
         </dt>
 
         <dd>
@@ -42,7 +42,7 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons") + "'");">
                 <span class="glyphicon glyphicon-menu-left"></span> Back
             </button>
             <button type="submit" value="Delete" class="btn btn-default">

@@ -13,6 +13,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.idLesson)
+        @Html.HiddenFor(model => model.Language_idLanguage);
 
         <div class="form-group">
             @Html.LabelFor(model => model.lessonName, "Lesson", htmlAttributes: new { @class = "control-label col-md-2" })
