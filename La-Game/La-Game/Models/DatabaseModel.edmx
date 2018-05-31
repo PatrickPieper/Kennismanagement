@@ -37,6 +37,7 @@
           <Property Name="Language_idLanguage" Type="int" Nullable="false" />
           <Property Name="lessonName" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
+          <Property Name="isHidden" Type="tinyint" />
         </EntityType>
         <EntityType Name="Lesson_Participant">
           <Key>
@@ -70,6 +71,7 @@
           <Property Name="firstName" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="lastName" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="birthDate" Type="date" Nullable="false" />
+          <Property Name="studentCode" Type="int" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -80,6 +82,7 @@
           <Property Name="audio" Type="varchar" MaxLength="250" />
           <Property Name="questionText" Type="varchar" MaxLength="200" />
           <Property Name="isHidden" Type="smallint" />
+          <Property Name="likertScale" Type="tinyint" />
         </EntityType>
         <EntityType Name="QuestionList">
           <Key>
@@ -117,8 +120,8 @@
           <Property Name="QuestionList_idQuestionList" Type="int" Nullable="false" />
           <Property Name="AnswerOption_idAnswer" Type="int" Nullable="false" />
           <Property Name="Participant_idParticipant" Type="int" Nullable="false" />
-          <Property Name="startTime" Type="bigint" />
-          <Property Name="endTime" Type="bigint" />
+          <Property Name="startTime" Type="datetime2" Precision="7" />
+          <Property Name="endTime" Type="datetime2" Precision="7" />
         </EntityType>
         <Association Name="fk_Answer_Question1">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
@@ -420,6 +423,7 @@
           <NavigationProperty Name="Language" Relationship="Self.fk_Lesson_Language" FromRole="Lesson" ToRole="Language" />
           <NavigationProperty Name="Lesson_Participant" Relationship="Self.fk_Language_Participant_Lesson1" FromRole="Lesson" ToRole="Lesson_Participant" />
           <NavigationProperty Name="Lesson_QuestionList" Relationship="Model.fk_Lesson_QuestionList_Lesson1" FromRole="Lesson" ToRole="Lesson_QuestionList" />
+          <Property Name="isHidden" Type="Byte" />
         </EntityType>
         <EntityType Name="Lesson_Participant">
           <Key>
@@ -450,6 +454,7 @@
           <Property Name="birthDate" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Lesson_Participant" Relationship="Self.fk_Language_Participant_Participant1" FromRole="Participant" ToRole="Lesson_Participant" />
           <NavigationProperty Name="QuestionResults" Relationship="Self.fk_QuestionResult_Participant1" FromRole="Participant" ToRole="QuestionResult" />
+          <Property Name="studentCode" Type="Int32" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -463,6 +468,7 @@
           <NavigationProperty Name="QuestionList_Question" Relationship="Model.fk_QuestionList_Question_Question1" FromRole="Question" ToRole="QuestionList_Question" />
           <Property Name="isHidden" Type="Int16" />
           <NavigationProperty Name="QuestionOrders" Relationship="Model.fk_QuestionOrder_Question1" FromRole="Question" ToRole="QuestionOrder" />
+          <Property Name="likertScale" Type="Byte" />
         </EntityType>
         <EntityType Name="QuestionList">
           <Key>
@@ -487,8 +493,8 @@
           <Property Name="QuestionList_idQuestionList" Type="Int32" Nullable="false" />
           <Property Name="AnswerOption_idAnswer" Type="Int32" Nullable="false" />
           <Property Name="Participant_idParticipant" Type="Int32" Nullable="false" />
-          <Property Name="startTime" Type="Int64" />
-          <Property Name="endTime" Type="Int64" />
+          <Property Name="startTime" Type="DateTime" />
+          <Property Name="endTime" Type="DateTime" />
           <NavigationProperty Name="AnswerOption" Relationship="Self.fk_QuestionResult_Answer1" FromRole="QuestionResult" ToRole="AnswerOption" />
           <NavigationProperty Name="Participant" Relationship="Self.fk_QuestionResult_Participant1" FromRole="QuestionResult" ToRole="Participant" />
           <NavigationProperty Name="QuestionList" Relationship="Self.fk_QuestionResult_QuestionList1" FromRole="QuestionResult" ToRole="QuestionList" />
@@ -815,6 +821,7 @@
           <EntitySetMapping Name="Lessons">
             <EntityTypeMapping TypeName="Model.Lesson">
               <MappingFragment StoreEntitySet="Lesson">
+                <ScalarProperty Name="isHidden" ColumnName="isHidden" />
                 <ScalarProperty Name="idLesson" ColumnName="idLesson" />
                 <ScalarProperty Name="Language_idLanguage" ColumnName="Language_idLanguage" />
                 <ScalarProperty Name="lessonName" ColumnName="lessonName" />
@@ -843,6 +850,7 @@
           <EntitySetMapping Name="Participants">
             <EntityTypeMapping TypeName="Model.Participant">
               <MappingFragment StoreEntitySet="Participant">
+                <ScalarProperty Name="studentCode" ColumnName="studentCode" />
                 <ScalarProperty Name="idParticipant" ColumnName="idParticipant" />
                 <ScalarProperty Name="firstName" ColumnName="firstName" />
                 <ScalarProperty Name="lastName" ColumnName="lastName" />
@@ -853,6 +861,7 @@
           <EntitySetMapping Name="Questions">
             <EntityTypeMapping TypeName="Model.Question">
               <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="likertScale" ColumnName="likertScale" />
                 <ScalarProperty Name="isHidden" ColumnName="isHidden" />
                 <ScalarProperty Name="idQuestion" ColumnName="idQuestion" />
                 <ScalarProperty Name="picture" ColumnName="picture" />

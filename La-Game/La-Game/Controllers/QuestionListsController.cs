@@ -43,7 +43,6 @@ namespace La_Game.Controllers
         // GET: QuestionLists/Create
         public ActionResult Create()
         {
-            //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName");
             return View();
         }
 
@@ -60,8 +59,7 @@ namespace La_Game.Controllers
                 db.SaveChanges();
                 return RedirectToAction("ModifyQuestionList", new { id = questionList.idQuestionList });
             }
-
-            //ViewBag.Lesson_idLesson = new SelectList(db.Lessons, "idLesson", "lessonName", questionList.Lesson_idLesson);
+            
             return View(questionList);
         }
         #endregion

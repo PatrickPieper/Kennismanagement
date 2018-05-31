@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
+﻿using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
 
@@ -18,7 +14,7 @@ namespace La_Game.Controllers
         public ActionResult Index()
         {
             var lessons = db.Lessons.Include(l => l.Language);
-            return View(lessons.ToList());
+            return View(lessons.ToList().Where(s => s.isHidden != 1));
         }
 
         // GET: Lessons/Details/5
@@ -94,29 +90,55 @@ namespace La_Game.Controllers
             return View(lesson);
         }
 
-        // GET: Lessons/Delete/5
+        /// <summary>
+        /// GET: Lessons/Delete/[id]
+        /// Find the lesson that has to be deleted and redirect to a seperate deletion page for confirmation.
+        /// </summary>
+        /// <param name="id"> Id of the lesson that has to be deactivated. </param>
         public ActionResult Delete(int? id)
         {
+            // Check if id was given
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            // Try to find the lesson, if it does not exist return 404
             Lesson lesson = db.Lessons.Find(id);
             if (lesson == null)
             {
                 return HttpNotFound();
             }
+
+            // Return the delete page with the lesson information
             return View(lesson);
         }
 
-        // POST: Lessons/Delete/5
+        /// <summary>
+        /// POST: Lessons/Delete/[id]
+        /// After confirming that the lesson can be deleted, deactivate it in the database.
+        /// </summary>
+        /// <param name="id"> Id of the lesson that has to be deactivated. </param>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Lesson lesson = db.Lessons.Find(id);
-            db.Lessons.Remove(lesson);
-            db.SaveChanges();
+            try
+            {
+                // Find the questionlist and set it to hidden
+                Lesson lesson = db.Lessons.Find(id);
+                lesson.isHidden = 1;
+
+                // Save the changes
+                db.Entry(lesson).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Delete failed
+            }
+
+            // Redirect to index
             return RedirectToAction("Index");
         }
 

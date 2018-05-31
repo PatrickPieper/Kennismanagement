@@ -25,6 +25,7 @@ namespace La_Game.Models
         public string firstName { get; set; }
         public string lastName { get; set; }
         public System.DateTime birthDate { get; set; }
+        public Nullable<int> studentCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Lesson_Participant> Lesson_Participant { get; set; }
