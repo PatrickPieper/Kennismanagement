@@ -120,6 +120,19 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
+        public ActionResult ParticipantLessonOverview(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            String selectQuery = "SELECT * FROM Participant WHERE idParticipant IN(SELECT Participant_idParticipant FROM Lesson_Participant WHERE Lesson_idLesson = " + id + ");";
+            IEnumerable<Participant> data = db.Database.SqlQuery<Participant>(selectQuery);  
+
+            //If a name was given, use it to filter the results
+            ViewBag.questionListID = id;
+            return View(data);
+        }
         protected override void Dispose(bool disposing)
         {
             if (disposing)
