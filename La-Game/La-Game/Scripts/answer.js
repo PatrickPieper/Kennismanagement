@@ -4,10 +4,12 @@ var answerType = $('input[name=answerType]');
 
 answerType.change(function () {
     var selected = $('input[name=answerType]:checked');
-    if (selected.val() == 'meerkeuze') {
+    if (selected.val() === 'meerkeuze') {
         document.getElementById("Option").style.display = 'inline';
         document.getElementById("AddAnswer").style.display = 'inline';
-    } else {
+        document.getElementById("test").style.display = 'none';
+    } else if (selected.val() === "likert") {
+        document.getElementById("test").style.display = 'inline';
         document.getElementById("Option").style.display = 'none';
         document.getElementById("AddAnswer").style.display = 'none';
     }
