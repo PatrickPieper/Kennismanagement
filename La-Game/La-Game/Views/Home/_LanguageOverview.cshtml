@@ -1,0 +1,31 @@
+﻿@model IEnumerable<La_Game.Models.Language>
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<table class="table">
+    <tr>
+        <th>
+            Language
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        //var link = Url.Action("Index", "Language", new { id = item.idLanguage });
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.languageName)
+            </td>
+            <td>
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons", new { idLanguage = item.idLanguage }) + "'");">
+                    <span class="glyphicon glyphicon-list-alt"></span> Lessons
+                </button>
+            </td>
+        </tr>
+    }
+</table>

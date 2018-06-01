@@ -16,11 +16,13 @@ namespace La_Game.Controllers
         /// GET: Lessons
         /// Get a overview of all the active lessons.
         /// </summary>
-        public ActionResult Index(int? languageId)
+        public ActionResult Index(int? idLanguage)
         {
             // Include the language and then return the list of all active lessons
-            var lessons = db.Lessons.Include(l => l.Language);
-            return View(lessons.ToList().Where(s => s.isHidden != 1));
+            var lessons = db.Lessons.Where(s => s.isHidden != 1 && s.Language_idLanguage == idLanguage);
+            ViewBag.Language = db.Languages.Where(l => l.idLanguage == idLanguage).FirstOrDefault();
+            
+            return View(lessons.ToList());
         }
         
         /// <summary>

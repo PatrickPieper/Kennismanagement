@@ -1,4 +1,6 @@
-﻿@{
+﻿@model IEnumerable<La_Game.Models.Language>
+
+@{
     ViewBag.Title = "Dashboard";
 }
 
@@ -8,10 +10,18 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="table-responsive col-md-4">
         <h2>Your Languages</h2>
-        <p> Table containing all the languages you are a member of. </p>
-        <p><a class="btn btn-default" href=""> ¯\_(ツ)_/¯ &raquo;</a></p>
+        @{Html.RenderAction("GetLanguageOverview", "Home", new { memberId = 1 });}
+
+        <p>
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+                <span class="glyphicon glyphicon-list-alt"></span> Questionlist Overview
+            </button>
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Questions") + "'");">
+                <span class="glyphicon glyphicon-list-alt"></span> Question Overview
+            </button>
+        </p>
     </div>
     <div class="col-md-4">
         <h2>Statistics</h2>

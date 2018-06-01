@@ -10,7 +10,7 @@
     }
 </script>
 
-<h2> Overview Lessons - @ViewBag.Language</h2>
+<h2> Overview Lessons - @ViewBag.Language.languageName</h2>
 
 <p>
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Lessons") + "'");">

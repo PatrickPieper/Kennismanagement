@@ -41,5 +41,19 @@ namespace La_Game.Controllers
         {
             return View();
         }
+
+        /// <summary>
+        /// GET: Home/GetLanguageOverview/[memberId]
+        /// Return a PartialView containing a list of all languages that the member belongs to.
+        /// </summary>
+        /// <param name="memberId"> Id of the member. </param>
+        public PartialViewResult GetLanguageOverview(int? memberId)
+        {
+            // Get the lists from the database
+            String selectQuery = "SELECT * FROM Language WHERE idLanguage IN(SELECT Language_idLanguage FROM Language_Member WHERE Member_idMember = " + memberId + ");";
+            IEnumerable<Language> data = db.Database.SqlQuery<Language>(selectQuery);
+
+            return PartialView("_LanguageOverview", data.ToList());
+        }
     }
 }
