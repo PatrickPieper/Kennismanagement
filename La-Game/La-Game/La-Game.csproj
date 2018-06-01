@@ -382,6 +382,7 @@
     <Content Include="Views\Lessons\Index.cshtml" />
     <Content Include="Views\Shared\_AddQuestionListLessonTable.cshtml" />
     <Content Include="Views\Lessons\ParticipantLessonOverview.cshtml" />
+    <Content Include="Views\Lessons\QuestionResultParticipantOverview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

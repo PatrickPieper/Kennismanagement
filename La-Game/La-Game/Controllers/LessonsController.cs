@@ -186,21 +186,45 @@ namespace La_Game.Controllers
         /// GET: Lessons/ParticipantLessonOverview/[id]
         /// Get a list of all participants that have done the questionlist. 
         /// </summary>
-        /// <param name="id"> Id of the lesson. </param>
-        public ActionResult ParticipantLessonOverview(int? id)
+        /// <param name="questionListID"> Id of the questionlist. </param>
+        /// <param name="lessonID"> Id of the lesson. </param>
+        public ActionResult ParticipantLessonOverview(int? questionListID, int? lessonID)
         {
             // Check if id was given
-            if (id == null)
+            if (questionListID == null || lessonID == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Get list of participants
-            String selectQuery = "SELECT * FROM Participant WHERE idParticipant IN(SELECT Participant_idParticipant FROM Lesson_Participant WHERE Lesson_idLesson = " + id + ");";
+            // Get list of participants that have results for this questionlist+lesson combination
+            String selectQuery = "SELECT DISTINCT p.* FROM Participant AS p JOIN QuestionResult AS qr on qr.Participant_idParticipant = p.idParticipant WHERE qr.QuestionList_idQuestionList = " + questionListID + " AND qr.QuestionList_idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + lessonID + ") ";
+
             IEnumerable<Participant> data = db.Database.SqlQuery<Participant>(selectQuery);  
 
             // Return the overview containing the data
-            ViewBag.questionListID = id;
+            ViewBag.questionListID = questionListID;
+            ViewBag.lessonID = lessonID;
+            return View(data);
+        }
+        /// <summary>
+        /// GET: Lessons/QuestionResultParticipantOverview/[id]
+        /// Get a list of all participants that have done the questionlist. 
+        /// </summary>
+        /// <param name="questionListID"> Id of the questionlist. </param>
+        /// <param name="lessonID"> Id of the lesson. </param>
+        public ActionResult QuestionResultParticipantOverview(int? questionListID, int? lessonID)
+        {
+            // Check if id was given
+            if (questionListID == null || lessonID == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Get list of questionresults for this questionlist+lesson combination
+            String selectQuery = "SELECT qr.* FROM QuestionResult AS qr JOIN Participant AS p on qr.Participant_idParticipant = p.idParticipant WHERE qr.QuestionList_idQuestionList = " + questionListID + " AND qr.QuestionList_idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + lessonID + ") ";
+            IEnumerable<QuestionResult> data = db.Database.SqlQuery<QuestionResult>(selectQuery);
+
+            // Return the overview containing the data
             return View(data);
         }
 

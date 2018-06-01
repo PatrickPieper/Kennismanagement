@@ -41,7 +41,7 @@
                 }
             </td>
             <td>
-                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("ParticipantLessonOverview", "Lessons", new { id = ViewBag.lessonID }) + "'");">
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("ParticipantLessonOverview", "Lessons", new { questionListID = item.idQuestionList, lessonID = ViewBag.lessonID }) + "'");">
                     <span class="glyphicon glyphicon-list-alt"></span> Results
                 </button>
             </td>

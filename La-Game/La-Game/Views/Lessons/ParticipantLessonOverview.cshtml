@@ -41,7 +41,7 @@
             @Html.DisplayFor(modelItem => birthDate)
         </td>
         <td>
-            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Lessons", new { id = item.idParticipant }) + "'");">
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionResultParticipantOverview", "Lessons", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID }) + "'");">
                 <span class="glyphicon glyphicon-list-alt"></span> Results
             </button>
         </td>
