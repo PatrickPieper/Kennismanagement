@@ -209,8 +209,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
+    <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
-    <Compile Include="Controllers\StudentListController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -295,6 +295,7 @@
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
       <LastGenOutput>DatabaseModel.cs</LastGenOutput>
     </Content>
+    <Content Include="Scripts\answer.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -381,12 +382,15 @@
     <Content Include="Views\QuestionLists\ModifyQuestionList.cshtml" />
     <Content Include="Views\Shared\_AddQuestionTable.cshtml" />
     <Content Include="Views\Shared\_PartialView.cshtml" />
-    <Content Include="Views\Dashboard-temprary\CreateCodes.cshtml" />
+    <Content Include="Views\QuestionResults\Create.cshtml" />
+    <Content Include="Views\QuestionResults\Delete.cshtml" />
+    <Content Include="Views\QuestionResults\Details.cshtml" />
+    <Content Include="Views\QuestionResults\Edit.cshtml" />
+    <Content Include="Views\QuestionResults\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="Views\StudentList\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

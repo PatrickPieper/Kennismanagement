@@ -1,0 +1,59 @@
+﻿@model La_Game.Models.QuestionResult
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>QuestionResult</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.startTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.startTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.endTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.endTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AnswerOption.answerText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AnswerOption.answerText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Participant.firstName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Participant.firstName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionList.questionListName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuestionList.questionListName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestionResult }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -70,6 +70,7 @@
           <Property Name="firstName" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="lastName" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="birthDate" Type="date" Nullable="false" />
+          <Property Name="studentCode" Type="int" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -80,6 +81,7 @@
           <Property Name="audio" Type="varchar" MaxLength="250" />
           <Property Name="questionText" Type="varchar" MaxLength="200" />
           <Property Name="isHidden" Type="smallint" />
+          <Property Name="likertScale" Type="tinyint" />
         </EntityType>
         <EntityType Name="QuestionList">
           <Key>
@@ -450,6 +452,7 @@
           <Property Name="birthDate" Type="DateTime" Nullable="false" Precision="0" />
           <NavigationProperty Name="Lesson_Participant" Relationship="Self.fk_Language_Participant_Participant1" FromRole="Participant" ToRole="Lesson_Participant" />
           <NavigationProperty Name="QuestionResults" Relationship="Self.fk_QuestionResult_Participant1" FromRole="Participant" ToRole="QuestionResult" />
+          <Property Name="studentCode" Type="Int32" />
         </EntityType>
         <EntityType Name="Question">
           <Key>
@@ -463,6 +466,7 @@
           <NavigationProperty Name="QuestionList_Question" Relationship="Model.fk_QuestionList_Question_Question1" FromRole="Question" ToRole="QuestionList_Question" />
           <Property Name="isHidden" Type="Int16" />
           <NavigationProperty Name="QuestionOrders" Relationship="Model.fk_QuestionOrder_Question1" FromRole="Question" ToRole="QuestionOrder" />
+          <Property Name="likertScale" Type="Byte" />
         </EntityType>
         <EntityType Name="QuestionList">
           <Key>
@@ -843,6 +847,7 @@
           <EntitySetMapping Name="Participants">
             <EntityTypeMapping TypeName="Model.Participant">
               <MappingFragment StoreEntitySet="Participant">
+                <ScalarProperty Name="studentCode" ColumnName="studentCode" />
                 <ScalarProperty Name="idParticipant" ColumnName="idParticipant" />
                 <ScalarProperty Name="firstName" ColumnName="firstName" />
                 <ScalarProperty Name="lastName" ColumnName="lastName" />
@@ -853,6 +858,7 @@
           <EntitySetMapping Name="Questions">
             <EntityTypeMapping TypeName="Model.Question">
               <MappingFragment StoreEntitySet="Question">
+                <ScalarProperty Name="likertScale" ColumnName="likertScale" />
                 <ScalarProperty Name="isHidden" ColumnName="isHidden" />
                 <ScalarProperty Name="idQuestion" ColumnName="idQuestion" />
                 <ScalarProperty Name="picture" ColumnName="picture" />
