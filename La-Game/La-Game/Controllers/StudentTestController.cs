@@ -12,7 +12,7 @@ namespace La_Game.Controllers
     {
         private LaGameDBContext db = new LaGameDBContext();
         // GET: StudentTest
-        public ActionResult Index(int? index, string studentAnswer)
+        public ActionResult Index(int? index, int studentAnswerId = 0)
         {
             if (index == null)
             {
@@ -42,11 +42,23 @@ namespace La_Game.Controllers
                 ViewBag.answerOptions = TempData["answerOptions"];
             }
 
-            if(studentAnswer != null && TempData["startTime"] != null)
+            if (studentAnswerId != 0 && TempData["startTime"] != null)
             {
                 string endTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
-                DateTime startTime = DateTime.ParseExact((string)TempData["startTime"],"yyyy:MM:dd HH:mm:ss:fff",null);
-                
+                DateTime startTime = DateTime.ParseExact((string)TempData["startTime"], "yyyy:MM:dd HH:mm:ss:fff", null);
+                int questionListId = ViewBag.questionListData[0].idQuestionList;
+                // when I have the id from participant set it here
+                QuestionResult questionResult = new QuestionResult()
+                {
+                    QuestionList_idQuestionList = questionListId,
+                    AnswerOption_idAnswer = studentAnswerId,
+                    Participant_idParticipant = 2,
+                    startTime = startTime,
+                    endTime = DateTime.ParseExact(endTime, "yyyy:MM:dd HH:mm:ss:fff", null)
+
+                };
+                db.QuestionResults.Add(questionResult);
+                db.SaveChanges();
 
             }
             
