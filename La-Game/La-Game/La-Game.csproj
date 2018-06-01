@@ -211,6 +211,7 @@
     <Compile Include="Controllers\QuestionListsController.cs" />
     <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Controllers\StudentListController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -391,6 +392,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ViewModels\" />
+    <Folder Include="Views\StudentList\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
