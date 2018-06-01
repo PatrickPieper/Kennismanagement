@@ -1,0 +1,27 @@
+﻿@model La_Game.Models.Participant
+
+@{
+    ViewBag.Title = "Results";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var results = ViewBag.questionslist;
+}
+
+<h2>Results from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName)</h2>
+
+@foreach (var item in results)
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Panel title</h3>
+        </div>
+        <div class="panel-body">
+
+            @foreach (var question in @item.Value)
+            {
+                <p>@Html.Raw(question)</p>
+            }
+
+        </div>
+    </div>
+    
+}
