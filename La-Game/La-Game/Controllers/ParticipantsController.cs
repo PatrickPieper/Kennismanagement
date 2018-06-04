@@ -149,13 +149,26 @@ namespace La_Game.Controllers
         {
             if(firstName != null && lastName!= null && birthDate!= null)
             {
-                Random rng = new Random();
+                int studentId = 400993;
+                Random rng = new Random(); 
+                while (true)
+                {
+                    studentId = rng.Next(100000, 1000000);
+                    string sqlstring = "SELECT * FROM Participant WHERE StudentCode=" + studentId;
+                    List<Participant> students = db.Participants.SqlQuery(sqlstring).ToList();           
+                    if(students.Count == 0)
+                    {
+                        break;
+                    }
+                }
+                
+                
                 Participant student = new Participant
                 {
                     firstName = firstName,
                     lastName = lastName,
                     birthDate = (DateTime)birthDate,
-                    studentCode = rng.Next(10000,1000000)
+                    studentCode = studentId
                 };
                 db.Participants.Add(student);
                 db.SaveChanges();
