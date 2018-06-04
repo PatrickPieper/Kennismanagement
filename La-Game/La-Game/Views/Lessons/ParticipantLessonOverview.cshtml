@@ -28,7 +28,7 @@
 
 @foreach (var item in Model)
 {
-    var link = Url.Action("Details", "Lessons", new { id = item.idParticipant });
+    var link = Url.Action("QuestionResultParticipantOverview", "Lessons", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID });
     <tr>
         <td onclick="Redirect('@link')">
             @Html.DisplayFor(modelItem => item.firstName)

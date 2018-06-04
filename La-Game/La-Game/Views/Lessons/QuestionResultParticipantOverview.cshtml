@@ -4,12 +4,6 @@
     ViewBag.Title = "Question Result Overview";
 }
 
-<script type="text/javascript">
-    function Redirect(link) {
-        location.href = link;
-    }
-</script>
-
 <h2> Overview Question Results by Participant - @ViewBag.Language</h2>
 
 <table class="table">
@@ -29,34 +23,27 @@
         <th>
             End Time
         </th>
-        <th></th>
     </tr>
 
 @foreach (var item in Model)
 {
-    var link = Url.Action("Details", "Lessons", new { id = item.idQuestionResult });
     <tr>
-        <td onclick="Redirect('@link')">
+        <td>
             @Html.DisplayFor(modelItem => item.QuestionList_idQuestionList)
         </td>
-        <td onclick="Redirect('@link')">
+        <td>
             @Html.DisplayFor(modelItem => item.AnswerOption_idAnswer)
         </td>
-        <td onclick="Redirect('@link')">
+        <td>
             @Html.DisplayFor(modelItem => item.Participant_idParticipant)
         </td>
-        <td onclick="Redirect('@link')">
+        <td>
             @{var startTime = item.startTime.HasValue ? item.startTime.Value.ToString("dd-MM-yyyy") : "-";}
             @Html.DisplayFor(modelItem => startTime)
         </td>
-        <td onclick="Redirect('@link')">
+        <td>
             @{var endTime = item.endTime.HasValue ? item.endTime.Value.ToString("dd-MM-yyyy") : "-";}
             @Html.DisplayFor(modelItem => endTime)
-        </td>
-        <td>
-            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Lessons", new { id = item.idQuestionResult }) + "'");">
-                <span class="glyphicon glyphicon-list-alt"></span> Results
-            </button>
         </td>
     </tr>
 }
