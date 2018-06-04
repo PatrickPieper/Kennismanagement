@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "CreateStudentCode";
+}
+
+<h2>CreateStudent</h2>
+
+
+@{
+    using (Html.BeginForm("CreateStudent", "Participants", FormMethod.Post))
+    {
+        <p>First name:</p> <input type="text" name="firstName" />
+        <p>Last name: </p> <input type="text" name="lastName" />
+        <p>Birthdate:</p> <input type="date" name="birthDate"/>
+        <input type="submit" value="Create student" name="submit" />
+    }
+}

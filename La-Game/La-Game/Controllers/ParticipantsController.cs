@@ -145,6 +145,25 @@ namespace La_Game.Controllers
             return View(participant);
         }
 
+        public ActionResult CreateStudent(DateTime? birthDate, string firstName="", string lastName="")
+        {
+            if(firstName != null && lastName!= null && birthDate!= null)
+            {
+                Random rng = new Random();
+                Participant student = new Participant
+                {
+                    firstName = firstName,
+                    lastName = lastName,
+                    birthDate = (DateTime)birthDate,
+                    studentCode = rng.Next(10000,1000000)
+                };
+                db.Participants.Add(student);
+                db.SaveChanges();
+            }
+
+            return View();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
