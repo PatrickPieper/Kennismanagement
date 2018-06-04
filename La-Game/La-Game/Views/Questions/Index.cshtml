@@ -3,43 +3,73 @@
 @{
     ViewBag.Title = "Index";
 }
+@Styles.Render("~/Content/dataTables")
 
-<h2>Index</h2>
+<h2> Question Overview </h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Questions") + "'");">
+        <span class="glyphicon glyphicon-plus"></span> Create New
+    </button>
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.picture)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.audio)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.questionText)
-        </th>
-        <th></th>
-    </tr>
+<table id="questionOverview" class="table table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.questionText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.picture)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.audio)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.picture)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.audio)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.questionText)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idQuestion }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idQuestion }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idQuestion })
-        </td>
-    </tr>
-}
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+            <tr>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.questionText)
+                </td>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.picture)
+                </td>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.audio)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Questions", new { id = item.idQuestion }) + "'");">
+                        <span class="glyphicon glyphicon-wrench"></span> Edit
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questions", new { id = item.idQuestion }) + "'");">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#questionOverview').DataTable(
+                {
+                    "pagingType": "simple_numbers",
+                    "columnDefs": [
+                        { targets: 3, orderable: false }
+                    ]
+                }
+            );
+        });
+    </script>
+}
