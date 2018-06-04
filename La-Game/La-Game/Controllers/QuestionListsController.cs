@@ -212,12 +212,6 @@ namespace La_Game.Controllers
             IEnumerable<Question> questions = db.Database.SqlQuery<Question>(selectQuery);
             ViewBag.questions = questions;
 
-            //If a name was given, use it to filter the results
-            if (!String.IsNullOrEmpty(filter))
-            {
-                questions = questions.Where(s => s.questionText.Contains(filter));
-            }
-
             // Set the listId and go to the page
             ViewBag.listId = id;
             return View(questions);
