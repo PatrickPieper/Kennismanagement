@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Lesson Details";
 }
+@Styles.Render("~/Content/dataTables")
 
 <script type="text/javascript">
     function Redirect(link) {
@@ -56,3 +57,22 @@
     </p>
 
 </div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#listOverview').DataTable(
+                {
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        { targets: [2, 4], orderable: false },
+                        { targets: '_all', orderable: true }
+                    ]
+                }
+            );
+        });
+    </script>
+}

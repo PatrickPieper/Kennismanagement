@@ -144,7 +144,13 @@
         $(document).ready(function () {
             $('#removeQuestion').DataTable(
                 {
-                    "pagingType": "simple"
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        {
+                            targets: "_all",
+                            orderable: false
+                        }
+                    ]
                 }
             );
         });
@@ -152,7 +158,13 @@
         $(document).ready(function () {
             $('#addQuestion').DataTable(
                 {
-                    "pagingType": "simple"
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        {
+                            targets: 3,
+                            orderable: false
+                        }
+                    ]
                 }
             );
         });
