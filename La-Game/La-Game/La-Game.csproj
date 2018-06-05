@@ -207,6 +207,7 @@
     <Compile Include="Controllers\AnswerOptionsController.cs" />
     <Compile Include="Controllers\BlobsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\LessonsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
@@ -619,6 +620,11 @@
     <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Lessons\QuestionResultParticipantOverview.cshtml" />
     <Content Include="Views\Home\_LanguageOverview.cshtml" />
+    <Content Include="Views\Languages\Create.cshtml" />
+    <Content Include="Views\Languages\Delete.cshtml" />
+    <Content Include="Views\Languages\Details.cshtml" />
+    <Content Include="Views\Languages\Edit.cshtml" />
+    <Content Include="Views\Languages\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

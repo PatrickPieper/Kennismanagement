@@ -16,7 +16,7 @@
 
     @foreach (var item in Model)
     {
-        //var link = Url.Action("Index", "Language", new { id = item.idLanguage });
+        var link = Url.Action("Details", "Languages", new { id = item.idLanguage });
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.languageName)

@@ -1,0 +1,26 @@
+﻿@model La_Game.Models.Language
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Language</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.languageName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.languageName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idLanguage }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
