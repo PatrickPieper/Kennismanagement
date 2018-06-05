@@ -11,14 +11,23 @@ namespace La_Game.Controllers
     {
         private readonly LaGameDBContext db = new LaGameDBContext();
 
-        public ActionResult Index(string participationCode)
+        public ActionResult Index(string participationCode,string firstName, string lastName, string studentCode)
         {
-
+            Participant participant =null;
             string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + participationCode + "'";
             List<QuestionList> questionListData = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
 
-            
-            if (questionListData.Count != 0)
+            if (firstName != null && lastName != null && studentCode != null)
+            { 
+                sqlString = "SELECT * FROM PARTICIPANT WHERE studentCode='" + studentCode + "' AND firstName='" + firstName + "' AND lastName='" + lastName+"'";
+                if(db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
+                { 
+                    participant = db.Participants.SqlQuery(sqlString).First();
+                }
+            }
+
+
+            if (questionListData.Count != 0 && participant != null)
             {
                 int questionListID = questionListData[0].idQuestionList;
                 String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
@@ -26,14 +35,16 @@ namespace La_Game.Controllers
 
                 TempData["questionListData"] = questionListData;
                 TempData["questionData"] = questionData;
+                TempData["participant"] = participant;
                 return RedirectToAction("Index", "StudentTest");
                     //View("~/Views/StudentTest/MultipleChoice.cshtml");
             }
-            else if(participationCode != null)
+            else if(participationCode != null || firstName != null || lastName != null || studentCode != null)
             {
-                ViewBag.Message = "participation code doesn't exist";
+                ViewBag.Message = "something is not typed correctly";
                 return View();
             }
+            
             return View();
         }
 

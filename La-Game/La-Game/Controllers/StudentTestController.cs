@@ -14,9 +14,11 @@ namespace La_Game.Controllers
         // GET: StudentTest
         public ActionResult Index(int? index, int studentAnswerId = 0)
         {
+            ViewBag.participant = TempData["participant"];
             if (index == null)
             {
                 ViewBag.index = 0;
+                
             }
             else
             {
@@ -47,12 +49,13 @@ namespace La_Game.Controllers
                 string endTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
                 DateTime startTime = DateTime.ParseExact((string)TempData["startTime"], "yyyy:MM:dd HH:mm:ss:fff", null);
                 int questionListId = ViewBag.questionListData[0].idQuestionList;
+                Participant participant = (Participant)TempData["participant"];
                 // when I have the id from participant set it here
                 QuestionResult questionResult = new QuestionResult()
                 {
                     QuestionList_idQuestionList = questionListId,
                     AnswerOption_idAnswer = studentAnswerId,
-                    Participant_idParticipant = 2,
+                    Participant_idParticipant = participant.idParticipant,
                     startTime = startTime,
                     endTime = DateTime.ParseExact(endTime, "yyyy:MM:dd HH:mm:ss:fff", null)
 
