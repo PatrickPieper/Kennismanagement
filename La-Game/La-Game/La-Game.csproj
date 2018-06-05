@@ -210,8 +210,11 @@
     <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\LessonsController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\ParticipantsController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
+    <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Controllers\StudentListController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -626,6 +629,22 @@
     <Content Include="Views\Languages\Edit.cshtml" />
     <Content Include="Views\Languages\Index.cshtml" />
     <Content Include="Views\Languages\_AddLanguageMembersTable.cshtml" />
+    <Content Include="Views\Blobs\CreateBlobContainer.cshtml" />
+    <Content Include="Views\Blobs\ListBlobs.cshtml" />
+    <Content Include="Views\Dashboard-temprary\CreateCodes.cshtml" />
+    <Content Include="Views\Participants\Create.cshtml" />
+    <Content Include="Views\Participants\CreateStudent.cshtml" />
+    <Content Include="Views\Participants\Delete.cshtml" />
+    <Content Include="Views\Participants\Details.cshtml" />
+    <Content Include="Views\Participants\Edit.cshtml" />
+    <Content Include="Views\Participants\Index.cshtml" />
+    <Content Include="Views\Participants\Results.cshtml" />
+    <Content Include="Views\QuestionResults\Create.cshtml" />
+    <Content Include="Views\QuestionResults\Delete.cshtml" />
+    <Content Include="Views\QuestionResults\Details.cshtml" />
+    <Content Include="Views\QuestionResults\Edit.cshtml" />
+    <Content Include="Views\QuestionResults\Index.cshtml" />
+    <Content Include="Views\Shared\_QuestionPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
