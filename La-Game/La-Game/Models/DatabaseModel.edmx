@@ -37,13 +37,12 @@
           <Property Name="Language_idLanguage" Type="int" Nullable="false" />
           <Property Name="lessonName" Type="varchar" MaxLength="45" Nullable="false" />
           <Property Name="description" Type="varchar" MaxLength="200" />
-          <Property Name="isHidden" Type="tinyint" />
         </EntityType>
         <EntityType Name="Lesson_Participant">
           <Key>
-            <PropertyRef Name="idLesson_Participant" />
+            <PropertyRef Name="idLanguage_Participant" />
           </Key>
-          <Property Name="idLesson_Participant" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="idLanguage_Participant" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Participant_idParticipant" Type="int" Nullable="false" />
           <Property Name="Lesson_idLesson" Type="int" Nullable="false" />
         </EntityType>
@@ -135,6 +134,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="fk_Language_Participant_Lesson1">
+          <End Role="Lesson" Type="Self.Lesson" Multiplicity="1" />
+          <End Role="Lesson_Participant" Type="Self.Lesson_Participant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lesson">
+              <PropertyRef Name="idLesson" />
+            </Principal>
+            <Dependent Role="Lesson_Participant">
+              <PropertyRef Name="Lesson_idLesson" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="fk_Language_Participant_Participant1">
+          <End Role="Participant" Type="Self.Participant" Multiplicity="1" />
+          <End Role="Lesson_Participant" Type="Self.Lesson_Participant" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Participant">
+              <PropertyRef Name="idParticipant" />
+            </Principal>
+            <Dependent Role="Lesson_Participant">
+              <PropertyRef Name="Participant_idParticipant" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="fk_Language_User_Language1">
           <End Role="Language" Type="Self.Language" Multiplicity="1" />
           <End Role="Language_Member" Type="Self.Language_Member" Multiplicity="*" />
@@ -168,30 +191,6 @@
             </Principal>
             <Dependent Role="Lesson">
               <PropertyRef Name="Language_idLanguage" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_Lesson_Participant_Lesson1">
-          <End Role="Lesson" Type="Self.Lesson" Multiplicity="1" />
-          <End Role="Lesson_Participant" Type="Self.Lesson_Participant" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Lesson">
-              <PropertyRef Name="idLesson" />
-            </Principal>
-            <Dependent Role="Lesson_Participant">
-              <PropertyRef Name="Lesson_idLesson" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="fk_Lesson_Participant_Participant1">
-          <End Role="Participant" Type="Self.Participant" Multiplicity="1" />
-          <End Role="Lesson_Participant" Type="Self.Lesson_Participant" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Participant">
-              <PropertyRef Name="idParticipant" />
-            </Principal>
-            <Dependent Role="Lesson_Participant">
-              <PropertyRef Name="Participant_idParticipant" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -321,6 +320,14 @@
             <End Role="Question" EntitySet="Question" />
             <End Role="AnswerOption" EntitySet="AnswerOption" />
           </AssociationSet>
+          <AssociationSet Name="fk_Language_Participant_Lesson1" Association="Self.fk_Language_Participant_Lesson1">
+            <End Role="Lesson" EntitySet="Lesson" />
+            <End Role="Lesson_Participant" EntitySet="Lesson_Participant" />
+          </AssociationSet>
+          <AssociationSet Name="fk_Language_Participant_Participant1" Association="Self.fk_Language_Participant_Participant1">
+            <End Role="Participant" EntitySet="Participant" />
+            <End Role="Lesson_Participant" EntitySet="Lesson_Participant" />
+          </AssociationSet>
           <AssociationSet Name="fk_Language_User_Language1" Association="Self.fk_Language_User_Language1">
             <End Role="Language" EntitySet="Language" />
             <End Role="Language_Member" EntitySet="Language_Member" />
@@ -332,14 +339,6 @@
           <AssociationSet Name="fk_Lesson_Language" Association="Self.fk_Lesson_Language">
             <End Role="Language" EntitySet="Language" />
             <End Role="Lesson" EntitySet="Lesson" />
-          </AssociationSet>
-          <AssociationSet Name="fk_Lesson_Participant_Lesson1" Association="Self.fk_Lesson_Participant_Lesson1">
-            <End Role="Lesson" EntitySet="Lesson" />
-            <End Role="Lesson_Participant" EntitySet="Lesson_Participant" />
-          </AssociationSet>
-          <AssociationSet Name="fk_Lesson_Participant_Participant1" Association="Self.fk_Lesson_Participant_Participant1">
-            <End Role="Participant" EntitySet="Participant" />
-            <End Role="Lesson_Participant" EntitySet="Lesson_Participant" />
           </AssociationSet>
           <AssociationSet Name="fk_Lesson_QuestionList_Lesson1" Association="Self.fk_Lesson_QuestionList_Lesson1">
             <End Role="Lesson" EntitySet="Lesson" />
@@ -423,17 +422,16 @@
           <NavigationProperty Name="Language" Relationship="Self.fk_Lesson_Language" FromRole="Lesson" ToRole="Language" />
           <NavigationProperty Name="Lesson_Participant" Relationship="Self.fk_Language_Participant_Lesson1" FromRole="Lesson" ToRole="Lesson_Participant" />
           <NavigationProperty Name="Lesson_QuestionList" Relationship="Model.fk_Lesson_QuestionList_Lesson1" FromRole="Lesson" ToRole="Lesson_QuestionList" />
-          <Property Name="isHidden" Type="Byte" />
         </EntityType>
         <EntityType Name="Lesson_Participant">
           <Key>
-            <PropertyRef Name="idLesson_Participant" />
+            <PropertyRef Name="idLanguage_Participant" />
           </Key>
+          <Property Name="idLanguage_Participant" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Participant_idParticipant" Type="Int32" Nullable="false" />
           <Property Name="Lesson_idLesson" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Lesson" Relationship="Self.fk_Language_Participant_Lesson1" FromRole="Lesson_Participant" ToRole="Lesson" />
           <NavigationProperty Name="Participant" Relationship="Self.fk_Language_Participant_Participant1" FromRole="Lesson_Participant" ToRole="Participant" />
-          <Property Name="idLesson_Participant" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
         </EntityType>
         <EntityType Name="Member">
           <Key>
@@ -493,8 +491,8 @@
           <Property Name="QuestionList_idQuestionList" Type="Int32" Nullable="false" />
           <Property Name="AnswerOption_idAnswer" Type="Int32" Nullable="false" />
           <Property Name="Participant_idParticipant" Type="Int32" Nullable="false" />
-          <Property Name="startTime" Type="DateTime" Precision="7" />
-          <Property Name="endTime" Type="DateTime" Precision="7" />
+          <Property Name="startTime" Type="DateTime" />
+          <Property Name="endTime" Type="DateTime" />
           <NavigationProperty Name="AnswerOption" Relationship="Self.fk_QuestionResult_Answer1" FromRole="QuestionResult" ToRole="AnswerOption" />
           <NavigationProperty Name="Participant" Relationship="Self.fk_QuestionResult_Participant1" FromRole="QuestionResult" ToRole="Participant" />
           <NavigationProperty Name="QuestionList" Relationship="Self.fk_QuestionResult_QuestionList1" FromRole="QuestionResult" ToRole="QuestionList" />
@@ -821,7 +819,6 @@
           <EntitySetMapping Name="Lessons">
             <EntityTypeMapping TypeName="Model.Lesson">
               <MappingFragment StoreEntitySet="Lesson">
-                <ScalarProperty Name="isHidden" ColumnName="isHidden" />
                 <ScalarProperty Name="idLesson" ColumnName="idLesson" />
                 <ScalarProperty Name="Language_idLanguage" ColumnName="Language_idLanguage" />
                 <ScalarProperty Name="lessonName" ColumnName="lessonName" />
@@ -832,7 +829,7 @@
           <EntitySetMapping Name="Lesson_Participant">
             <EntityTypeMapping TypeName="Model.Lesson_Participant">
               <MappingFragment StoreEntitySet="Lesson_Participant">
-                <ScalarProperty Name="idLesson_Participant" ColumnName="idLesson_Participant" />
+                <ScalarProperty Name="idLanguage_Participant" ColumnName="idLanguage_Participant" />
                 <ScalarProperty Name="Participant_idParticipant" ColumnName="Participant_idParticipant" />
                 <ScalarProperty Name="Lesson_idLesson" ColumnName="Lesson_idLesson" />
               </MappingFragment>

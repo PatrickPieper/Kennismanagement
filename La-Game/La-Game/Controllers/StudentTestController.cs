@@ -12,11 +12,13 @@ namespace La_Game.Controllers
     {
         private LaGameDBContext db = new LaGameDBContext();
         // GET: StudentTest
-        public ActionResult Index(int? index, string studentAnswer)
+        public ActionResult Index(int? index, int studentAnswerId = 0)
         {
+            ViewBag.participant = TempData["participant"];
             if (index == null)
             {
                 ViewBag.index = 0;
+                
             }
             else
             {
@@ -42,12 +44,25 @@ namespace La_Game.Controllers
                 ViewBag.answerOptions = TempData["answerOptions"];
             }
 
-            if(studentAnswer != null)
+            if (studentAnswerId != 0 && TempData["startTime"] != null)
             {
-                string[,] studentAnswers = new string[ViewBag.questionData.Count, 2];
-                studentAnswers[(int)index-2,0] = studentAnswer;
-                studentAnswers[(int)index-2, 1] = "timer";
-                ViewBag.studentAnswers = studentAnswers;
+                string endTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
+                DateTime startTime = DateTime.ParseExact((string)TempData["startTime"], "yyyy:MM:dd HH:mm:ss:fff", null);
+                int questionListId = ViewBag.questionListData[0].idQuestionList;
+                Participant participant = (Participant)TempData["participant"];
+                // when I have the id from participant set it here
+                QuestionResult questionResult = new QuestionResult()
+                {
+                    QuestionList_idQuestionList = questionListId,
+                    AnswerOption_idAnswer = studentAnswerId,
+                    Participant_idParticipant = participant.idParticipant,
+                    startTime = startTime,
+                    endTime = DateTime.ParseExact(endTime, "yyyy:MM:dd HH:mm:ss:fff", null)
+
+                };
+                db.QuestionResults.Add(questionResult);
+                db.SaveChanges();
+
             }
             
             //to do: when we have a boolean for LikertScale or MultipleChoice return the right view
