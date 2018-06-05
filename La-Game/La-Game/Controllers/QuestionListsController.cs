@@ -44,7 +44,7 @@ namespace La_Game.Controllers
             }
 
             // Get the questions belonging to the list and put the result in the viewbag
-            String selectQuery = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ") ORDER BY qo.[order]";
+            String selectQuery = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.idQuestionList = " + id + " ORDER BY qo.[order]";
             IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
             ViewBag.questions = data.ToList();
 
@@ -208,7 +208,7 @@ namespace La_Game.Controllers
             }
 
             // Get all the questions that are currently in the questionlist
-            String selectQuery = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + id + ") ORDER BY qo.[order]";
+            String selectQuery = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.idQuestionList = " + id + " ORDER BY qo.[order]";
             IEnumerable<Question> questions = db.Database.SqlQuery<Question>(selectQuery);
             ViewBag.questions = questions;
 
