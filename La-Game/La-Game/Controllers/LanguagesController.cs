@@ -115,6 +115,18 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Languages/GetLanguageMembers/[1]
+        public PartialViewResult GetLanguageMembers(int? id)
+        {
+            // Get the members from the database
+            String selectQuery = "SELECT * FROM Member WHERE idMember IN(SELECT Member_idMember FROM Language_Member WHERE Language_idLanguage = " + id + ");";
+            IEnumerable<Member> data = db.Database.SqlQuery<Member>(selectQuery);
+
+            // Set the languageId and return the PartialView
+            ViewBag.languageId = id;
+            return PartialView("_AddLanguageMembersTable", data);
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

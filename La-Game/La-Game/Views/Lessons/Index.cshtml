@@ -54,6 +54,11 @@
         }
     </tbody>
 </table>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+    </button>
+</p>
 
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
@@ -64,6 +69,7 @@
             $('#lessonOverview').DataTable(
                 {
                     "pagingType": "simple",
+                    "bFilter": false,
                     "columnDefs": [
                         { targets: 2, orderable: false }
                     ]

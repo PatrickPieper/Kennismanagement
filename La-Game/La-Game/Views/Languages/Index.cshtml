@@ -3,31 +3,70 @@
 @{
     ViewBag.Title = "Index";
 }
+@Styles.Render("~/Content/dataTables")
 
-<h2>Index</h2>
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.languageName)
-        </th>
-        <th></th>
-    </tr>
+<h2>
+    Languages
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Languages") + "'");">
+        <span class="glyphicon glyphicon-plus"></span> Create New
+    </button>
+</h2>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.languageName)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idLanguage }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idLanguage }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idLanguage })
-        </td>
-    </tr>
-}
+<table id="language" class="table table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Language
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var link = Url.Action("Details", "Languages", new { id = item.idLanguage });
+            <tr>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.languageName)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Languages", new { id = item.idLanguage }) + "'");">
+                        <span class="glyphicon glyphicon-wrench"></span> Edit
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Languages", new { id = item.idLanguage }) + "'");">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
 
 </table>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+    </button>
+</p>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#language').DataTable(
+                {
+                    "pagingType": "simple",
+                    "bLengthChange": false,
+                }
+            );
+        });
+    </script>
+}

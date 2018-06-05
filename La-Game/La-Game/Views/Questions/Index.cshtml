@@ -55,6 +55,11 @@
     </tbody>
 
 </table>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+    </button>
+</p>
 
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
@@ -64,7 +69,7 @@
         $(document).ready(function () {
             $('#questionOverview').DataTable(
                 {
-                    "pagingType": "simple_numbers",
+                    "pagingType": "simple",
                     "columnDefs": [
                         { targets: 3, orderable: false }
                     ]
