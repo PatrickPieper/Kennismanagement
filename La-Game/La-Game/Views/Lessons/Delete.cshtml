@@ -4,15 +4,15 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+<h2>Delete Lesson</h2>
 
 <h3>Are you sure you want to delete this?</h3>
+<h4>This cannot be undone unless you contact an admin.</h4>
 <div>
-    <h4>Lesson</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.lessonName)
+            Lesson
         </dt>
 
         <dd>
@@ -20,7 +20,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.description)
+            Description
         </dt>
 
         <dd>
@@ -28,7 +28,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Language.languageName)
+            Language
         </dt>
 
         <dd>
@@ -37,12 +37,17 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons") + "'");">
+                <span class="glyphicon glyphicon-menu-left"></span> Back
+            </button>
+            <button type="submit" value="Delete" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash"></span> Delete
+            </button>
         </div>
     }
 </div>

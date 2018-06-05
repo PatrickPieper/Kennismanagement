@@ -4,6 +4,7 @@
     ViewBag.Title = "Details";
     var questionList = ViewBag.questions;
 }
+@Styles.Render("~/Content/dataTables")
 
 <script type="text/javascript">
     function Redirect(link) {
@@ -64,41 +65,44 @@
         </button>
     </h3>
 
-    <table class="table">
-        <tr>
-            <th></th>
-            <th>
-                Question
-            </th>
-            <th>
-                Picture
-            </th>
-            <th>
-                Audio
-            </th>
-        </tr>
-
-        @foreach (var item in questionList)
-        {
-            var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
-
-            IEnumerable<La_Game.Models.Question> questions = ViewBag.questions;
-            var number = questions.ToList().FindIndex(a => a.idQuestion == item.idQuestion);
+    <table id="details" class="table table table-striped table-hover">
+        <thead>
             <tr>
-                <td onclick="Redirect('@link')" style="text-align: center">
-                    @(number + 1)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @item.questionText
-                </td>
-                <td onclick="Redirect('@link')">
-                    @item.picture
-                </td>
-                <td onclick="Redirect('@link')">
-                    @item.audio
-                </td>
+                <th></th>
+                <th>
+                    Question
+                </th>
+                <th>
+                    Picture
+                </th>
+                <th>
+                    Audio
+                </th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var item in questionList)
+            {
+                var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+
+                IEnumerable<La_Game.Models.Question> questions = ViewBag.questions;
+                var number = questions.ToList().FindIndex(a => a.idQuestion == item.idQuestion);
+                <tr>
+                    <td onclick="Redirect('@link')" style="text-align: center">
+                        @(number + 1)
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @item.questionText
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @item.picture
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @item.audio
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 </div>
 <p>
@@ -106,3 +110,18 @@
         <span class="glyphicon glyphicon-menu-left"></span> Back to list
     </button>
 </p>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#details').DataTable(
+                {
+                    "pagingType": "simple",
+                }
+            );
+        });
+    </script>
+}

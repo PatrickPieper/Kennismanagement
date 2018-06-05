@@ -1,0 +1,35 @@
+﻿@model IEnumerable<La_Game.Models.Member>
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<table table id="languageMembers" class="table table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Id
+            </th>
+            <th>
+                Username
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var item in Model)
+        {
+            //var link = Url.Action("Details", "Members", new { id = item.idMember });
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.idMember)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.username)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

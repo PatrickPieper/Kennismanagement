@@ -9,7 +9,7 @@
         <EntityTypeShape EntityType="Model.Language" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Language_Member" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Lesson" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Lesson_Participant" Width="1.5" PointX="5.25" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Lesson_Participant" Width="1.875" PointX="5.5" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Member" Width="1.5" PointX="0.75" PointY="1.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Participant" Width="1.5" PointX="3" PointY="11" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Question" Width="1.5" PointX="7.5" PointY="9.625" IsExpanded="true" />

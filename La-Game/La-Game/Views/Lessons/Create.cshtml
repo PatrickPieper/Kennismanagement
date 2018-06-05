@@ -4,10 +4,10 @@
     ViewBag.Title = "Create new Lesson";
 }
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Lesson</h4>
         <hr />
@@ -29,16 +29,21 @@
         </div>
 
         <div class="form-group">
+            <input type="hidden" name="Language_idLanguage" value=@(ViewBag.Language) />
+        </div>
+
+        <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <button type="button" class="btn btn-default" onclick="@(" window.location.href='" + @Url.Action("Index", "Lessons") + "' ");">
+                    <span class="glyphicon glyphicon-menu-left"></span> Back
+                </button>
+                <button type="submit" value="Create" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> Create
+                </button>
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

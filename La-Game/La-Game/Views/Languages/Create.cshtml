@@ -1,0 +1,35 @@
+﻿@model La_Game.Models.Language
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create Language</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.languageName, "Language", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.languageName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.languageName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Languages") + "'");">
+                    <span class="glyphicon glyphicon-menu-left"></span> Back
+                </button>
+                <button type="submit" value="Create" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> Create
+                </button>
+            </div>
+        </div>
+    </div>
+}

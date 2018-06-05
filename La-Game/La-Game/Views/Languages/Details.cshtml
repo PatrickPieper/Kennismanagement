@@ -1,0 +1,54 @@
+﻿@model La_Game.Models.Language
+
+@{
+    ViewBag.Title = "Details";
+}
+@Styles.Render("~/Content/dataTables")
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<div class="container">
+    <div class="row">
+        <div>
+            <h2>Language Details</h2>
+            <div>
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        Language
+                    </dt>
+
+                    <dd>
+                        @Html.DisplayFor(model => model.languageName)
+                    </dd>
+
+                </dl>
+            </div>
+            <h3> Active Members </h3>
+            <div class="table-responsive col-md-6">
+                @{Html.RenderAction("GetLanguageMembers", "Languages");}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#languageMembers').DataTable(
+                {
+                    "pagingType": "simple",
+                    "bLengthChange": false,
+                    "bFilter": false,
+                }
+            );
+        });
+    </script>
+}

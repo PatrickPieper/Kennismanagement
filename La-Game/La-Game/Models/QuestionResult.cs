@@ -18,8 +18,8 @@ namespace La_Game.Models
         public int QuestionList_idQuestionList { get; set; }
         public int AnswerOption_idAnswer { get; set; }
         public int Participant_idParticipant { get; set; }
-        public Nullable<long> startTime { get; set; }
-        public Nullable<long> endTime { get; set; }
+        public Nullable<System.DateTime> startTime { get; set; }
+        public Nullable<System.DateTime> endTime { get; set; }
     
         public virtual AnswerOption AnswerOption { get; set; }
         public virtual Participant Participant { get; set; }

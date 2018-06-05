@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
+@Styles.Render("~/Content/dataTables")
 
 <script type="text/javascript">
     function Redirect(link) {
@@ -10,40 +11,70 @@
     }
 </script>
 
-<h2> Overview Lessons - @ViewBag.Language</h2>
+<h2> Overview Lessons - @ViewBag.Language.languageName</h2>
 
 <p>
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Lessons") + "'");">
         <span class="glyphicon glyphicon-plus"></span> Create New
     </button>
 </p>
-<table class="table">
-    <tr>
-        <th>
-            Lesson
-        </th>
-        <th>
-            Description
-        </th>
-        <th></th>
-    </tr>
+<table id="lessonOverview" class="table table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Lesson
+            </th>
+            <th>
+                Description
+            </th>
+            <th></th>
+        </tr>
+    </thead>
 
-@foreach (var item in Model)
-{
-    var link = Url.Action("Details", "Lessons", new { id = item.idLesson });
-    <tr>
-        <td onclick="Redirect('@link')">
-            @Html.DisplayFor(modelItem => item.lessonName)
-        </td>
-        <td onclick="Redirect('@link')">
-            @Html.DisplayFor(modelItem => item.description)
-        </td>
-        <td>
-            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Lessons", new { id = item.idLesson }) + "'");">
-                <span class="glyphicon glyphicon-remove"></span> Remove
-            </button>
-        </td>
-    </tr>
-}
-
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var link = Url.Action("Details", "Lessons", new { id = item.idLesson });
+            <tr>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.lessonName)
+                </td>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.description)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Lessons", new { id = item.idLesson }) + "'");">
+                        <span class="glyphicon glyphicon-wrench"></span> Edit
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Lessons", new { id = item.idLesson }) + "'");">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+    </button>
+</p>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#lessonOverview').DataTable(
+                {
+                    "pagingType": "simple",
+                    "bFilter": false,
+                    "columnDefs": [
+                        { targets: 2, orderable: false }
+                    ]
+                }
+            );
+        });
+    </script>
+}

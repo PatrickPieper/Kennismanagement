@@ -1,0 +1,51 @@
+﻿@model IEnumerable<La_Game.Models.Participant>
+
+@{
+    ViewBag.Title = "Participant Overview";
+}
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<h2> Overview Participants in Lesson - @ViewBag.Language</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last Name
+        </th>
+        <th>
+            Birth Date
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    var link = Url.Action("QuestionResultParticipantOverview", "Lessons", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID });
+    <tr>
+        <td onclick="Redirect('@link')">
+            @Html.DisplayFor(modelItem => item.firstName)
+        </td>
+        <td onclick="Redirect('@link')">
+            @Html.DisplayFor(modelItem => item.lastName)
+        </td>
+        <td onclick="Redirect('@link')">
+            @{var birthDate = item.birthDate.ToString("dd-MM-yyyy");}
+            @Html.DisplayFor(modelItem => birthDate)
+        </td>
+        <td>
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionResultParticipantOverview", "Lessons", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID }) + "'");">
+                <span class="glyphicon glyphicon-list-alt"></span> Results
+            </button>
+        </td>
+    </tr>
+}
+
+</table>

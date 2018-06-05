@@ -14,9 +14,9 @@ namespace La_Game.Models
     
     public partial class Lesson_Participant
     {
-        public int idLanguage_Participant { get; set; }
         public int Participant_idParticipant { get; set; }
         public int Lesson_idLesson { get; set; }
+        public int idLesson_Participant { get; set; }
     
         public virtual Lesson Lesson { get; set; }
         public virtual Participant Participant { get; set; }
