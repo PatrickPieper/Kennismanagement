@@ -4,7 +4,7 @@ var answerType = $('input[name=answerType]');
 
 answerType.change(function () {
     var selected = $('input[name=answerType]:checked');
-    if (selected.val() === 'meerkeuze') {
+    if (selected.val() === "multiplechoice") {
         document.getElementById("Option").style.display = 'inline';
         document.getElementById("AddAnswer").style.display = 'inline';
         document.getElementById("test").style.display = 'none';

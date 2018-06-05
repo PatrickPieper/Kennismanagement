@@ -48,7 +48,7 @@
             </div>
             <div class="form-check col-md-4">
                 <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="answerType" id="multiplechoice" value="meerkeuze">
+                    <input type="radio" class="form-check-input" name="answerType" id="multiplechoice" value="multiplechoice">
                     Multiple choice
                 </label>
             </div>
@@ -69,8 +69,8 @@
             <div class="form-horizontal">
                 <hr />
                 <div id="Option" style="display:none" class="col-sm-12">
-                    @Html.Partial("_PartialView")
-                    @Html.Partial("_PartialView")
+                    @Html.Partial("_QuestionPartial")
+                    @Html.Partial("_QuestionPartial")
                 </div>
                 <a class="btn btn-success" id="AddAnswer" style="display:none" data-url='@Url.Action("AddAnswerOption", "AnswerOptions")'><i class="fas fa-plus"> Add answer</i></a>
             </div>
