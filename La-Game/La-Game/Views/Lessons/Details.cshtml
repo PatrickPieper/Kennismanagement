@@ -1,0 +1,48 @@
+﻿@model La_Game.Models.Lesson
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4> Lesson </h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Lesson
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.lessonName)
+        </dd>
+
+        <dt>
+            Description
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.description)
+        </dd>
+
+        <dt>
+            Language
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Language.languageName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Lessons", new { id = Model.idLesson }) + "'");">
+        <span class="glyphicon glyphicon-wrench"></span> Edit
+    </button>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to list
+    </button>
+</p>
+
+<!-- TODO - QUESTIONLISTS HERE -->

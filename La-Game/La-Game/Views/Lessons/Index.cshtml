@@ -1,0 +1,49 @@
+﻿@model IEnumerable<La_Game.Models.Lesson>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<h2> Overview Lessons - @ViewBag.Language</h2>
+
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Lessons") + "'");">
+        <span class="glyphicon glyphicon-plus"></span> Create New
+    </button>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Lesson
+        </th>
+        <th>
+            Description
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model)
+{
+    var link = Url.Action("Details", "Lessons", new { id = item.idLesson });
+    <tr>
+        <td onclick="Redirect('@link')">
+            @Html.DisplayFor(modelItem => item.lessonName)
+        </td>
+        <td onclick="Redirect('@link')">
+            @Html.DisplayFor(modelItem => item.description)
+        </td>
+        <td>
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Lessons", new { id = item.idLesson }) + "'");">
+                <span class="glyphicon glyphicon-remove"></span> Remove
+            </button>
+        </td>
+    </tr>
+}
+
+</table>

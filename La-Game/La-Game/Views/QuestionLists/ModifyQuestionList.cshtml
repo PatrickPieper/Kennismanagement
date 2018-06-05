@@ -14,9 +14,9 @@
 <div>
     <h2>
         Add/Remove Question
-            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
-                <span class="glyphicon glyphicon-menu-left"></span> Back to list
-            </button>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
+            <span class="glyphicon glyphicon-menu-left"></span> Back to list
+        </button>
     </h2>
 
     @using (Html.BeginForm("ModifyQuestionList", "QuestionLists", FormMethod.Get))
@@ -31,13 +31,15 @@
             <div class="table-responsive col-md-6">
                 <table class="table">
                     <tr>
+                        <th></th>
+                        <th></th>
                         <th>
                             Question
                         </th>
-                        <th>
+                        <th style="text-align: center">
                             Picture
                         </th>
-                        <th>
+                        <th style="text-align: center">
                             Audio
                         </th>
                         <th></th>
@@ -46,11 +48,56 @@
                     @foreach (var item in Model)
                     {
                         var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+
+                        IEnumerable<La_Game.Models.Question> questions = ViewBag.questions;
+                        var number = questions.ToList().FindIndex(a => a.idQuestion == item.idQuestion);
                         <tr>
+                            <td onclick="Redirect('@link')" style="text-align: center">
+                                @(number + 1)
+                            </td>
+                            <td>
+                                <div>
+                                    <div class="col-md-1">
+                                        @if (number + 1 != 1)
+                                        {
+                                            using (Html.BeginForm("MoveQuestionInList", "QuestionLists", FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" value="MoveUp" class="btn btn-default btn-xs" )>
+                                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                                </button>
+
+                                                <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
+                                                <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
+                                                <input type="hidden" name="movedTo" value=@(number - 1) />
+                                                <input type="hidden" name="upDown" value=0 />
+                                            }
+                                        }
+                                    </div>
+
+                                    <div class="col-md-1">
+                                        @if (number + 1 != questions.Count())
+                                        {
+                                            using (Html.BeginForm("MoveQuestionInList", "QuestionLists", FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" value="MoveDown" class="btn btn-default btn-xs">
+                                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                                </button>
+
+                                                <input type="hidden" name="Question_idQuestion" value="@Html.Raw(item.idQuestion)" />
+                                                <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(ViewBag.listId)" />
+                                                <input type="hidden" name="movedTo" value=@(number + 1) />
+                                                <input type="hidden" name="upDown" value=1 />
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </td>
                             <td onclick="Redirect('@link')">
                                 @Html.DisplayFor(modelItem => item.questionText)
                             </td>
-                            <td onclick="Redirect('@link')">
+                            <td onclick="Redirect('@link')" style="text-align: center">
                                 @{
                                     if (!String.IsNullOrEmpty(item.picture))
                                     {
@@ -58,7 +105,7 @@
                                     }
                                 }
                             </td>
-                            <td onclick="Redirect('@link')">
+                            <td onclick="Redirect('@link')" style="text-align: center">
                                 @{
                                     if (!String.IsNullOrEmpty(item.audio))
                                     {
