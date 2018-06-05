@@ -67,6 +67,8 @@
             $('#listOverview').DataTable(
                 {
                     "pagingType": "simple",
+                    "bLengthChange": false,
+                    "bFilter": false,
                     "columnDefs": [
                         { targets: [2, 4], orderable: false },
                         { targets: '_all', orderable: true }

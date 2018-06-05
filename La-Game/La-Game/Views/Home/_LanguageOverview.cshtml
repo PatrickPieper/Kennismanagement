@@ -1,11 +1,5 @@
 ﻿@model IEnumerable<La_Game.Models.Language>
 
-<script type="text/javascript">
-    function Redirect(link) {
-        location.href = link;
-    }
-</script>
-
 <table class="table">
     <tr>
         <th>
@@ -18,7 +12,7 @@
     {
         var link = Url.Action("Details", "Languages", new { id = item.idLanguage });
         <tr>
-            <td>
+            <td onclick="Redirect('@link')">
                 @Html.DisplayFor(modelItem => item.languageName)
             </td>
             <td>
