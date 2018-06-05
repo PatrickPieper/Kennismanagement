@@ -16,7 +16,7 @@ namespace La_Game.Controllers
 
         public ActionResult AddAnswerOption()
         {
-            return PartialView("_PartialView");
+            return PartialView("_QuestionPartial");
         }
 
 
