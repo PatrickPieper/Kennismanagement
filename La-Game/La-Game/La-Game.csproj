@@ -644,6 +644,8 @@
     <Content Include="Views\QuestionResults\Edit.cshtml" />
     <Content Include="Views\QuestionResults\Index.cshtml" />
     <Content Include="Views\Shared\_QuestionPartial.cshtml" />
+    <Content Include="Views\Lessons\ManageLists.cshtml" />
+    <Content Include="Views\Lessons\_AddQuestionListTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<La_Game.Models.QuestionList>
 
-<table id="listOverview" class="table table table-striped table-hover">
+<table id="addQuestionList" class="table table table-striped table-hover">
     <thead>
         <tr>
             <th>
@@ -15,7 +15,6 @@
             <th>
                 <p>Active</p>
             </th>
-            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -45,25 +44,18 @@
                     }
                 </td>
                 <td>
-                    @if (item.isActive == 0 || item.isActive == null)
+                    @using (Html.BeginForm("AddList", "Lessons", FormMethod.Post))
                     {
-                        <button type="submit" value="Activate" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-plus"></span> Activate List
+                        @Html.AntiForgeryToken()
+                        <button type="submit" value="Add" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-plus"></span> Add
                         </button>
+
+                        <input type="hidden" name="Lesson_idLesson" value="@Html.Raw(ViewBag.idLesson)" />
+                        <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(item.idQuestionList)" />
                     }
-                    else
-                    { <button type="submit" value="Activate" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-plus"></span> Deactivate List
-                        </button>
-                    }
-                </td>
-                <td>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("ParticipantLessonOverview", "Lessons", new { questionListID = item.idQuestionList, lessonID = ViewBag.lessonID }) + "'");">
-                        <span class="glyphicon glyphicon-list-alt"></span> Results
-                    </button>
                 </td>
             </tr>
         }
-
     </tbody>
 </table>
