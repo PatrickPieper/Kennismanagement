@@ -52,6 +52,7 @@ namespace La_Game.Controllers
             }
 
             // Redirect to the detail page
+            ViewBag.idLanguage = idLanguage;
             return View(lesson);
         }
 
@@ -238,11 +239,11 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: Lessons/AddListToLesson/[idLesson]
+        /// GET: Lessons/AddListToLesson/[idLesson]?idLanguage=[idLanguage]
         /// Navigate to a page where the list of questionlists can be found so they can be added to the lesson.
         /// </summary>
         /// <param name="idLesson"> Id of the lesson. </param>
-        /// <returns></returns>
+        /// <param name="idLanguage"> Id of the language. </param>
         public ActionResult ManageLists(int? idLesson)
         {
             // Check if id was given
@@ -284,7 +285,7 @@ namespace La_Game.Controllers
             }
 
             // Set the lessonId and return the PartialView
-            ViewBag.lessonId = idLesson;
+            ViewBag.idLesson = idLesson;
             return PartialView("_AddQuestionListTable", allLists);
         }
 
@@ -297,6 +298,8 @@ namespace La_Game.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddList([Bind(Include = "Lesson_idLesson,QuestionList_idQuestionList")] FormCollection collection)
         {
+            try
+            {
                 // Check if the neccesary ids were given
                 if (collection.Get("Lesson_idLesson") == null || collection.Get("QuestionList_idQuestionList") == null)
                 {
@@ -311,12 +314,16 @@ namespace La_Game.Controllers
                 };
                 db.Lesson_QuestionList.Add(lesson_questionlist);
                 db.SaveChanges();
- 
+            }
+            catch
+            {
+                // Adding to list failed
+            }
 
             // Redirect back to the list to reload the data
             return RedirectToAction("ManageLists", new { idLesson = collection.Get("Lesson_idLesson") });
         }
-        
+
         /// <summary>
         /// POST: Lessons/RemoveList
         /// Remove the database entry that connects the questionlist to the lesson.
@@ -347,7 +354,7 @@ namespace La_Game.Controllers
             }
 
             // Redirect back to the list to reload the data
-            return RedirectToAction("ManageLists", new { idLesson = collection.Get("Lesson_idLesson")});
+            return RedirectToAction("ManageLists", new { idLesson = collection.Get("Lesson_idLesson") });
         }
 
         protected override void Dispose(bool disposing)

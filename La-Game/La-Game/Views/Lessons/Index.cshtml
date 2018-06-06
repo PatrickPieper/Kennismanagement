@@ -34,7 +34,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            var link = Url.Action("Details", "Lessons", new { id = item.idLesson });
+            var link = Url.Action("Details", "Lessons", new { id = item.idLesson, idLanguage = ViewBag.idLanguage });
             <tr>
                 <td onclick="Redirect('@link')">
                     @Html.DisplayFor(modelItem => item.lessonName)
