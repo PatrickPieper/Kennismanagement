@@ -35,8 +35,11 @@
     </div>
     <div class="col-md-4">
         <h2>Statistics</h2>
-        <p> View statistics or generate reports. Maybe a seperate dashboard containing different kind of graphs. </p>
-        <p><a class="btn btn-default" href=""> ¯\_(ツ)_/¯ &raquo;</a></p>
+        <p>
+            <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Statistics") + "'");">
+                <span class="glyphicon glyphicon-stats"></span> Statistics
+            </button>
+        </p>
     </div>
 
 </div>

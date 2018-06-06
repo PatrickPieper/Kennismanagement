@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Question Statistics";
+}
+
+<h2> Question Statistics </h2>
+
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("CommonWrongAnswers", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-stats"></span> Common Wrong Answers
+    </button>
+</p>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to Statistics
+    </button>
+</p>

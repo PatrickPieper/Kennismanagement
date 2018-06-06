@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Common Wrong Answers";
+}
+
+<h2> Common Wrong Answers </h2>
+
+<div>
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="form-group">
+                <label>Bar Chart</label>
+                <canvas id="barChart" width="400" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionStatistics", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to Question Statistics
+    </button>
+</p>
+@section scripts {
+    <script src="~/Scripts/Chart.js"></script>
+    <script src="~/Scripts/Common.js"></script>
+    <script>
+
+        //-----Single Bar --------------
+        var c = document.getElementById("barChart");
+        var ctx = c.getContext("2d");
+        var tData = $.getValues("/Statistics/BarChartDataCommonWrongAnswers");
+        var myBarChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: tData,
+            options: {
+                scales: {
+                    xAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            suggestedMax: 10
+                        }
+                    }]
+                }
+            }
+        });
+        $("#barChart").click(
+            function (evt) {
+                var activePoints = myBarChart.getElementsAtEvent(evt);
+
+                if (activePoints.length > 0) {
+                    //get the internal index of slice in pie chart
+                    var clickedElementindex = activePoints[0]["_index"];
+
+                    //get specific label by index
+                    var label = myBarChart.data.labels[clickedElementindex];
+
+                    //get value by index
+                    var value = myBarChart.data.datasets[0].data[clickedElementindex];
+
+                    /* other stuff that requires slice's label and value */
+                    var url = '@Url.Action("Details", "Questions", new {})' + "?id=" + label.split(':')[0];
+                    window.location.href = url;
+                }
+            }
+        );
+    </script>
+}

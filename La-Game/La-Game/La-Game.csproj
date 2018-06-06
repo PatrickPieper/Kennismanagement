@@ -214,6 +214,7 @@
     <Compile Include="Controllers\QuestionListsController.cs" />
     <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\StudentListController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -223,6 +224,8 @@
     <Compile Include="Models\AnswerOption.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CommonWrongQuestionResult.cs" />
+    <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\DatabaseModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -472,6 +475,9 @@
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\Chart.js" />
+    <Content Include="Scripts\Chart.min.js" />
+    <Content Include="Scripts\Common.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -644,6 +650,9 @@
     <Content Include="Views\QuestionResults\Edit.cshtml" />
     <Content Include="Views\QuestionResults\Index.cshtml" />
     <Content Include="Views\Shared\_QuestionPartial.cshtml" />
+    <Content Include="Views\Statistics\Index.cshtml" />
+    <Content Include="Views\Statistics\QuestionStatistics.cshtml" />
+    <Content Include="Views\Statistics\CommonWrongAnswers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

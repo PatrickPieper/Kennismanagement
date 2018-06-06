@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<h2> Statistics Overview </h2>
+
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionStatistics", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-stats"></span> Question Statistics
+    </button>
+</p>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+    </button>
+</p>
