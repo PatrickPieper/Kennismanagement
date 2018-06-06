@@ -18,23 +18,21 @@
         @Html.HiddenFor(model => model.idQuestion)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.picture, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.picture, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.picture, "", new { @class = "text-danger" })
+                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" alt="Alternate Text" width="250" height="250" />
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.audio, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.audio, "Audio", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.audio, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.audio, "", new { @class = "text-danger" })
+                <audio src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)" alt="Alternate Text"/>
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.questionText, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.questionText, "Question", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.questionText, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.questionText, "", new { @class = "text-danger" })

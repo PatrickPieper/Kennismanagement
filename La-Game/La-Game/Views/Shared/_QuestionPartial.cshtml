@@ -14,7 +14,7 @@
         <div class="col-sm-5">
             <select class="form-control" name="correctAnswer">
                 <option value="1">Yes</option>
-                <option value="0">No</option>
+                <option value="0" selected>No</option>
             </select>
             @Html.ValidationMessageFor(model => model.correctAnswer, "", new { @class = "text-danger" })
         </div>
