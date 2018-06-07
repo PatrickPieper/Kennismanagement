@@ -74,7 +74,7 @@ namespace La_Game.Controllers
                 db.SaveChanges();
 
                 // Return a new create view
-                Create();
+                return View();
             }
             
             // If not valid, stay on the page with the current data

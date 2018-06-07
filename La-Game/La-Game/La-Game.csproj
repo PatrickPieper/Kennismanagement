@@ -215,7 +215,6 @@
     <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
-    <Compile Include="Controllers\StudentListController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -639,7 +638,6 @@
     <Content Include="Views\Blobs\ListBlobs.cshtml" />
     <Content Include="Views\Dashboard-temprary\CreateCodes.cshtml" />
     <Content Include="Views\Participants\Create.cshtml" />
-    <Content Include="Views\Participants\CreateStudent.cshtml" />
     <Content Include="Views\Participants\Delete.cshtml" />
     <Content Include="Views\Participants\Details.cshtml" />
     <Content Include="Views\Participants\Edit.cshtml" />
@@ -655,10 +653,11 @@
     <Content Include="Views\Statistics\QuestionStatistics.cshtml" />
     <Content Include="Views\Statistics\CommonWrongAnswers.cshtml" />
     <Content Include="Views\Statistics\_CommonWrongAnswerFilter.cshtml" />
+    <Content Include="Views\Lessons\ManageLists.cshtml" />
+    <Content Include="Views\Lessons\_AddQuestionListTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
