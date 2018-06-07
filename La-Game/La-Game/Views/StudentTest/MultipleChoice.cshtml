@@ -2,7 +2,7 @@
 @{
 
     ViewBag.Title = "MultipleChoice";
-
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>MultipleChoice</h2>
@@ -17,7 +17,7 @@
 
         using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
         {
-
+            int likertIndex = 1;
             for (int i = 0; i < ViewBag.answerOptions.Count; i++)
             {
 
@@ -27,9 +27,25 @@
 
                     if (ViewBag.answerOptions[i].Question_idQuestion == ViewBag.questionData[ViewBag.index].idQuestion)
                     {
-                        <button type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId">@ViewBag.answerOptions[i].answerText</button>
+
+                        if (ViewBag.questionData[ViewBag.index].likertScale == null || ViewBag.questionData[ViewBag.index].likertScale == 3)
+                        {
+                            <button type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId">@ViewBag.answerOptions[i].answerText</button>
+                        }
+                        else if (ViewBag.questionData[ViewBag.index].likertScale == 1)
+                        {
+                            <button type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img width="50%" src="https://lagame2.blob.core.windows.net/images/thumb-@(likertIndex).jpg" /></button>
+                            likertIndex++;
+                        }
+                        else if (ViewBag.questionData[ViewBag.index].likertScale == 2)
+                        {
+                            <button type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img width="50%" src="https://lagame2.blob.core.windows.net/images/emo-@(likertIndex).jpg" /></button>
+                            likertIndex++;
+                        }
+
                     }
                 }
+
 
 
             }
@@ -41,6 +57,7 @@
         string startTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
         TempData["startTime"] = startTime;
     }
+
 
     TempData["participant"] = ViewBag.participant;
     TempData["questionData"] = ViewBag.questionData;

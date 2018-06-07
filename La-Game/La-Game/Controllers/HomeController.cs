@@ -20,7 +20,9 @@ namespace La_Game.Controllers
             if (firstName != null && lastName != null && studentCode != null)
             { 
                 sqlString = "SELECT * FROM PARTICIPANT WHERE studentCode='" + studentCode + "' AND firstName='" + firstName + "' AND lastName='" + lastName+"'";
-                if(db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
+
+
+                if (db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
                 { 
                     participant = db.Participants.SqlQuery(sqlString).First();
                 }
@@ -30,8 +32,11 @@ namespace La_Game.Controllers
             if (questionListData.Count != 0 && participant != null)
             {
                 int questionListID = questionListData[0].idQuestionList;
-                String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
-                List<Question> questionData = db.Questions.SqlQuery(selectQuery).ToList<Question>();
+                // String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
+                 sqlString = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion" +
+                " JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + participationCode + "' ORDER BY qo.[order]";
+
+                List<Question> questionData = db.Questions.SqlQuery(sqlString).ToList<Question>();
 
                 TempData["questionListData"] = questionListData;
                 TempData["questionData"] = questionData;
@@ -44,7 +49,11 @@ namespace La_Game.Controllers
                 ViewBag.Message = "something is not typed correctly";
                 return View();
             }
-            
+
+            if (TempData["doneMessage"] != null)
+            {
+                ViewBag.doneMessage = TempData["doneMessage"];
+            }
             return View();
         }
 

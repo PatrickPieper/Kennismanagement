@@ -25,7 +25,7 @@ namespace La_Game.Controllers
                 index++;
                 ViewBag.index = index;
             }
-
+            
 
             if (TempData["questionListData"] != null && TempData["questionData"] != null)
             { 
@@ -64,7 +64,13 @@ namespace La_Game.Controllers
                 db.SaveChanges();
 
             }
-            
+
+            if (ViewBag.questionData.Count <= ViewBag.index)
+            {
+                TempData["doneMessage"] = "your have completed the test";
+                return RedirectToAction("Index", "Home");
+            }
+
             //to do: when we have a boolean for LikertScale or MultipleChoice return the right view
             return View("MultipleChoice");
         }

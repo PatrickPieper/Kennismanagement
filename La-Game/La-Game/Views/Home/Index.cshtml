@@ -1,6 +1,8 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
+
+<h3>@ViewBag.doneMessage</h3>
 <div class="container-code">
     <form method="get">
         First name: <input name="firstName" type="text" /> <br />
@@ -10,5 +12,6 @@
         <input value="go" type="submit" />
     </form>
 </div>
+
 
 <p>@ViewBag.Message</p>
