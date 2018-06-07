@@ -9,7 +9,7 @@
                 <div class="form-group">
                     <div class="col-md-10">
                         <p>Language</p>
-                        @Html.DropDownList("lst_Languages", null, htmlAttributes: new { @class = "form-control", @id = "ddlanguages" })
+                        @Html.DropDownList("lst_Languages", null, "No filter", htmlAttributes: new { @class = "form-control", @id = "ddlanguages" })
 
                     </div>
 
@@ -18,7 +18,7 @@
                 <div class="form-group">
                     <div class="col-md-10">
                         <p>Lesson</p>
-                        @Html.DropDownList("lst_Lessons", null, htmlAttributes: new { @class = "form-control", @id = "ddlessons" })
+                        @Html.DropDownList("lst_Lessons", null, "No filter", htmlAttributes: new { @class = "form-control", @id = "ddlessons" })
 
                     </div>
 
@@ -27,7 +27,7 @@
                 <div class="form-group">
                     <div class="col-md-10">
                         <p>QuestionList</p>
-                        @Html.DropDownList("lst_QuestionLists", null, htmlAttributes: new { @class = "form-control", @id = "ddquestionLists" })
+                        @Html.DropDownList("lst_QuestionLists", null, "No filter", htmlAttributes: new { @class = "form-control", @id = "ddquestionLists" })
 
                     </div>
 
@@ -37,6 +37,5 @@
         <hr />
     </div>
 </div>
-
 <script src="~/Scripts/filterrefresh.js"></script>
 

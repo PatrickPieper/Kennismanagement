@@ -27,26 +27,36 @@ namespace La_Game.Controllers
             return View();
         }
         #region Partial Views
+        /// <summary>
+        /// GET: CommonWrongAnswerFilter
+        /// </summary>
+        /// <param name="idLanguage">Language filter</param>
+        /// <param name="idLesson">Lesson filter</param>
+        /// <returns>Partial view for the common wrong answer filter</returns>
         public PartialViewResult CommonWrongAnswerFilter(int? idLanguage, int? idLesson)
         {
             List<Language> lst_Language = db.Languages.ToList();
             List<Lesson> lst_Lesson;
             List<QuestionList> lst_QuestionList;
 
+            //Create the query string for lessons
             StringBuilder lessonQueryString = new StringBuilder();
             lessonQueryString.Append("SELECT le.* FROM Lesson AS le");
-            if (idLanguage != null)
+            //If a language id is given, a language has been set and narrow the lesson results to said language
+            if (idLanguage != null && idLanguage != -1)
             {
                 lessonQueryString.Append(" WHERE le.Language_idLanguage = " + idLanguage);
 
             }
             lst_Lesson = db.Database.SqlQuery<Lesson>(lessonQueryString.ToString()).ToList();
 
+            //Check if there's no lessons in the previous result, if there is none, there's also no questionlists to be displayed
             if(lst_Lesson.Count != 0)
             {
                 StringBuilder questionListQueryString = new StringBuilder();
                 questionListQueryString.Append("SELECT ql.* FROM QuestionList AS ql");
-                if (idLesson != null)
+                //Check if lesson is set, if it is, narrow the results based down to lessons
+                if (idLesson != null && idLesson != -1)
                 {
                     questionListQueryString.Append(" JOIN Lesson_QuestionList AS lq on ql.idQuestionList = lq.QuestionList_idQuestionList");
                     questionListQueryString.Append(" WHERE lq.Lesson_idLesson = " + idLesson);
@@ -59,7 +69,7 @@ namespace La_Game.Controllers
                 lst_QuestionList = new List<QuestionList>();
             }
 
-
+            //Create the selectlists for the dropdowns
             ViewBag.lst_Languages = new SelectList(lst_Language, "idLanguage", "languageName");
             ViewBag.lst_Lessons = new SelectList(lst_Lesson, "idLesson", "lessonName");
             ViewBag.lst_QuestionLists = new SelectList(lst_QuestionList, "idQuestionList", "questionListName");
@@ -68,12 +78,18 @@ namespace La_Game.Controllers
         }
         #endregion
         #region Json Results
+        /// <summary>
+        /// Method to create the barchart data for the common wrong answers page
+        /// </summary>
+        /// <returns>Returns a JsonResult with the required chart.js data</returns>
         public JsonResult BarChartDataCommonWrongAnswers()
         {
             var random = new Random();
+            //Query to select questions that were answered wrongly the most, with their amount
             string sqlQuery = "select q.idQuestion, q.questionText,count(*) as 'wrongCount' from Question as q join AnswerOption as ao on q.idQuestion = ao.Question_idQuestion join QuestionResult as qr on ao.idAnswer = qr.AnswerOption_idAnswer where ao.correctAnswer = 0 group by q.idQuestion, q.questionText";
             var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQuery).ToList();
 
+            //Turn query result into two separate list for use as data/labels for chart.js
             List<string> questionTexts = new List<string>();
             foreach (CommonWrongQuestionResult entry in queryResult)
             {
@@ -84,6 +100,7 @@ namespace La_Game.Controllers
             {
                 questionData.Add(entry.wrongCount);
             }
+            //For every result, generate a random bar color
             List<string> barColors = new List<string>();
             foreach (CommonWrongQuestionResult entry in queryResult)
             {
