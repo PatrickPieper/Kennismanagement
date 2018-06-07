@@ -49,7 +49,7 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        
+
         <div class="form-actions no-color">
             <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
                 <span class="glyphicon glyphicon-menu-left"></span> Back

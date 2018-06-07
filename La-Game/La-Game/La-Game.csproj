@@ -630,7 +630,6 @@
     <Content Include="Views\Blobs\CreateBlobContainer.cshtml" />
     <Content Include="Views\Blobs\ListBlobs.cshtml" />
     <Content Include="Views\Participants\Create.cshtml" />
-    <Content Include="Views\Participants\CreateStudent.cshtml" />
     <Content Include="Views\Participants\Delete.cshtml" />
     <Content Include="Views\Participants\Details.cshtml" />
     <Content Include="Views\Participants\Edit.cshtml" />
@@ -647,7 +646,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
