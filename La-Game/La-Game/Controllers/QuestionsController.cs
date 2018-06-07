@@ -68,21 +68,12 @@ namespace La_Game.Controllers
                     question.likertScale = test;
                 }
 
+                var max = db.Questions.Max(q => q.idQuestion) + 1;
 
-                // Get the question Text from the from and add it to the database with Multilingual.
-                string qText = question.questionText;
-                string queryText = "INSERT INTO Question(questionText) VALUES (N'"+ qText +"')";
-                db.Database.ExecuteSqlCommand(queryText);
-                db.SaveChanges();
-
-
-                var max = db.Questions.Max(q => q.idQuestion);                
-               
                 BlobsController blobsController = new BlobsController();
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
                 containerName = container.Name;
                 AnswerOptionsController answerOptionsController = new AnswerOptionsController();
-
 
                 // Checks if there is a image uploaded.
                 // If there is a image upload it to the blob and write the filename to the database.
@@ -110,6 +101,11 @@ namespace La_Game.Controllers
                     question.audio = audioName;
                 }
 
+                // Get the question Text from the from and add it to the database with Multilingual.
+                string qText = question.questionText;
+                string queryText = "INSERT INTO Question(questionText, picture, audio) VALUES (N'" + qText +"', '" + fileName +"','" + audioName +"')";
+                db.Database.ExecuteSqlCommand(queryText);
+
 
                 if (answerType == "likert")
                 {
@@ -120,7 +116,7 @@ namespace La_Game.Controllers
                         AnswerOption option = new AnswerOption();
                         String text = count.ToString();                        
                         option.answerText = text;
-                        option.correctAnswer = 0;
+                        option.correctAnswer = 1;
                         option.Question_idQuestion = max;
                         answerOptionsController.Create(option);
                         count++;

@@ -20,14 +20,14 @@
         <div class="form-group">
             @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" alt="Alternate Text" width="250" height="250" />
+                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" />
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.audio, "Audio", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <audio src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)" alt="Alternate Text"/>
+                <audio src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)" />
             </div>
         </div>
 
