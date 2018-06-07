@@ -127,7 +127,20 @@ namespace La_Game.Controllers
                 questionList.Add(new KeyValuePair<string, object>("ID",questionlistId));
                 questionList.Add(new KeyValuePair<string, object>("Name", qListName));
                 List<String> questions = new List<String>();
+                IEnumerable<int> answerIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participant.idParticipant) && q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.AnswerOption_idAnswer);
                 IEnumerable<int> question_ids = db.QuestionList_Question.Where(q => q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.Question_idQuestion);
+                int numOfQuestions = question_ids.Count();
+                questionList.Add(new KeyValuePair<string, object>("countQuestions", numOfQuestions));
+
+                int correctAnswers = 0;
+                foreach (var answer in answerIds)
+                {
+                    short? correct = db.AnswerOptions.Where(a => a.idAnswer.Equals(answer)).Select(a => a.correctAnswer).Single();
+                    if(correct == 1)
+                    {
+                        correctAnswers++;
+                    }
+                }
 
                 foreach(int question_id in question_ids)
                 {
@@ -136,6 +149,7 @@ namespace La_Game.Controllers
 
                     questions.Add(question.Single().ToString());
                 }
+                questionList.Add(new KeyValuePair<string, object>("correctAnswers", correctAnswers));
                 questionList.Add(new KeyValuePair<string, object>("Questions", questions));
                 questionlists.Add(questionList);
             }
