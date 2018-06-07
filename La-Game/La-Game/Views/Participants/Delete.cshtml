@@ -5,15 +5,15 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete</h2>
+<h2>Delete Participant</h2>
 
 <h3>Are you sure you want to delete this?</h3>
+<h4>This cannot be undone unless you contact an admin.</h4>
 <div>
-    <h4>Participant</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.firstName)
+            Firstname
         </dt>
 
         <dd>
@@ -21,7 +21,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.lastName)
+            Lastname
         </dt>
 
         <dd>
@@ -29,7 +29,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.birthDate)
+            Date of Birth
         </dt>
 
         <dd>
@@ -37,7 +37,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.studentCode)
+            Studentcode
         </dt>
 
         <dd>
@@ -46,12 +46,17 @@
 
     </dl>
 
-    @using (Html.BeginForm()) {
+    @using (Html.BeginForm())
+    {
         @Html.AntiForgeryToken()
-
+        
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
+                <span class="glyphicon glyphicon-menu-left"></span> Back
+            </button>
+            <button type="submit" value="Delete" class="btn btn-default">
+                <span class="glyphicon glyphicon-trash"></span> Delete
+            </button>
         </div>
     }
 </div>

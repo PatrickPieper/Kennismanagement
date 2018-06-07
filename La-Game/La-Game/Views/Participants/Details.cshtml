@@ -5,14 +5,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Details</h2>
+<h2>Participant Details - @Html.DisplayNameFor(model => model.firstName) </h2>
 
 <div>
-    <h4>Participant</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.firstName)
+            Firstname
         </dt>
 
         <dd>
@@ -20,7 +19,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.lastName)
+            Lastname
         </dt>
 
         <dd>
@@ -28,7 +27,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.birthDate)
+            Date of Birth
         </dt>
 
         <dd>
@@ -36,7 +35,7 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.studentCode)
+            Studentcode
         </dt>
 
         <dd>
@@ -46,6 +45,10 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idParticipant }) |
-    @Html.ActionLink("Back to List", "Index")
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back
+    </button>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = Model.idParticipant }) + "'");">
+        <span class="glyphicon glyphicon-wrench"></span> Edit
+    </button>
 </p>

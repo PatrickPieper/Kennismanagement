@@ -1,52 +1,92 @@
 ﻿@model IEnumerable<La_Game.Models.Participant>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Participant Overview";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@Styles.Render("~/Content/dataTables")
 
-<h2>Index</h2>
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<h2>Participant Overview</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("CreateStudent", "Participants") + "'");">
+        <span class="glyphicon glyphicon-plus"></span> Create New
+    </button>
 </p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.firstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.lastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.birthDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.studentCode)
-        </th>
-        <th></th>
-    </tr>
+<table id="participants" class="table table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Firstname
+            </th>
+            <th>
+                Lastname
+            </th>
+            <th>
+                Date of Birth
+            </th>
+            <th>
+                Studentcode
+            </th>
+            <th></th>
+        </tr>
+    </thead>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.firstName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.lastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.birthDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.studentCode)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.idParticipant }) |
-            @Html.ActionLink("Details", "Details", new { id=item.idParticipant }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.idParticipant })
-        </td>
-    </tr>
-}
-
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var link = Url.Action("Details", "Participants", new { id = item.idParticipant });
+            <tr>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.firstName)
+                </td>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.lastName)
+                </td>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.birthDate)
+                </td>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.studentCode)
+                </td>
+                <td>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = item.idParticipant }) + "'");">
+                        <span class="glyphicon glyphicon-wrench"></span> Edit
+                    </button>
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Participants", new { id = item.idParticipant }) + "'");">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+    </button>
+</p>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#participants').DataTable(
+                {
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        { targets: [4], orderable: false }
+                    ]
+                }
+            );
+        });
+    </script>
+}
