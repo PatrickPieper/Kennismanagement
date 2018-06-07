@@ -1,0 +1,120 @@
+﻿@model IEnumerable<La_Game.Models.QuestionList>
+
+@{
+    ViewBag.Title = "Manage  questionlists";
+}
+@Styles.Render("~/Content/dataTables")
+
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
+<div>
+    <h2> Manage questionlists</h2>
+
+    <div class="container">
+        <div class="row">
+            <div class="table-responsive col-md-6">
+                <table id="currentLists" class="table table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                <p>Name</p>
+                            </th>
+                            <th>
+                                <p>Description</p>
+                            </th>
+                            <th>
+                                <p>Code</p>
+                            </th>
+                            <th>
+                                <p>Active</p>
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var link = Url.Action("Details", "QuestionLists", new { id = item.idQuestionList });
+                            <tr>
+                                <td onclick="Redirect('@link')">
+                                    @Html.DisplayFor(modelItem => item.questionListName)
+                                </td>
+                                <td onclick="Redirect('@link')">
+                                    @Html.DisplayFor(modelItem => item.questionListDescription)
+                                </td>
+                                <td onclick="Redirect('@link')">
+                                    @Html.DisplayFor(modelItem => item.participationCode)
+                                </td>
+                                <td onclick="Redirect('@link')">
+                                    @if (item.isActive == 0 || item.isActive == null)
+                                    {
+                                        <t>No</t>
+                                    }
+                                    else
+                                    {
+                                        <t>Yes</t>
+                                    }
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("RemoveList", "Lessons", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                                            <span class="glyphicon glyphicon-trash"></span> Remove
+                                        </button>
+
+                                        <input type="hidden" name="Lesson_idLesson" value="@Html.Raw(ViewBag.idLesson)" />
+                                        <input type="hidden" name="QuestionList_idQuestionList" value="@Html.Raw(item.idQuestionList)" />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="table-responsive col-md-6">
+                @{Html.RenderAction("GetQuestionListTable", "Lessons");}
+            </div>
+        </div>
+        <p>
+            <button type="button" class="btn btn-default btn-sm" onclick="@(" window.location.href='" + @Url.Action("Details", "Lessons", new { idLesson = ViewBag.idLesson, idLanguage = ViewBag.idLanguage }) + "' ");">
+                <span class="glyphicon glyphicon-menu-left"></span> Back to List
+            </button>
+        </p>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#currentLists').DataTable(
+                {
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        { targets: [2, 4], orderable: false },
+                        { targets: '_all', orderable: true }
+                    ]
+                }
+            );
+
+            $('#addQuestionList').DataTable(
+                {
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        { targets: [2, 4], orderable: false },
+                        { targets: '_all', orderable: true }
+                    ]
+                }
+            );
+        });
+    </script>
+}

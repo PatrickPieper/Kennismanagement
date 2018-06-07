@@ -21,17 +21,32 @@
         @{Html.RenderAction("GetLanguageOverview", "Home", new { memberId = 1 });}
     </div>
     <div class="col-md-4">
-        <h2>Questions and Lists</h2>
-        <p>
-            <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
-                <span class="glyphicon glyphicon-list-alt"></span> Questionlist Overview
-            </button>
-        </p>
-        <p>
-            <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Questions") + "'");">
-                <span class="glyphicon glyphicon-list-alt"></span> Question Overview
-            </button>
-        </p>
+        <div>
+            <h2>Questions and Lists</h2>
+            <p>
+                <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+                    <span class="glyphicon glyphicon-list-alt"></span> Questionlist Overview
+                </button>
+            </p>
+            <p>
+                <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Questions") + "'");">
+                    <span class="glyphicon glyphicon-list-alt"></span> Question Overview
+                </button>
+            </p>
+        </div>
+        <div>
+            <h2>Participants</h2>
+            <p>
+                <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Create", "Participants") + "'");">
+                    <span class="glyphicon glyphicon-plus-sign"></span> Create new Participant
+                </button>
+            </p>
+            <p>
+                <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
+                    <span class="glyphicon glyphicon-list-alt"></span> Participant  Overview
+                </button>
+            </p>
+        </div>
     </div>
     <div class="col-md-4">
         <h2>Statistics</h2>

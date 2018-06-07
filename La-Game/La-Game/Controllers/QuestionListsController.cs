@@ -63,7 +63,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// POST: QuestionLists/Create/[id]
+        /// POST: QuestionLists/Create
         /// After pressing the button check if the data is valid then add it to database.
         /// </summary>
         /// <param name="questionList"> The data that has to be added. </param>
@@ -111,7 +111,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// POST: QuestionLists/Edit/[id]
+        /// POST: QuestionLists/Edit
         /// After pressing the button check if the data is valid then save it to database.
         /// </summary>
         /// <param name="questionList"> The data that has to be saved. </param>
@@ -194,12 +194,11 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: QuestionLists/ModifyQuestionList/[id]?filter=[filter]
+        /// GET: QuestionLists/ModifyQuestionList/[id]
         /// Navigate to page where questions can be added and/or removed from the list.
         /// </summary>
         /// <param name="id"> Id of the questionlist. </param>
-        /// <param name="filter"> Optional filter for filtering the data. </param>
-        public ActionResult ModifyQuestionList(int? id, string filter)
+        public ActionResult ModifyQuestionList(int? id)
         {
             // Check if id was given
             if (id == null)
@@ -269,7 +268,7 @@ namespace La_Game.Controllers
             }
 
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
@@ -326,7 +325,7 @@ namespace La_Game.Controllers
             db.SaveChanges();
 
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
@@ -363,7 +362,7 @@ namespace La_Game.Controllers
             }
             
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>

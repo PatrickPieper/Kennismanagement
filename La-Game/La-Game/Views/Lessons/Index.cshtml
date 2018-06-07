@@ -14,7 +14,7 @@
 <h2> Overview Lessons - @ViewBag.Language.languageName</h2>
 
 <p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Lessons") + "'");">
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Lessons", new { idLanguage = ViewBag.Language.idLanguage }) + "'");">
         <span class="glyphicon glyphicon-plus"></span> Create New
     </button>
 </p>
@@ -34,7 +34,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            var link = Url.Action("Details", "Lessons", new { id = item.idLesson });
+            var link = Url.Action("Details", "Lessons", new { id = item.idLesson, idLanguage = ViewBag.idLanguage });
             <tr>
                 <td onclick="Redirect('@link')">
                     @Html.DisplayFor(modelItem => item.lessonName)

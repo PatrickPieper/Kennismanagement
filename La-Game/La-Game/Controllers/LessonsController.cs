@@ -11,33 +11,39 @@ namespace La_Game.Controllers
     public class LessonsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
-        
+
         /// <summary>
-        /// GET: Lessons
+        /// GET: Lessons?idLanguage=[idLanguage]
         /// Get a overview of all the active lessons.
         /// </summary>
         public ActionResult Index(int? idLanguage)
         {
+            // Check if id was given
+            if (idLanguage == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             // Include the language and then return the list of all active lessons
             var lessons = db.Lessons.Where(s => s.isHidden != 1 && s.Language_idLanguage == idLanguage);
             ViewBag.Language = db.Languages.Where(l => l.idLanguage == idLanguage).FirstOrDefault();
-            
+
             return View(lessons.ToList());
         }
-        
+
         /// <summary>
-        /// GET: Lessons/Details/[id]
+        /// GET: Lessons/Details/[id]?idLanguage=[idLanguage]
         /// Get the details of a lesson and show it on a seperate page.
         /// </summary>
         /// <param name="id"> Id of the lesson. </param>
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, int? idLanguage)
         {
             // Check if id was given
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            
+
             // Try to find the lesson, if it does not exist return 404
             Lesson lesson = db.Lessons.Find(id);
             if (lesson == null)
@@ -46,22 +52,23 @@ namespace La_Game.Controllers
             }
 
             // Redirect to the detail page
+            ViewBag.idLanguage = idLanguage;
             return View(lesson);
         }
-        
+
         /// <summary>
         /// GET: Lessons/Create
         /// Redirect to the creation page to add a new lesson to the database.
         /// </summary>
-        public ActionResult Create()
+        public ActionResult Create(int? idLanguage)
         {
             // Go to create page
-            ViewBag.Language = 1; //Test
+            ViewBag.Language = idLanguage;
             return View();
         }
 
         /// <summary>
-        /// POST: Lessons/Create/[id]
+        /// POST: Lessons/Create
         /// After pressing the button check if the data is valid then add it to database.
         /// </summary>
         /// <param name="lesson"> The data that has to be added. </param>
@@ -109,7 +116,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// POST: Lessons/Edit/[id]
+        /// POST: Lessons/Edit
         /// After pressing the button check if the data is valid then save it to database.
         /// </summary>
         /// <param name="lesson"> The data that has to be saved. </param>
@@ -167,7 +174,7 @@ namespace La_Game.Controllers
         {
             try
             {
-                // Find the questionlist and set it to hidden
+                // Find the lesson and set it to hidden
                 Lesson lesson = db.Lessons.Find(id);
                 lesson.isHidden = 1;
 
@@ -185,7 +192,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: Lessons/ParticipantLessonOverview/[id]
+        /// GET: Lessons/ParticipantLessonOverview/[questionListID]?lessonID=[lessonID]
         /// Get a list of all participants that have done the questionlist. 
         /// </summary>
         /// <param name="questionListID"> Id of the questionlist. </param>
@@ -201,15 +208,16 @@ namespace La_Game.Controllers
             // Get list of participants that have results for this questionlist+lesson combination
             String selectQuery = "SELECT DISTINCT p.* FROM Participant AS p JOIN QuestionResult AS qr on qr.Participant_idParticipant = p.idParticipant WHERE qr.QuestionList_idQuestionList = " + questionListID + " AND qr.QuestionList_idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + lessonID + ") ";
 
-            IEnumerable<Participant> data = db.Database.SqlQuery<Participant>(selectQuery);  
+            IEnumerable<Participant> data = db.Database.SqlQuery<Participant>(selectQuery);
 
             // Return the overview containing the data
             ViewBag.questionListID = questionListID;
             ViewBag.lessonID = lessonID;
             return View(data);
         }
+
         /// <summary>
-        /// GET: Lessons/QuestionResultParticipantOverview/[id]
+        /// GET: Lessons/QuestionResultParticipantOverview/[questionListID]?lessonID=[lessonID]
         /// Get a list of all participants that have done the questionlist. 
         /// </summary>
         /// <param name="questionListID"> Id of the questionlist. </param>
@@ -228,6 +236,125 @@ namespace La_Game.Controllers
 
             // Return the overview containing the data
             return View(data);
+        }
+
+        /// <summary>
+        /// GET: Lessons/AddListToLesson/[idLesson]?idLanguage=[idLanguage]
+        /// Navigate to a page where the list of questionlists can be found so they can be added to the lesson.
+        /// </summary>
+        /// <param name="idLesson"> Id of the lesson. </param>
+        /// <param name="idLanguage"> Id of the language. </param>
+        public ActionResult ManageLists(int? idLesson)
+        {
+            // Check if id was given
+            if (idLesson == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Get list of all current questionlists
+            List<QuestionList> allLists = (from q in db.QuestionLists select q).ToList();
+
+            // Get all the lists that are already in the lesson
+            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + "); ";
+            List<QuestionList> questionlists = db.Database.SqlQuery<QuestionList>(selectQuery).ToList();
+
+            // Set the id for the lesson and go to the page            
+            ViewBag.idLesson = idLesson;
+            return View(questionlists.Where(s => s.isHidden != 1));
+        }
+
+        /// <summary>
+        /// GET: Lessons/GetQuestionListTable/[id]
+        /// Return a PartialView containing a list of all questionlists in the database that are not currently in the lesson.
+        /// </summary>
+        /// <param name="idLesson"> Id of the lesson. </param>
+        public PartialViewResult GetQuestionListTable(int? idLesson)
+        {
+            // Get list of all current questionlists
+            List<QuestionList> allLists = (from q in db.QuestionLists select q).ToList();
+
+            // Get all the lists that are already in the lesson
+            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + "); ";
+            List<QuestionList> currentLists = db.Database.SqlQuery<QuestionList>(selectQuery).ToList();
+
+            // Compare the two lists and remove all the questions that are already in the list
+            foreach (QuestionList list in currentLists)
+            {
+                allLists.RemoveAll(item => item.idQuestionList == list.idQuestionList);
+            }
+
+            // Set the lessonId and return the PartialView
+            ViewBag.idLesson = idLesson;
+            return PartialView("_AddQuestionListTable", allLists);
+        }
+
+        /// <summary>
+        /// POST: Lessons/AddList
+        /// Make a database entry to connect the questionlist to the lesson.
+        /// </summary>
+        /// <param name="collection"> The data that has to be added. </param>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddList([Bind(Include = "Lesson_idLesson,QuestionList_idQuestionList")] FormCollection collection)
+        {
+            try
+            {
+                // Check if the neccesary ids were given
+                if (collection.Get("Lesson_idLesson") == null || collection.Get("QuestionList_idQuestionList") == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                // Create the connection between list and lesson and add it to the database
+                Lesson_QuestionList lesson_questionlist = new Lesson_QuestionList
+                {
+                    Lesson_idLesson = int.Parse(collection.Get("Lesson_idLesson")),
+                    QuestionList_idQuestionList = int.Parse(collection.Get("QuestionList_idQuestionList"))
+                };
+                db.Lesson_QuestionList.Add(lesson_questionlist);
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Adding to list failed
+            }
+
+            // Redirect back to the list to reload the data
+            return RedirectToAction("ManageLists", new { idLesson = collection.Get("Lesson_idLesson") });
+        }
+
+        /// <summary>
+        /// POST: Lessons/RemoveList
+        /// Remove the database entry that connects the questionlist to the lesson.
+        /// </summary>
+        /// <param name="collection"> Entry that has to be removed. </param>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RemoveList([Bind(Include = "Lesson_idLesson,QuestionList_idQuestionList")] FormCollection collection)
+        {
+            try
+            {
+                // Check if the neccesary ids were given
+                if (collection.Get("Lesson_idLesson") == null || collection.Get("QuestionList_idQuestionList") == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                // Delete the connection between the lesson and the questionlist
+                var deleteQuestionListEntry = "DELETE FROM Lesson_QuestionList WHERE Lesson_idLesson = " + collection.Get("Lesson_idLesson") + " AND QuestionList_idQuestionList = " + collection.Get("QuestionList_idQuestionList") + ";";
+                db.Database.ExecuteSqlCommand(deleteQuestionListEntry);
+
+                // Save the changes
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Failed to remove
+            }
+
+            // Redirect back to the list to reload the data
+            return RedirectToAction("ManageLists", new { idLesson = collection.Get("Lesson_idLesson") });
         }
 
         protected override void Dispose(bool disposing)

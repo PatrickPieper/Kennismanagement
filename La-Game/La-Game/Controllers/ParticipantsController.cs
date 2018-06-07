@@ -40,21 +40,44 @@ namespace La_Game.Controllers
         {
             return View();
         }
-
-        // POST: Participants/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        
+        /// <summary>
+        /// POST: Participants/Create
+        /// After pressing the button check if the data is valid then add it to database.
+        /// </summary>
+        /// <param name="participant"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idParticipant,firstName,lastName,birthDate,studentCode")] Participant participant)
         {
+            // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // Get a unique studentId
+                int studentId;
+                Random rng = new Random();
+                while (true)
+                {
+                    studentId = rng.Next(100000, 1000000);
+                    string sqlstring = "SELECT * FROM Participant WHERE StudentCode=" + studentId;
+                    List<Participant> students = db.Participants.SqlQuery(sqlstring).ToList();
+
+                    if (students.Count == 0)
+                    {
+                        break;
+                    }
+                }
+
+                // Set the code then add the participant to the database
+                participant.studentCode = studentId;
                 db.Participants.Add(participant);
                 db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
+                // Return a new create view
+                Create();
+            }
+            
+            // If not valid, stay on the page with the current data
             return View(participant);
         }
 
@@ -143,38 +166,6 @@ namespace La_Game.Controllers
 
 
             return View(participant);
-        }
-
-        public ActionResult CreateStudent(DateTime? birthDate, string firstName="", string lastName="")
-        {
-            if(firstName != null && lastName!= null && birthDate!= null)
-            {
-                int studentId = 400993;
-                Random rng = new Random(); 
-                while (true)
-                {
-                    studentId = rng.Next(100000, 1000000);
-                    string sqlstring = "SELECT * FROM Participant WHERE StudentCode=" + studentId;
-                    List<Participant> students = db.Participants.SqlQuery(sqlstring).ToList();           
-                    if(students.Count == 0)
-                    {
-                        break;
-                    }
-                }
-                
-                
-                Participant student = new Participant
-                {
-                    firstName = firstName,
-                    lastName = lastName,
-                    birthDate = (DateTime)birthDate,
-                    studentCode = studentId
-                };
-                db.Participants.Add(student);
-                db.SaveChanges();
-            }
-
-            return View();
         }
 
         protected override void Dispose(bool disposing)
