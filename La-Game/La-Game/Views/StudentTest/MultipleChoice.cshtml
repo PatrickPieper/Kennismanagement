@@ -13,7 +13,20 @@
 
     if (ViewBag.questionData.Count > ViewBag.index)
     {
-        <p>@ViewBag.questionData[ViewBag.index].questionText</p>
+        if (ViewBag.questionData[ViewBag.index].picture != null)
+        {
+            <img src=https://lagame2.blob.core.windows.net/questions/@(ViewBag.questionData[ViewBag.index].idQuestion)/@(ViewBag.questionData[ViewBag.index].picture) />
+        }
+        if (ViewBag.questionData[ViewBag.index].audio != null)
+        {
+            <audio controls>
+                <source src=https://lagame2.blob.core.windows.net/questions/@(ViewBag.questionData[ViewBag.index].idQuestion)/@(ViewBag.questionData[ViewBag.index].audio) type="audio/mp3"/>
+            </audio>
+                   
+        }
+       <p>@ViewBag.questionData[ViewBag.index].questionText</p>
+        
+
 
         using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
         {
@@ -24,7 +37,7 @@
 
                 if (ViewBag.answerOptions[i].Question_idQuestion != null)
                 {
-
+                    
                     if (ViewBag.answerOptions[i].Question_idQuestion == ViewBag.questionData[ViewBag.index].idQuestion)
                     {
 

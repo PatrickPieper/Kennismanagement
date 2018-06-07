@@ -145,6 +145,7 @@ namespace La_Game.Controllers
             return View(participant);
         }
 
+        [HttpPost]
         public ActionResult CreateStudent(DateTime? birthDate, string firstName="", string lastName="")
         {
             if(firstName != null && lastName!= null && birthDate!= null)
