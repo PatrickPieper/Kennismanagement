@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 
@@ -25,6 +26,48 @@ namespace La_Game.Controllers
         {
             return View();
         }
+        #region Partial Views
+        public PartialViewResult CommonWrongAnswerFilter(int? idLanguage, int? idLesson)
+        {
+            List<Language> lst_Language = db.Languages.ToList();
+            List<Lesson> lst_Lesson;
+            List<QuestionList> lst_QuestionList;
+
+            StringBuilder lessonQueryString = new StringBuilder();
+            lessonQueryString.Append("SELECT le.* FROM Lesson AS le");
+            if (idLanguage != null)
+            {
+                lessonQueryString.Append(" WHERE le.Language_idLanguage = " + idLanguage);
+
+            }
+            lst_Lesson = db.Database.SqlQuery<Lesson>(lessonQueryString.ToString()).ToList();
+
+            if(lst_Lesson.Count != 0)
+            {
+                StringBuilder questionListQueryString = new StringBuilder();
+                questionListQueryString.Append("SELECT ql.* FROM QuestionList AS ql");
+                if (idLesson != null)
+                {
+                    questionListQueryString.Append(" JOIN Lesson_QuestionList AS lq on ql.idQuestionList = lq.QuestionList_idQuestionList");
+                    questionListQueryString.Append(" WHERE lq.Lesson_idLesson = " + idLesson);
+
+                }
+                lst_QuestionList = db.Database.SqlQuery<QuestionList>(questionListQueryString.ToString()).ToList();
+            }
+            else
+            {
+                lst_QuestionList = new List<QuestionList>();
+            }
+
+
+            ViewBag.lst_Languages = new SelectList(lst_Language, "idLanguage", "languageName");
+            ViewBag.lst_Lessons = new SelectList(lst_Lesson, "idLesson", "lessonName");
+            ViewBag.lst_QuestionLists = new SelectList(lst_QuestionList, "idQuestionList", "questionListName");
+
+            return PartialView("_CommonWrongAnswerFilter");
+        }
+        #endregion
+        #region Json Results
         public JsonResult BarChartDataCommonWrongAnswers()
         {
             var random = new Random();
@@ -32,7 +75,7 @@ namespace La_Game.Controllers
             var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQuery).ToList();
 
             List<string> questionTexts = new List<string>();
-            foreach(CommonWrongQuestionResult entry in queryResult)
+            foreach (CommonWrongQuestionResult entry in queryResult)
             {
                 questionTexts.Add(entry.idQuestion + ":" + entry.questionText);
             }
@@ -62,7 +105,7 @@ namespace La_Game.Controllers
             _chart.datasets = _dataSet;
             return Json(_chart, JsonRequestBehavior.AllowGet);
         }
-
+        #endregion JsonResults
         protected override void Dispose(bool disposing)
         {
             if (disposing)
