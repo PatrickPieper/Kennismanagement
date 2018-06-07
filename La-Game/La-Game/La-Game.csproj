@@ -214,7 +214,6 @@
     <Compile Include="Controllers\QuestionListsController.cs" />
     <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
-    <Compile Include="Controllers\StudentListController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -630,7 +629,6 @@
     <Content Include="Views\Languages\_AddLanguageMembersTable.cshtml" />
     <Content Include="Views\Blobs\CreateBlobContainer.cshtml" />
     <Content Include="Views\Blobs\ListBlobs.cshtml" />
-    <Content Include="Views\Dashboard-temprary\CreateCodes.cshtml" />
     <Content Include="Views\Participants\Create.cshtml" />
     <Content Include="Views\Participants\CreateStudent.cshtml" />
     <Content Include="Views\Participants\Delete.cshtml" />
