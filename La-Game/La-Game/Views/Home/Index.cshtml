@@ -1,17 +1,14 @@
 ﻿@{
     ViewBag.Title = "Home Page";
 }
-
-<h3>@ViewBag.doneMessage</h3>
 <div class="container-code">
     <form method="get">
-        First name: <input name="firstName" type="text" /> <br />
-        Last name: <input name="lastName" type="text" /> <br />
-        Student code: <input name="studentCode" type="number" /> <br />
-        Participation code: <input name="participationCode" type="text" />
-        <input value="go" type="submit" />
+        <p>First name:</p> <input class="input" name="firstName" type="text" /> <br />
+        <p>Last name: </p><input class="input" name="lastName" type="text" /> <br />
+        <p>Student code:</p> <input class="input" name="studentCode" type="number" /> <br />
+        <p>Participation code:</p> <input class="input" name="participationCode" type="text" /><br/><br/>
+        <input class="submit" value="go" type="submit" />
     </form>
 </div>
-
 
 <p>@ViewBag.Message</p>

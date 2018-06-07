@@ -27,5 +27,22 @@ textarea {
 }
 
 .container-code{
-    padding-top:200px;
+    padding-top:50px;
+}
+
+p {
+    font-size: 17px;
+}
+
+.input {
+    width : 300px;
+    font-size: 20px;
+    background-color: aliceblue;
+    color: darkblue;
+}
+
+.submit{
+    width: 300px;
+    background-color:aqua;
+    
 }
