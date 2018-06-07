@@ -192,36 +192,10 @@ namespace La_Game.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase ImageUpdate, HttpPostedFileBase FileAudio)
+        public ActionResult Edit([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase ImageUpdate, HttpPostedFileBase AudioUpdate)
         {
             if (ModelState.IsValid)
             {
-                //// Checks if there is a image uploaded.
-                //// If there is a image upload it to the blob and write the filename to the database.
-                //FileImage2 = Request.Files[0];
-                //if (FileImage2.ContentLength > 0)
-                //{
-                //    fileName = Path.GetFileName(FileImage2.FileName);
-                //    imageStream = FileImage2.InputStream;
-
-                //    blobsController.UploadBlob(fileName, imageStream, containerName);
-                //    question.picture = fileName;
-
-                //}
-
-                //// Checks if there is a audiofile uploaded
-                //// If there is a audiofile upload it to the blob and write the filename to the database.
-                //FileAudio = Request.Files[1];
-                //if (FileAudio.ContentLength > 0)
-                //{
-                //    audioName = Path.GetFileName(FileAudio.FileName);
-                //    audioStream = FileAudio.InputStream;
-
-                //    //Use questionnumber as last parameter to search right container.
-                //    blobsController.UploadBlob(audioName, audioStream, containerName);
-                //    question.audio = audioName;
-                //}
-
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(question.idQuestion.ToString());
                 int id = question.idQuestion;
                 containerName = container.Name;
@@ -240,6 +214,21 @@ namespace La_Game.Controllers
                     db.Database.ExecuteSqlCommand(queryText);
 
                 }
+
+                AudioUpdate = Request.Files[1];
+                if (AudioUpdate.ContentLength > 0)
+                {
+                    fileUpdateName = AudioUpdate.FileName;
+
+                    fileName = Path.GetFileName(AudioUpdate.FileName);
+                    imageStream = AudioUpdate.InputStream;
+
+                    blobsController.UploadBlob(fileUpdateName, imageStream, containerName);
+                    string queryText = "UPDATE Question SET audio = '" + fileUpdateName + "' WHERE idQuestion = " + id;
+                    db.Database.ExecuteSqlCommand(queryText);
+
+                }
+
 
                 string updateQuestion = question.questionText;
                 string queryQuestion = "Update Question SET questionText ='" +updateQuestion +"' WHERE idQuestion = " + id;
