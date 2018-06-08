@@ -51,7 +51,7 @@ namespace La_Game.Controllers
             lst_Lesson = db.Database.SqlQuery<Lesson>(lessonQueryString.ToString()).ToList();
 
             //Check if there's no lessons in the previous result, if there is none, there's also no questionlists to be displayed
-            if(lst_Lesson.Count != 0)
+            if (lst_Lesson.Count != 0)
             {
                 StringBuilder questionListQueryString = new StringBuilder();
                 questionListQueryString.Append("SELECT ql.* FROM QuestionList AS ql");
@@ -82,12 +82,36 @@ namespace La_Game.Controllers
         /// Method to create the barchart data for the common wrong answers page
         /// </summary>
         /// <returns>Returns a JsonResult with the required chart.js data</returns>
-        public JsonResult BarChartDataCommonWrongAnswers()
+        public JsonResult BarChartDataCommonWrongAnswers(int? idLanguage, int? idLesson, int? idQuestionList)
         {
             var random = new Random();
             //Query to select questions that were answered wrongly the most, with their amount
-            string sqlQuery = "select q.idQuestion, q.questionText,count(*) as 'wrongCount' from Question as q join AnswerOption as ao on q.idQuestion = ao.Question_idQuestion join QuestionResult as qr on ao.idAnswer = qr.AnswerOption_idAnswer where ao.correctAnswer = 0 group by q.idQuestion, q.questionText";
-            var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQuery).ToList();
+            StringBuilder sqlQueryString = new StringBuilder();
+            sqlQueryString.Append("select q.idQuestion, q.questionText,count(*) as 'wrongCount' from Question as q " +
+                                "join AnswerOption as ao on q.idQuestion = ao.Question_idQuestion " +
+                                "join QuestionResult as qr on ao.idAnswer = qr.AnswerOption_idAnswer " +
+                                "left join QuestionList_Question as qlq on qlq.Question_idQuestion = q.idQuestion " +
+                                "left join QuestionList as ql on qlq.QuestionList_idQuestionList = ql.idQuestionList " +
+                                "left join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList " +
+                                "left join Lesson as le on lq.Lesson_idLesson = le.idLesson " +
+                                "left join[Language] as la on le.Language_idLanguage = la.idLanguage " +
+                                "where ao.correctAnswer = 0 ");
+            //string sqlQuery = "select q.idQuestion, q.questionText,count(*) as 'wrongCount' from Question as q join AnswerOption as ao on q.idQuestion = ao.Question_idQuestion join QuestionResult as qr on ao.idAnswer = qr.AnswerOption_idAnswer where ao.correctAnswer = 0 group by q.idQuestion, q.questionText";
+
+            if (idLanguage != null && idLanguage != -1)
+            {
+                sqlQueryString.Append(" and la.idLanguage = " + idLanguage);
+            }
+            if (idLesson != null && idLesson != -1)
+            {
+                sqlQueryString.Append(" and le.idLesson = " + idLesson);
+            }
+            if(idQuestionList != null && idQuestionList != -1)
+            {
+                sqlQueryString.Append(" and ql.idQuestionList = " + idQuestionList);
+            }
+            sqlQueryString.Append(" group by q.idQuestion, q.questionText");
+            var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQueryString.ToString()).ToList();
 
             //Turn query result into two separate list for use as data/labels for chart.js
             List<string> questionTexts = new List<string>();
