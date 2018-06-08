@@ -220,21 +220,17 @@ namespace La_Game.Controllers
             QuestionList qlist = db.QuestionLists.Find(questionlistId);
             ViewBag.questionList = qlist;
 
+            List<KeyValuePair<int, AnswerOption>> givenanswerList = new List<KeyValuePair<int, AnswerOption>>();
 
-            List<KeyValuePair<int, AnswerOption>> correctAnswerList = new List<KeyValuePair<int, AnswerOption>>();
+            List<int> answerids = GetAnswerIds(participantId, questionlistId);
 
-            List<int> questionIds = GetQuestionIds(questionlistId);
+            List<AnswerOption> givenAnswers = db.AnswerOptions.Where(ao => answerids.Any(s => ao.idAnswer.Equals(s))).ToList();
 
-
-            List<AnswerOption> correctAnswers = db.AnswerOptions.Where(q => questionIds.Any(s => q.Question_idQuestion.Equals(s)) && q.correctAnswer == 1).ToList();
-
-            foreach(var correctAnswer in correctAnswers)
+            foreach(var givenAnswer in givenAnswers)
             {
-                int questionId = db.Questions.Where(q => q.idQuestion.Equals(correctAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
-                correctAnswerList.Add(new KeyValuePair<int, AnswerOption>(questionId, correctAnswer));
+                int questionId = db.Questions.Where(q => q.idQuestion.Equals(givenAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
+                givenanswerList.Add(new KeyValuePair<int, AnswerOption>(questionId,givenAnswer));
             }
-
-            
             return View(participant);
         }
 
