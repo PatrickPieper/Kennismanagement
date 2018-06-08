@@ -4,6 +4,23 @@
     ViewBag.Title = "Create";
 }
 
+<script>
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("impPrev").style.display = 'inline';
+                $('#impPrev').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#fileImage").change(function () {
+        readURL(this);
+    });
+</script>
+
 <h2>Create Question</h2>
 
 
@@ -11,31 +28,35 @@
 {
     @Html.AntiForgeryToken()
 
-<div class="form-horizontal">
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.LabelFor(model => model.questionText, "Question", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.questionText, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.questionText, "", new { @class = "text-danger" })
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.questionText, "Question", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.questionText, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.questionText, "", new { @class = "text-danger" })
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input name="image" type="file" id="fileImage" accept=".jpg,.jpeg,.png" onchange="ValidateFileUpload()" />
+        <div class="form-group">
+            @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="image" type="file" id="fileImage" accept=".jpg,.jpeg,.png" onchange="readURL(this)" />
+
+                    <img id="impPrev" Height="250" width="250" style="display:none" />
+
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(model => model.audio, "Audio", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            <input type="file" id="FileAudio" name="FileAudio" accept=".mp3,,wav" />
+        <div class="form-group">
+            @Html.LabelFor(model => model.audio, "Audio", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="file" id="FileAudio" name="FileAudio" accept=".mp3,,wav" />
+
+            </div>
         </div>
-    </div>
 
 
-</div>
+    </div>
     <div class="col-md-12">
         <div class="form-horizontal">
             <h4>Answers</h4>
@@ -56,8 +77,8 @@
     </div>
     <div>
         <div class="createMcAnswer col-md-12">
-            <div class="form-horizontal">            
-               <div id="test" style="display:none" class="col-sm-12">
+            <div class="form-horizontal">
+                <div id="test" style="display:none" class="col-sm-12">
                     <hr />
                     <input type="radio" name="likertOption" value="1"> Thumbs<br>
                     <input type="radio" name="likertOption" value="2"> Smileys<br>

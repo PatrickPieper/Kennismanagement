@@ -4,13 +4,47 @@
     ViewBag.Title = "Edit";
 }
 
+<script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        document.querySelectorAll('img').forEach(function (img) {
+            img.onerror = function () { this.style.display = 'none'; };
+        })
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        document.querySelectorAll('audio').forEach(function (audio) {
+            audio.onerror = function () { this.style.display = 'none'; };
+        })
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                document.getElementById("impPrev").style.display = 'inline';
+                $('#impPrev').attr('src', e.target.result);
+            }
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    $("#fileImage").change(function () {
+        readURL(this);
+    });
+
+
+</script>
+
+
 <h2>Edit</h2>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Questions", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Question</h4>
         <hr />
@@ -19,16 +53,22 @@
 
         <div class="form-group">
             @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" />
-            </div>
+            <div class="col-md-3">
+                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" id="impPrev" />
+
+                <input name="image" type="file" id="fileImage" accept=".jpg,.jpeg,.png" onchange="readURL(this)" />
+
+              </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.audio, "Audio", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <audio src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)" />
+                <audio controls
+                       src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)"></audio>
+                <input type="file" id="FileAudio" name="FileAudio" accept=".mp3,,wav" />
             </div>
+
         </div>
 
         <div class="form-group">
@@ -52,4 +92,7 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/ValidateFileUpload.js")
+    @Scripts.Render("~/Scripts/answer.js")
+
 }

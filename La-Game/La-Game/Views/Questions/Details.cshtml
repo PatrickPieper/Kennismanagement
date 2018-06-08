@@ -4,6 +4,24 @@
     ViewBag.Title = "Details";
 }
 
+<script type="text/javascript">
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        document.querySelectorAll('audio').forEach(function (audio) {
+            audio.onerror = function () { this.style.display = 'none'; };
+        })
+    });
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        document.querySelectorAll('img').forEach(function (img) {
+            img.onerror = function () { this.style.display = 'none'; };
+        })
+    });
+
+
+ </script>
+
+
 <h2>Details</h2>
 
 <div>
@@ -11,19 +29,20 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.picture)
+            @Html.LabelFor(model => model.picture, "Picture")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.picture)
+            <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" />
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.audio)
+            @Html.LabelFor(model => model.audio, "Audio")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.audio)
+            <audio controls
+                   src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)"></audio>
         </dd>
 
         <dt>
