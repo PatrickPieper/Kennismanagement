@@ -118,65 +118,70 @@ namespace La_Game.Controllers
         public ActionResult Results(int id)
         {
             Participant participant = db.Participants.Find(id);
-            List<List<KeyValuePair<String,object>>> questionlists = new List<List<KeyValuePair<String, object>>>();
-            IEnumerable<int> listIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participant.idParticipant)).Select(q => q.QuestionList_idQuestionList);
+            List<List<KeyValuePair<String, object>>> questionlists = new List<List<KeyValuePair<String, object>>>();
+            List<int> listIds = this.GetLists(participant.idParticipant);
             foreach (int questionlistId in listIds)
             {
                 String qListName = db.QuestionLists.Where(q => q.idQuestionList.Equals(questionlistId)).Select(q => q.questionListName).Single();
                 List<KeyValuePair<String, object>> questionList = new List<KeyValuePair<String, object>>();
-                questionList.Add(new KeyValuePair<string, object>("ID",questionlistId));
+                questionList.Add(new KeyValuePair<string, object>("ID", questionlistId));
                 questionList.Add(new KeyValuePair<string, object>("Name", qListName));
                 List<String> questions = new List<String>();
-                IEnumerable<int> answerIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participant.idParticipant) && q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.AnswerOption_idAnswer);
-                IEnumerable<int> question_ids = db.QuestionList_Question.Where(q => q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.Question_idQuestion);
+                List<int> answerIds = GetAnswerIds(participant.idParticipant, questionlistId);
+                List<int> question_ids = GetQuestionIds(questionlistId);
                 int numOfQuestions = question_ids.Count();
                 questionList.Add(new KeyValuePair<string, object>("countQuestions", numOfQuestions));
 
-                int correctAnswers = 0;
-                foreach (var answer in answerIds)
+                int correctAnswerCount = 0;
+                List<AnswerOption> answers = new List<AnswerOption>();
+                foreach (var answerid in answerIds)
                 {
-                    short? correct = db.AnswerOptions.Where(a => a.idAnswer.Equals(answer)).Select(a => a.correctAnswer).Single();
-                    if(correct == 1)
+                    short? correct = db.AnswerOptions.Where(a => a.idAnswer.Equals(answerid)).Select(a => a.correctAnswer).Single();
+                    if (correct == 1)
                     {
-                        correctAnswers++;
+                        correctAnswerCount++;
                     }
                 }
 
-                foreach(int question_id in question_ids)
+
+
+                foreach (int question_id in question_ids)
                 {
+                    IEnumerable<AnswerOption> correctAnswer = db.AnswerOptions.Where(ao => ao.Question_idQuestion.Equals(question_id) && ao.correctAnswer == 1);
                     IEnumerable<String> question = db.Questions.Where(q => q.idQuestion.Equals(question_id)).Select(q => q.questionText);
                     IEnumerable<Question> list_questions = db.Questions.Where(q => q.idQuestion.Equals(question_id));
 
                     questions.Add(question.Single().ToString());
                 }
-                questionList.Add(new KeyValuePair<string, object>("correctAnswers", correctAnswers));
+                questionList.Add(new KeyValuePair<string, object>("correctAnswerCount", correctAnswerCount));
                 questionList.Add(new KeyValuePair<string, object>("Questions", questions));
                 questionlists.Add(questionList);
             }
+            //ViewBag.answers = answers;
             ViewBag.questionslist = questionlists;
 
 
             return View(participant);
         }
 
-        public ActionResult CreateStudent(DateTime? birthDate, string firstName="", string lastName="")
+        public ActionResult CreateStudent(DateTime? birthDate, string firstName = "", string lastName = "")
         {
-            if(firstName != null && lastName!= null && birthDate!= null)
+            if (firstName != null && lastName != null && birthDate != null)
             {
                 int studentId = 400993;
-                Random rng = new Random(); 
+                Random rng = new Random();
                 while (true)
                 {
                     studentId = rng.Next(100000, 1000000);
                     string sqlstring = "SELECT * FROM Participant WHERE StudentCode=" + studentId;
-                    List<Participant> students = db.Participants.SqlQuery(sqlstring).ToList();           
-                    if(students.Count == 0)
+                    List<Participant> students = db.Participants.SqlQuery(sqlstring).ToList();
+                    if (students.Count == 0)
                     {
                         break;
                     }
                 }
-                
-                
+
+
                 Participant student = new Participant
                 {
                     firstName = firstName,
@@ -189,6 +194,32 @@ namespace La_Game.Controllers
             }
 
             return View();
+        }
+
+        public List<int> GetLists(int participantId)
+        {
+            List<int> listIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId)).Select(q => q.QuestionList_idQuestionList).Distinct().ToList();
+            return listIds;
+        }
+
+        public List<int> GetQuestionIds(int questionListId)
+        {
+            List<int> questionIds = db.QuestionList_Question.Where(q => q.QuestionList_idQuestionList.Equals(questionListId)).Select(q => q.Question_idQuestion).ToList();
+            return questionIds;
+        }
+
+        public List<int> GetAnswerIds(int participantId, int questionlistId)
+        {
+            List<int> answerIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId) && q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.AnswerOption_idAnswer).ToList();
+            return answerIds;
+        }
+
+        public ActionResult QuestionlistResult(int participantId, int questionlistId)
+        {
+            Participant participant = db.Participants.Find(participantId);
+            QuestionList qlist = db.QuestionLists.Find(questionlistId);
+            ViewBag.questionList = qlist;
+            return View(participant);
         }
 
         protected override void Dispose(bool disposing)

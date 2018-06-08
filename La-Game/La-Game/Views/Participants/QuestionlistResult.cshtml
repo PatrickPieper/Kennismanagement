@@ -1,0 +1,11 @@
+﻿@model La_Game.Models.Participant
+
+@{
+    ViewBag.Title = "QuestionlistResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var qlist = ViewBag.questionList;
+}
+
+<h2>@qlist.questionListName</h2>
+<hr />
+

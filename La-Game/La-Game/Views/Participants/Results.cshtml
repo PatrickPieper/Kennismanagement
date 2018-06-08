@@ -4,9 +4,11 @@
     ViewBag.Title = "Results";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var results = ViewBag.questionslist;
-    var answers = ViewBag.answerids;
+    var answersids = ViewBag.answerids;
+    var answers = ViewBag.answers;
     int correct = 0;
     int count = 0;
+    int qlistId = 0;
 }
 
 <h2>Results from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName)</h2>
@@ -16,6 +18,10 @@
     <div class="panel panel-default">
         @foreach (var kvPair in @item)
         {
+            if(kvPair.Key == "ID")
+            {
+                qlistId = kvPair.Value;
+            }
             if (kvPair.Key == "Name")
             {
                 <div class="panel-heading">
@@ -55,9 +61,12 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <a class="btn btn-default" href="">Details</a>
+                            @Html.RouteLink("Details", "ParticipantResultQuestionList", new { participantId = Model.idParticipant, questionlistId = qlistId, }, new { @class = "btn btn-default" })
+                            @*@Html.ActionLink("Details", "QuestionlistResult", new { participantId = Model.idParticipant, questionlistId = qlistId, }, new { @class = "btn btn-default" })*@
                         </div>
                     </div>
                 </div>
+
+        
     </div>
 }
