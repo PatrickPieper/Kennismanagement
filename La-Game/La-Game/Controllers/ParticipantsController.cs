@@ -219,6 +219,18 @@ namespace La_Game.Controllers
             Participant participant = db.Participants.Find(participantId);
             QuestionList qlist = db.QuestionLists.Find(questionlistId);
             ViewBag.questionList = qlist;
+
+            List<KeyValuePair<int, AnswerOption>> givenanswerList = new List<KeyValuePair<int, AnswerOption>>();
+
+            List<int> answerids = GetAnswerIds(participantId, questionlistId);
+
+            List<AnswerOption> givenAnswers = db.AnswerOptions.Where(ao => answerids.Any(s => ao.idAnswer.Equals(s))).ToList();
+
+            foreach(var givenAnswer in givenAnswers)
+            {
+                int questionId = db.Questions.Where(q => q.idQuestion.Equals(givenAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
+                givenanswerList.Add(new KeyValuePair<int, AnswerOption>(questionId,givenAnswer));
+            }
             return View(participant);
         }
 

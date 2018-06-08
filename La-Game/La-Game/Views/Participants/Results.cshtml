@@ -40,7 +40,7 @@
                             count = kvPair.Value;
                         }
 
-                        if (kvPair.Key == "correctAnswers")
+                        if (kvPair.Key == "correctAnswerCount")
                         {
                             correct = kvPair.Value;
                         }
@@ -55,14 +55,7 @@
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <p>Correct Answers:</p> 
-                            <div class="well col-md-8">
-                                <h2 style="text-align:center">@correct / @count</h2>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
                             @Html.RouteLink("Details", "ParticipantResultQuestionList", new { participantId = Model.idParticipant, questionlistId = qlistId, }, new { @class = "btn btn-default" })
-                            @*@Html.ActionLink("Details", "QuestionlistResult", new { participantId = Model.idParticipant, questionlistId = qlistId, }, new { @class = "btn btn-default" })*@
                         </div>
                     </div>
                 </div>
