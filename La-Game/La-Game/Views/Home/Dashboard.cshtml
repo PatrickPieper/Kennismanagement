@@ -1,4 +1,4 @@
-﻿@model IEnumerable<La_Game.Models.Language>
+﻿@model La_Game.Models.Member
 
 @{
     ViewBag.Title = "Dashboard";
@@ -11,14 +11,14 @@
 </script>
 
 <div class="jumbotron">
-    <h1>LA-Game User Dashboard</h1>
+    <h1>Welcome, @Html.DisplayFor(model => model.username) </h1>
     <p class="lead"> From this page you will be able to access all the functions of the application.</p>
 </div>
 
 <div class="row">
     <div class="table-responsive col-md-4">
         <h2>Your Languages</h2>
-        @{Html.RenderAction("GetLanguageOverview", "Home", new { memberId = 1 });}
+        @{Html.RenderAction("GetLanguageOverview", "Home", new { memberId = Model.idMember });}
     </div>
     <div class="col-md-4">
         <div>
@@ -38,7 +38,7 @@
             <h2>Participants</h2>
             <p>
                 <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Create", "Participants") + "'");">
-                    <span class="glyphicon glyphicon-plus-sign"></span> Create new Participant
+                    <span class="glyphicon glyphicon-plus"></span> Create new Participant
                 </button>
             </p>
             <p>

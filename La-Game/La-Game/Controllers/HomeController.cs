@@ -48,9 +48,13 @@ namespace La_Game.Controllers
             return View();
         }
 
+        /// <summary>
+        /// Go to the user dashboard
+        /// </summary>
         public ActionResult Dashboard()
         {
-            return View();
+            Member member = db.Members.Find(1); // Test
+            return View(member);
         }
 
         /// <summary>
