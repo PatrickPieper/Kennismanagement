@@ -1,5 +1,5 @@
 ﻿var count = 2;
-console.log(count);
+
 var answerType = $('input[name=answerType]');
 
 answerType.change(function () {
@@ -19,7 +19,7 @@ answerType.change(function () {
 $('#AddAnswer').click(function (e) {
     e.preventDefault();
 
-    console.log(count);
+
 
     if (count < 6) {
         url = $(this).data('url');
