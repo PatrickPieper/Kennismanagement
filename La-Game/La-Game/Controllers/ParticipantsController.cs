@@ -231,6 +231,21 @@ namespace La_Game.Controllers
                 int questionId = db.Questions.Where(q => q.idQuestion.Equals(givenAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
                 givenanswerList.Add(new KeyValuePair<int, AnswerOption>(questionId,givenAnswer));
             }
+
+            
+            List<KeyValuePair<int, AnswerOption>> correctAnswerList = new List<KeyValuePair<int, AnswerOption>>();
+
+            List<int> questionIds = GetQuestionIds(questionlistId);
+
+
+            List<AnswerOption> correctAnswers = db.AnswerOptions.Where(q => questionIds.Any(s => q.Question_idQuestion.Equals(s)) && q.correctAnswer == 1).ToList();
+
+            foreach (var correctAnswer in correctAnswers)
+            {
+                int questionId = db.Questions.Where(q => q.idQuestion.Equals(correctAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
+                correctAnswerList.Add(new KeyValuePair<int, AnswerOption>(questionId, correctAnswer));
+            }
+
             return View(participant);
         }
 
