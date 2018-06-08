@@ -1,4 +1,5 @@
 ﻿using La_Game.Models;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,9 +52,10 @@ namespace La_Game.Controllers
         /// <summary>
         /// Go to the user dashboard
         /// </summary>
+        [Authorize]
         public ActionResult Dashboard()
         {
-            Member member = db.Members.Find(1); // Test
+            Member member = db.Members.Where(u => u.username == User.Identity.Name).FirstOrDefault();
             return View(member);
         }
 
