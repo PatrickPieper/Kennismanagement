@@ -1,5 +1,4 @@
 ﻿using La_Game.Models;
-using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +11,7 @@ namespace La_Game.Controllers
     {
         private readonly LaGameDBContext db = new LaGameDBContext();
 
+        [AllowAnonymous]
         public ActionResult Index(string participationCode,string firstName, string lastName, string studentCode)
         {
             Participant participant =null;
@@ -50,26 +50,28 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// Go to the user dashboard
+        /// GET: /Home/Dashboard
+        /// Go to the user dashboard.
         /// </summary>
-        [Authorize]
         public ActionResult Dashboard()
         {
+            // Get member from database and go to dashboard
             Member member = db.Members.Where(u => u.username == User.Identity.Name).FirstOrDefault();
             return View(member);
         }
 
         /// <summary>
-        /// GET: Home/GetLanguageOverview/[memberId]
+        /// GET: /Home/GetLanguageOverview?memberId=[memberId]
         /// Return a PartialView containing a list of all languages that the member belongs to.
         /// </summary>
         /// <param name="memberId"> Id of the member. </param>
         public PartialViewResult GetLanguageOverview(int? memberId)
         {
-            // Get the lists from the database
+            // Get all the languages the member is assigned to
             String selectQuery = "SELECT * FROM Language WHERE idLanguage IN(SELECT Language_idLanguage FROM Language_Member WHERE Member_idMember = " + memberId + ");";
             IEnumerable<Language> data = db.Database.SqlQuery<Language>(selectQuery);
 
+            // Return the partialview containing the language table
             return PartialView("_LanguageOverview", data.ToList());
         }
     }

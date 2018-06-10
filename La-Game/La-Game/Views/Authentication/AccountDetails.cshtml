@@ -1,27 +1,45 @@
-﻿@model La_Game.Models.IndexViewModel
+﻿@model La_Game.Models.Member
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Account";
 }
 
-<h2>@ViewBag.Title.</h2>
-
-<p class="text-success">@ViewBag.StatusMessage</p>
+<h2>Account</h2>
 <div>
     <h4>Change your account settings</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>Password:</dt>
+        <dt>
+            Username
+        </dt>
         <dd>
-            [
-            @if (Model.HasPassword)
+            @Html.DisplayFor(model => model.username)
+        </dd>
+        <dt>
+            Email
+        </dt>
+        <dd>
+            @* Html.DisplayFor(model => model.email) *@
+        </dd>
+        <dt>
+            Admin Rights
+        </dt>
+        <dd>
+            @* 
+            if (model.isAdmin == 0 || model.isAdmin == null)
             {
-                @Html.ActionLink("Change your password", "ChangePassword")
+                <t>No</t>
             }
             else
             {
-                @Html.ActionLink("Create", "SetPassword")
+                <t>Yes</t>
             }
-            ]
+            *@
+        </dd>
+        <dt></dt>
+        <dd>
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("ChangePassword", "Authentication") + "'");">
+                <span class="glyphicon glyphicon glyphicon-wrench"></span> Change Password
+            </button>
         </dd>
     </dl>
 </div>

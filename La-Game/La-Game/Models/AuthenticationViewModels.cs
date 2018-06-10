@@ -17,7 +17,6 @@ namespace La_Game.Models
     public class RegisterViewModel
     {
         [Required]
-        [EmailAddress]
         [Display(Name = "Username")]
         public string Username { get; set; }
 
@@ -32,12 +31,7 @@ namespace La_Game.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
-    
-    public class IndexViewModel
-    {
-        public bool HasPassword { get; set; }
-    }
-    
+
     public class ChangePasswordViewModel
     {
         [Required]

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
@@ -26,7 +27,7 @@ namespace La_Game.Controllers
         /// GET: /Authentication/Login  
         /// Go to the login page.
         /// </summary>  
-        /// <param name="returnUrl"> Return URL string. </param> 
+        /// <param name="returnUrl"> URL of the previous page. </param> 
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -53,7 +54,6 @@ namespace La_Game.Controllers
         /// Try to log into the application using the data that was entered.
         /// </summary>  
         /// <param name="model"> The data that was entered. </param>  
-        /// <param name="returnUrl"> Return URL string. </param> 
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -65,23 +65,20 @@ namespace La_Game.Controllers
                 // Try to find the loginInfo in the database   
                 var loginInfo = db.Members.Where(s => s.username == model.Username && s.password == model.Password);
 
-                // Verification.    
+                // Verification
                 if (loginInfo != null && loginInfo.Count() > 0)
                 {
                     try
                     {
-                        // Initialization.    
-                        var logindetails = loginInfo.First();
-
                         // Setting  
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.Name, logindetails.username)
+                            new Claim(ClaimTypes.Name, loginInfo.First().username)
                         };
                         var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
                         var authenticationManager = Request.GetOwinContext().Authentication;
 
-                        // Sign In.    
+                        // Sign in   
                         authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, claimIdenties);
 
                         // Redirect to Dashboard  
@@ -95,7 +92,7 @@ namespace La_Game.Controllers
                 }
                 else
                 {
-                    // Setting.    
+                    // Error    
                     ModelState.AddModelError(string.Empty, "Invalid username or password.");
                 }
             }
@@ -105,12 +102,12 @@ namespace La_Game.Controllers
         }
 
         /// <summary>  
-        /// POST: /Authentication/LogOff    
+        /// POST: /Authentication/Logout    
         /// When you press the button, log out of the application.
         /// </summary>  
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public ActionResult Logout()
         {
             try
             {
@@ -133,54 +130,61 @@ namespace La_Game.Controllers
         /// The functions used to manage the account.
         /// </summary>
         #region Manage account
-        /*
         /// <summary>
-        /// GET: Authentication/AccountDetails
+        /// GET: /Authentication/AccountDetails
+        /// Go to the account page where the user can see their information and edit the settings.
         /// </summary>
         public ActionResult AccountDetails()
         {
-            // Verification     
-            if (Request.IsAuthenticated)
-            {
-                // Find the user details and return them in the view
-                var user = db.Members.Find(User.Identity.GetUserId());
-                return View(user);
-            }
-            else
-            {
-                return
-            }
+            // Get member from database and go to dashboard
+            Member member = db.Members.Where(u => u.username == User.Identity.Name).FirstOrDefault();
+            return View(member);
         }
 
-        // GET: /Manage/ChangePassword
+        /// <summary>
+        /// GET: /Authentication/ChangePassword
+        /// Go to a seperate page where the password can be changed.
+        /// </summary>
         public ActionResult ChangePassword()
         {
+            // Go to the AccountDetails page
             return View();
         }
-
-        // POST: /Manage/ChangePassword
+        
+        /// <summary>
+        /// POST: /Authentication/ChangePassword
+        /// Allows the user to change the password of their account.
+        /// </summary>
+        /// <param name="model"> Password data. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        public ActionResult ChangePassword(ChangePasswordViewModel model)
         {
-            if (!ModelState.IsValid)
+            // Check if the data is valid
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
-            var result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
-            if (result.Succeeded)
-            {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-                if (user != null)
+                // Get member from database
+                Member member = db.Members.Where(u => u.username == User.Identity.Name).FirstOrDefault();
+                
+                // Make sure the right password was entered
+                if(member.password == model.OldPassword)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    // Edit the password
+                    member.password = model.NewPassword; // Normal text for now
+                    db.Entry(member).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                    // Return to the previous page
+                    return RedirectToAction("AccountDetails");
                 }
-                return RedirectToAction("Index", new { Message = "Password was succesfully changed." });
+                
+                // Error    
+                ModelState.AddModelError(string.Empty, "The entered password was incorrect.");
             }
 
+            // If not valid, stay on the page
             return View(model);
         }
-        */
         #endregion
     }
 }

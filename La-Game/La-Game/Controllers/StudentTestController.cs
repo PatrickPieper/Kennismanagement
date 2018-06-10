@@ -11,7 +11,9 @@ namespace La_Game.Controllers
     public class StudentTestController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
+        
         // GET: StudentTest
+        [AllowAnonymous]
         public ActionResult Index(int? index, int studentAnswerId = 0)
         {
             ViewBag.participant = TempData["participant"];
@@ -68,14 +70,15 @@ namespace La_Game.Controllers
             //to do: when we have a boolean for LikertScale or MultipleChoice return the right view
             return View("MultipleChoice");
         }
-
         
+        [AllowAnonymous]
         public ActionResult MultipleChoice()
         {
             return View();
            
         }
 
+        [AllowAnonymous]
         public ActionResult LikertScale(int? index)
         {
             return View();
