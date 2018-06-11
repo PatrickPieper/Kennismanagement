@@ -4,23 +4,6 @@
     ViewBag.Title = "Details";
 }
 
-<script type="text/javascript">
-
-    document.addEventListener("DOMContentLoaded", function (event) {
-        document.querySelectorAll('audio').forEach(function (audio) {
-            audio.onerror = function () { this.style.display = 'none'; };
-        })
-    });
-
-    document.addEventListener("DOMContentLoaded", function (event) {
-        document.querySelectorAll('img').forEach(function (img) {
-            img.onerror = function () { this.style.display = 'none'; };
-        })
-    });
-
-
-</script>
-
 
 <h2>Details</h2>
 
@@ -59,3 +42,10 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestion }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/ValidateFileUpload.js")
+    @Scripts.Render("~/Scripts/answer.js")
+
+}

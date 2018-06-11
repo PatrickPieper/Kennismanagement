@@ -67,3 +67,45 @@ function deleteAnswer(button) {
     optionDiv.load(optionDiv);
 }
 
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById("impPrev").style.display = 'inline';
+            $('#impPrev').attr('src', e.target.result);
+        }
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#fileImage").change(function () {
+    readURL(this);
+});
+
+
+document.addEventListener("DOMContentLoaded", function (event) {
+    document.querySelectorAll('img').forEach(function (img) {
+        img.onerror = function () { this.style.display = 'none'; };
+    })
+});
+
+
+document.addEventListener("DOMContentLoaded", function (event) {
+    document.querySelectorAll('audio').forEach(function (audio) {
+        audio.onerror = function () { this.style.display = 'none'; };
+    })
+});
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function (e) {
+            document.getElementById("impPrev").style.display = 'inline';
+            $('#impPrev').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+$("#fileImage").change(function () {
+    readURL(this);
+});
