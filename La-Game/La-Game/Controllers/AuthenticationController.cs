@@ -19,9 +19,6 @@ namespace La_Game.Controllers
         // Database Context
         private LaGameDBContext db = new LaGameDBContext();
 
-        /// <summary>
-        /// All the functions that are needed to log in and out of the application.
-        /// </summary>
         #region Login and Logout Functions
         /// <summary>  
         /// GET: /Authentication/Login  
@@ -63,7 +60,7 @@ namespace La_Game.Controllers
             if (ModelState.IsValid)
             {
                 // Try to find the loginInfo in the database   
-                var loginInfo = db.Members.Where(s => s.username == model.Username && s.password == model.Password);
+                var loginInfo = db.Members.Where(s => s.email == model.Email && s.password == model.Password);
 
                 // Verification
                 if (loginInfo != null && loginInfo.Count() > 0)
@@ -73,7 +70,7 @@ namespace La_Game.Controllers
                         // Setting  
                         var claims = new List<Claim>
                         {
-                            new Claim(ClaimTypes.Name, loginInfo.First().username)
+                            new Claim(ClaimTypes.Name, loginInfo.First().email)
                         };
                         var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
                         var authenticationManager = Request.GetOwinContext().Authentication;
@@ -93,7 +90,7 @@ namespace La_Game.Controllers
                 else
                 {
                     // Error    
-                    ModelState.AddModelError(string.Empty, "Invalid username or password.");
+                    ModelState.AddModelError(string.Empty, "Invalid email or password.");
                 }
             }
 
@@ -126,9 +123,6 @@ namespace La_Game.Controllers
         }
         #endregion
 
-        /// <summary>
-        /// The functions used to manage the account.
-        /// </summary>
         #region Manage account
         /// <summary>
         /// GET: /Authentication/AccountDetails
@@ -137,7 +131,7 @@ namespace La_Game.Controllers
         public ActionResult AccountDetails()
         {
             // Get member from database and go to dashboard
-            Member member = db.Members.Where(u => u.username == User.Identity.Name).FirstOrDefault();
+            Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
             return View(member);
         }
 
@@ -150,7 +144,7 @@ namespace La_Game.Controllers
             // Go to the AccountDetails page
             return View();
         }
-        
+
         /// <summary>
         /// POST: /Authentication/ChangePassword
         /// Allows the user to change the password of their account.
@@ -164,10 +158,10 @@ namespace La_Game.Controllers
             if (ModelState.IsValid)
             {
                 // Get member from database
-                Member member = db.Members.Where(u => u.username == User.Identity.Name).FirstOrDefault();
-                
+                Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
+
                 // Make sure the right password was entered
-                if(member.password == model.OldPassword)
+                if (member.password == model.OldPassword)
                 {
                     // Edit the password
                     member.password = model.NewPassword; // Normal text for now
@@ -177,13 +171,66 @@ namespace La_Game.Controllers
                     // Return to the previous page
                     return RedirectToAction("AccountDetails");
                 }
-                
+
                 // Error    
                 ModelState.AddModelError(string.Empty, "The entered password was incorrect.");
             }
 
             // If not valid, stay on the page
             return View(model);
+        }
+        #endregion
+
+        #region Account overview and registering new accounts
+        /// <summary>
+        /// GET: /Authentication/AccountOverview
+        /// Get a overview of all member accounts.
+        /// </summary>
+        public ActionResult AccountOverview()
+        {
+            // Return overview of all members excluding the person accessing the list
+            return View(db.Members.ToList().Where(u => u.email != User.Identity.Name));
+        }
+
+        /// <summary>
+        /// GET: /Authentication/Register
+        /// Go to the page where a new account can be created.
+        /// </summary>
+        public ActionResult Register()
+        {
+            // Go to register page
+            return View();
+        }
+
+        /// <summary>
+        /// POST: /Authentication/Register
+        /// After pressing the button add the new account to the database.
+        /// </summary>
+        /// <param name="account"> The account that has to be added. </param>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Register([Bind(Include = "email,password,firstname,lastname,isAdmin")] Member account)
+        {
+            // Check if the data is valid
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    // If valid, add it to the database
+                    db.Members.Add(account);
+                    db.SaveChanges();
+
+                    // Redirect to the page where questions can be assigned to the list
+                    return RedirectToAction("AccountOverview", "Authentication");
+                }
+                catch
+                {
+                    ModelState.AddModelError(string.Empty, "Error while adding the account.");
+                }
+            }
+
+            // If not valid, stay on the edit page with the current data
+            return View(account);
         }
         #endregion
     }

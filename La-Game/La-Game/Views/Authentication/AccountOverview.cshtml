@@ -1,0 +1,102 @@
+﻿@model IEnumerable<La_Game.Models.Member>
+
+@{
+    ViewBag.Title = "Account Overview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/dataTables")
+
+<div>
+    <h2> Account Overview </h2>
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Register", "Authentication") + "'");">
+            <span class="glyphicon glyphicon-plus"></span> Register new Account
+        </button>
+    </p>
+    <div class="container">
+        <div class="row">
+            <div class="table-responsive col-md-6">
+                <table id="accounts" class="table table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                First Name
+                            </th>
+                            <th>
+                                Last Name
+                            </th>
+                            <th>
+                                Admin Rights
+                            </th>
+                            <th></th>
+                        </tr>
+                    <thead>
+
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.email)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.firstname)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.lastname)
+                                </td>
+                                <td>
+                                    @{
+                                        if (item.isAdmin == 1)
+                                        {
+                                            <p><span class="glyphicon glyphicon-ok"></span></p>
+                                        }
+                                        else
+                                        {
+                                            <p><span class="glyphicon glyphicon-remove"></span></p>
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <!-- Buttons go here (to add accounts to lessons) -->
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+            <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+        </button>
+    </p>
+</div>
+
+
+@section scripts {
+
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#accounts').DataTable(
+                {
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        {
+                            targets: [3, 4],
+                            orderable: false
+                        }
+                    ]
+                }
+            );
+        });
+    </script>
+}

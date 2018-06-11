@@ -56,7 +56,7 @@ namespace La_Game.Controllers
         public ActionResult Dashboard()
         {
             // Get member from database and go to dashboard
-            Member member = db.Members.Where(u => u.username == User.Identity.Name).FirstOrDefault();
+            Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
             return View(member);
         }
 

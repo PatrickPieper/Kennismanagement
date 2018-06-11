@@ -27,12 +27,6 @@
             <th>
                 <p>Description</p>
             </th>
-            <th>
-                <p>Code</p>
-            </th>
-            <th>
-                <p>Active</p>
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -47,19 +41,6 @@
                 </td>
                 <td onclick="Redirect('@link')">
                     @Html.DisplayFor(modelItem => item.questionListDescription)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.participationCode)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @if (item.isActive == 0 || item.isActive == null)
-                    {
-                        <t>No</t>
-                    }
-                    else
-                    {
-                        <t>Yes</t>
-                    }
                 </td>
                 <td>
                     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "QuestionLists", new { id = item.idQuestionList }) + "'");">
@@ -90,8 +71,7 @@
                 {
                     "pagingType": "simple",
                     "columnDefs": [
-                        { targets: [2, 4], orderable: false },
-                        { targets: '_all', orderable: true }
+                        { targets: 2, orderable: false }
                     ]
                 }
             );

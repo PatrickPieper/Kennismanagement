@@ -635,6 +635,7 @@
     <Content Include="Views\Lessons\ManageLists.cshtml" />
     <Content Include="Views\Lessons\_AddQuestionListTable.cshtml" />
     <Content Include="Views\Authentication\Login.cshtml" />
+    <Content Include="Views\Authentication\AccountOverview.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
