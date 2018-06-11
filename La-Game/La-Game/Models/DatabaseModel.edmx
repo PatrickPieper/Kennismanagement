@@ -125,6 +125,7 @@
           <Property Name="Participant_idParticipant" Type="int" Nullable="false" />
           <Property Name="startTime" Type="datetime2" Precision="7" />
           <Property Name="endTime" Type="datetime2" Precision="7" />
+          <Property Name="attempt" Type="int" />
         </EntityType>
         <Association Name="fk_Answer_Question1">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
@@ -504,6 +505,7 @@
           <NavigationProperty Name="AnswerOption" Relationship="Self.fk_QuestionResult_Answer1" FromRole="QuestionResult" ToRole="AnswerOption" />
           <NavigationProperty Name="Participant" Relationship="Self.fk_QuestionResult_Participant1" FromRole="QuestionResult" ToRole="Participant" />
           <NavigationProperty Name="QuestionList" Relationship="Self.fk_QuestionResult_QuestionList1" FromRole="QuestionResult" ToRole="QuestionList" />
+          <Property Name="attempt" Type="Int32" />
         </EntityType>
         <Association Name="fk_Answer_Question1">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
@@ -894,6 +896,7 @@
           <EntitySetMapping Name="QuestionResults">
             <EntityTypeMapping TypeName="Model.QuestionResult">
               <MappingFragment StoreEntitySet="QuestionResult">
+                <ScalarProperty Name="attempt" ColumnName="attempt" />
                 <ScalarProperty Name="idQuestionResult" ColumnName="idQuestionResult" />
                 <ScalarProperty Name="QuestionList_idQuestionList" ColumnName="QuestionList_idQuestionList" />
                 <ScalarProperty Name="AnswerOption_idAnswer" ColumnName="AnswerOption_idAnswer" />

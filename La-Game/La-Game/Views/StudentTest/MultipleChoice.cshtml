@@ -2,22 +2,34 @@
 @{
 
     ViewBag.Title = "MultipleChoice";
-
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>MultipleChoice</h2>
 
 @{
-    <p>@ViewBag.index</p>
+    <p> vraag @(ViewBag.index+1)</p>
 
 
     if (ViewBag.questionData.Count > ViewBag.index)
     {
+        if (ViewBag.questionData[ViewBag.index].picture != null)
+        {
+            <img class="img-responsive" src=https://lagame2.blob.core.windows.net/questions/@(ViewBag.questionData[ViewBag.index].idQuestion)/@(ViewBag.questionData[ViewBag.index].picture) />
+        }
+        if (ViewBag.questionData[ViewBag.index].audio != null)
+        {
+            <audio controls>
+                <source src=https://lagame2.blob.core.windows.net/questions/@(ViewBag.questionData[ViewBag.index].idQuestion)/@(ViewBag.questionData[ViewBag.index].audio) type="audio/mp3" />
+            </audio>
+
+        }
         <p>@ViewBag.questionData[ViewBag.index].questionText</p>
+
 
         using (Html.BeginForm("Index", "StudentTest", FormMethod.Post))
         {
-
+            int likertIndex = 1;
             for (int i = 0; i < ViewBag.answerOptions.Count; i++)
             {
 
@@ -27,20 +39,40 @@
 
                     if (ViewBag.answerOptions[i].Question_idQuestion == ViewBag.questionData[ViewBag.index].idQuestion)
                     {
-                        <button type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId">@ViewBag.answerOptions[i].answerText</button>
+
+                        if (ViewBag.questionData[ViewBag.index].likertScale == null)
+                        {
+
+                            <button style="min-height:50px" class="col-xs-6" type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId">@ViewBag.answerOptions[i].answerText</button>
+
+                        }
+                        else if (ViewBag.questionData[ViewBag.index].likertScale == 1)
+                        {
+                            <button style="padding:0px; min-height:25px" class="col-xs-2"  type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px" src="https://lagame2.blob.core.windows.net/images/thumb-@(likertIndex).jpg" /></button>
+                            likertIndex++;
+                        }
+                        else if (ViewBag.questionData[ViewBag.index].likertScale == 2)
+                        {
+                            <button style="padding:0px;" class="col-xs-2" type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px; min-width:25px; margin-left:auto; margin-right:auto;"  src="https://lagame2.blob.core.windows.net/images/emo-@(likertIndex).jpg" /></button>
+                            likertIndex++;
+                        }
+                        else if (ViewBag.questionData[ViewBag.index].likertScale == 3)
+                        {
+                            <button style="padding:0px" class="col-xs-2" type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId">@ViewBag.answerOptions[i].answerText</button>
+                        }
+
                     }
                 }
-
-
             }
 
             <input type="hidden" value="@ViewBag.index" name="index" />
             <input type="submit" value="go next" name="studentAnswer" />
-
         }
+
         string startTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
         TempData["startTime"] = startTime;
     }
+
 
     TempData["participant"] = ViewBag.participant;
     TempData["questionData"] = ViewBag.questionData;
