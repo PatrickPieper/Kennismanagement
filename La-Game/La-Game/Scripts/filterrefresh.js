@@ -24,7 +24,7 @@ $('#ddlanguages').change(function (e) {
     });
     //Set index back after replacing filter partial
     $("#ddlanguages").prop("selectedIndex", selectedLanguageIndex);
-    //createChart($(this).val(),idLesson, idQuestionList);
+    //Update chart with new filters
     updateChart($(this).val(), idLesson, idQuestionList);
 }
 );
@@ -52,7 +52,7 @@ $('#ddlessons').change(function (e) {
     //Set indexes back after replacing filter partial
     $("#ddlanguages").prop("selectedIndex", selectedLanguageIndex);
     $("#ddlessons").prop("selectedIndex", selectedLessonIndex);
-    //createChart($('#ddlanguages').val(), $(this).val(), idQuestionList);
+    //Update chart with new filters
     updateChart($('#ddlanguages').val(), $(this).val(), idQuestionList);
 }
 );
@@ -65,9 +65,7 @@ $('#ddquestionLists').change(function (e) {
     if ($('#ddquestionList').prop("selectedIndex") !== -1) {
         idQuestionList: $('#ddquestionList').val();
     }
-    //Replace the filter partial with a new one, with the dropdown values
-    //Set indexes back after replacing filter partial
-    //createChart($('#ddlanguages').val(), $('#ddlessons').val(), $(this).val());
+    //Update chart with new filters
     updateChart($('#ddlanguages').val(), $('#ddlessons').val(), $(this).val());
 }
 );

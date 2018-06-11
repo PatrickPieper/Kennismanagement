@@ -96,8 +96,7 @@ namespace La_Game.Controllers
                                 "left join Lesson as le on lq.Lesson_idLesson = le.idLesson " +
                                 "left join[Language] as la on le.Language_idLanguage = la.idLanguage " +
                                 "where ao.correctAnswer = 0 ");
-            //string sqlQuery = "select q.idQuestion, q.questionText,count(*) as 'wrongCount' from Question as q join AnswerOption as ao on q.idQuestion = ao.Question_idQuestion join QuestionResult as qr on ao.idAnswer = qr.AnswerOption_idAnswer where ao.correctAnswer = 0 group by q.idQuestion, q.questionText";
-
+            //Append the filter values to the query, if set
             if (idLanguage != null && idLanguage != -1)
             {
                 sqlQueryString.Append(" and la.idLanguage = " + idLanguage);
@@ -111,7 +110,7 @@ namespace La_Game.Controllers
                 sqlQueryString.Append(" and ql.idQuestionList = " + idQuestionList);
             }
             sqlQueryString.Append(" group by q.idQuestion, q.questionText");
-            var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQueryString.ToString()).ToList();
+            var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQueryString.ToString()).OrderByDescending(o => o.wrongCount).ToList();
 
             //Turn query result into two separate list for use as data/labels for chart.js
             List<string> questionTexts = new List<string>();
