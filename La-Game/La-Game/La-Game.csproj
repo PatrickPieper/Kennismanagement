@@ -553,6 +553,7 @@
     <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
+    <Content Include="Scripts\lessonselectionrefresh.js" />
     <Content Include="Scripts\filterrefresh.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -654,6 +655,9 @@
     <Content Include="Views\Statistics\_CommonWrongAnswerFilter.cshtml" />
     <Content Include="Views\Lessons\ManageLists.cshtml" />
     <Content Include="Views\Lessons\_AddQuestionListTable.cshtml" />
+    <Content Include="Views\Statistics\CompareLessons.cshtml" />
+    <Content Include="Views\Statistics\_CompareLessonSelection.cshtml" />
+    <Content Include="Views\Statistics\LessonStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

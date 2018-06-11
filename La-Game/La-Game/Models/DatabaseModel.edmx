@@ -60,8 +60,11 @@
             <PropertyRef Name="idMember" />
           </Key>
           <Property Name="idMember" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="username" Type="varchar" MaxLength="45" />
-          <Property Name="password" Type="varchar" MaxLength="45" />
+          <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="firstname" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="lastname" Type="varchar" MaxLength="40" Nullable="false" />
+          <Property Name="isAdmin" Type="tinyint" Nullable="false" />
         </EntityType>
         <EntityType Name="Participant">
           <Key>
@@ -80,7 +83,7 @@
           <Property Name="idQuestion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="picture" Type="varchar" MaxLength="250" />
           <Property Name="audio" Type="varchar" MaxLength="250" />
-          <Property Name="questionText" Type="varchar" MaxLength="200" />
+          <Property Name="questionText" Type="nvarchar" MaxLength="200" />
           <Property Name="isHidden" Type="smallint" />
           <Property Name="likertScale" Type="tinyint" />
         </EntityType>
@@ -122,6 +125,7 @@
           <Property Name="Participant_idParticipant" Type="int" Nullable="false" />
           <Property Name="startTime" Type="datetime2" Precision="7" />
           <Property Name="endTime" Type="datetime2" Precision="7" />
+          <Property Name="attempt" Type="int" />
         </EntityType>
         <Association Name="fk_Answer_Question1">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
@@ -440,9 +444,12 @@
             <PropertyRef Name="idMember" />
           </Key>
           <Property Name="idMember" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="username" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
-          <Property Name="password" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Language_Member" Relationship="Self.fk_Language_User_User1" FromRole="Member" ToRole="Language_Member" />
+          <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="firstname" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="lastname" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />
+          <Property Name="isAdmin" Type="Byte" Nullable="false" />
         </EntityType>
         <EntityType Name="Participant">
           <Key>
@@ -463,7 +470,7 @@
           <Property Name="idQuestion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="picture" Type="String" MaxLength="250" Unicode="false" FixedLength="false" />
           <Property Name="audio" Type="String" MaxLength="250" Unicode="false" FixedLength="false" />
-          <Property Name="questionText" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="questionText" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="AnswerOptions" Relationship="Self.fk_Answer_Question1" FromRole="Question" ToRole="AnswerOption" />
           <NavigationProperty Name="QuestionList_Question" Relationship="Model.fk_QuestionList_Question_Question1" FromRole="Question" ToRole="QuestionList_Question" />
           <Property Name="isHidden" Type="Int16" />
@@ -498,6 +505,7 @@
           <NavigationProperty Name="AnswerOption" Relationship="Self.fk_QuestionResult_Answer1" FromRole="QuestionResult" ToRole="AnswerOption" />
           <NavigationProperty Name="Participant" Relationship="Self.fk_QuestionResult_Participant1" FromRole="QuestionResult" ToRole="Participant" />
           <NavigationProperty Name="QuestionList" Relationship="Self.fk_QuestionResult_QuestionList1" FromRole="QuestionResult" ToRole="QuestionList" />
+          <Property Name="attempt" Type="Int32" />
         </EntityType>
         <Association Name="fk_Answer_Question1">
           <End Role="Question" Type="Self.Question" Multiplicity="1" />
@@ -841,8 +849,11 @@
           <EntitySetMapping Name="Members">
             <EntityTypeMapping TypeName="Model.Member">
               <MappingFragment StoreEntitySet="Member">
+                <ScalarProperty Name="isAdmin" ColumnName="isAdmin" />
+                <ScalarProperty Name="lastname" ColumnName="lastname" />
+                <ScalarProperty Name="firstname" ColumnName="firstname" />
+                <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="idMember" ColumnName="idMember" />
-                <ScalarProperty Name="username" ColumnName="username" />
                 <ScalarProperty Name="password" ColumnName="password" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -885,6 +896,7 @@
           <EntitySetMapping Name="QuestionResults">
             <EntityTypeMapping TypeName="Model.QuestionResult">
               <MappingFragment StoreEntitySet="QuestionResult">
+                <ScalarProperty Name="attempt" ColumnName="attempt" />
                 <ScalarProperty Name="idQuestionResult" ColumnName="idQuestionResult" />
                 <ScalarProperty Name="QuestionList_idQuestionList" ColumnName="QuestionList_idQuestionList" />
                 <ScalarProperty Name="AnswerOption_idAnswer" ColumnName="AnswerOption_idAnswer" />
