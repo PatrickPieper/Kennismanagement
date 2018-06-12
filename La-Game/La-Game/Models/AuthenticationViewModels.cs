@@ -73,4 +73,26 @@ namespace La_Game.Models
         [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
+
+    /// <summary>
+	/// Viewmodel for the homepage
+	/// <summary>
+	public class StartListModel
+    {
+        //[Required]
+        //[Display(Name = "First Name")]
+        //public string FirstName { get; set; }
+
+        //[Required]
+        //[Display(Name = "Last Name")]
+        //public string LastName { get; set; }
+
+        [Required]
+        [Display(Name = "Studentcode")]
+        public string Studentcode { get; set; }
+
+        [Required]
+        [Display(Name = "Participationcode")]
+        public string Participationcode { get; set; }
+    }
 }
