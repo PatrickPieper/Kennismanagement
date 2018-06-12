@@ -13,11 +13,11 @@
 
     if (ViewBag.questionData.Count > ViewBag.index)
     {
-        if (ViewBag.questionData[ViewBag.index].picture != null)
+        if (ViewBag.questionData[ViewBag.index].picture != "")
         {
-            <img class="img-responsive" src=https://lagame2.blob.core.windows.net/questions/@(ViewBag.questionData[ViewBag.index].idQuestion)/@(ViewBag.questionData[ViewBag.index].picture) />
+            <img style="max-height:250px; max-width:250px;" class="img-responsive" src=https://lagame2.blob.core.windows.net/questions/@(ViewBag.questionData[ViewBag.index].idQuestion)/@(ViewBag.questionData[ViewBag.index].picture) />
         }
-        if (ViewBag.questionData[ViewBag.index].audio != null)
+        if (ViewBag.questionData[ViewBag.index].audio != "")
         {
             <audio controls>
                 <source src=https://lagame2.blob.core.windows.net/questions/@(ViewBag.questionData[ViewBag.index].idQuestion)/@(ViewBag.questionData[ViewBag.index].audio) type="audio/mp3" />
