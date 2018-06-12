@@ -235,7 +235,7 @@ namespace La_Game.Controllers
 
                 // Update the Question in the database.
                 string updateQuestion = question.questionText;
-                string queryQuestion = "Update Question SET questionText ='" +updateQuestion +"' WHERE idQuestion = " + id;
+                string queryQuestion = "Update Question SET questionText = (N'" + updateQuestion + "') WHERE idQuestion = " + id;
                 db.Database.ExecuteSqlCommand(queryQuestion);
 
 
