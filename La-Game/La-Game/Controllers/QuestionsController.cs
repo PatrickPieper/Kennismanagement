@@ -60,6 +60,7 @@ namespace La_Game.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase FileImage, HttpPostedFileBase FileAudio)
         {
+            var max = 1;
             if (ModelState.IsValid)
             {
 
@@ -70,8 +71,11 @@ namespace La_Game.Controllers
                     byte test = byte.Parse(Request.Form["likertOption"]);                    
                     question.likertScale = test;
                 }
-
-                var max = db.Questions.Max(q => q.idQuestion) + 1;                
+                if (db.Questions.Count() != 0)
+                {
+                    max = db.Questions.Max(q => q.idQuestion) + 1;
+                } 
+                                
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
                 containerName = container.Name;
                 
