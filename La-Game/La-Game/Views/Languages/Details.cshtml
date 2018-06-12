@@ -28,7 +28,12 @@
 
                 </dl>
             </div>
-            <h3> Active Members </h3>
+            <h3>
+                Active Members
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("AddMemberToLanguage", "Languages", new { languageId = Model.idLanguage }) + "'");">
+                    <span class="glyphicon glyphicon-plus"></span> Add Members
+                </button>
+            </h3>
             <div class="table-responsive col-md-6">
                 @{Html.RenderAction("GetLanguageMembers", "Languages");}
             </div>
@@ -47,6 +52,7 @@
                     "pagingType": "simple",
                     "bLengthChange": false,
                     "bFilter": false,
+                    "columnDefs": [{ targets: 2, orderable: false }]
                 }
             );
         });

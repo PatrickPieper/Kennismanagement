@@ -42,8 +42,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons") + "'");">
-                <span class="glyphicon glyphicon-menu-left"></span> Back
+            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons", new { idLanguage = Model.Language_idLanguage }) + "'");">
+                <span class="glyphicon glyphicon-chevron-left"></span> Back
             </button>
             <button type="submit" value="Delete" class="btn btn-default">
                 <span class="glyphicon glyphicon-trash"></span> Delete

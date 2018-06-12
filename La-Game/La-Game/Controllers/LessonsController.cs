@@ -35,24 +35,23 @@ namespace La_Game.Controllers
         /// GET: Lessons/Details/[id]?idLanguage=[idLanguage]
         /// Get the details of a lesson and show it on a seperate page.
         /// </summary>
-        /// <param name="id"> Id of the lesson. </param>
-        public ActionResult Details(int? id, int? idLanguage)
+        /// <param name="idLesson"> Id of the lesson. </param>
+        public ActionResult Details(int? idLesson)
         {
             // Check if id was given
-            if (id == null)
+            if (idLesson == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the lesson, if it does not exist return 404
-            Lesson lesson = db.Lessons.Find(id);
+            Lesson lesson = db.Lessons.Find(idLesson);
             if (lesson == null)
             {
                 return HttpNotFound();
             }
 
             // Redirect to the detail page
-            ViewBag.idLanguage = idLanguage;
             return View(lesson);
         }
 
@@ -95,17 +94,17 @@ namespace La_Game.Controllers
         /// GET: Lessons/Edit/[id]
         /// Find the lesson that has to be changed and redirect to a seperate edit page.
         /// </summary>
-        /// <param name="id"> Id of the lesson that has to be changed. </param>
-        public ActionResult Edit(int? id)
+        /// <param name="idLesson"> Id of the lesson that has to be changed. </param>
+        public ActionResult Edit(int? idLesson)
         {
             // Check if id was given
-            if (id == null)
+            if (idLesson == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the lesson, if it does not exist return 404
-            Lesson lesson = db.Lessons.Find(id);
+            Lesson lesson = db.Lessons.Find(idLesson);
             if (lesson == null)
             {
                 return HttpNotFound();
@@ -143,17 +142,17 @@ namespace La_Game.Controllers
         /// GET: Lessons/Delete/[id]
         /// Find the lesson that has to be deleted and redirect to a seperate deletion page for confirmation.
         /// </summary>
-        /// <param name="id"> Id of the lesson that has to be deactivated. </param>
-        public ActionResult Delete(int? id)
+        /// <param name="idLesson"> Id of the lesson that has to be deactivated. </param>
+        public ActionResult Delete(int? idLesson)
         {
             // Check if id was given
-            if (id == null)
+            if (idLesson == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the lesson, if it does not exist return 404
-            Lesson lesson = db.Lessons.Find(id);
+            Lesson lesson = db.Lessons.Find(idLesson);
             if (lesson == null)
             {
                 return HttpNotFound();
@@ -167,15 +166,15 @@ namespace La_Game.Controllers
         /// POST: Lessons/Delete/[id]
         /// After confirming that the lesson can be deleted, deactivate it in the database.
         /// </summary>
-        /// <param name="id"> Id of the lesson that has to be deactivated. </param>
+        /// <param name="idLesson"> Id of the lesson that has to be deactivated. </param>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int idLesson)
         {
             try
             {
                 // Find the lesson and set it to hidden
-                Lesson lesson = db.Lessons.Find(id);
+                Lesson lesson = db.Lessons.Find(idLesson);
                 lesson.isHidden = 1;
 
                 // Save the changes
