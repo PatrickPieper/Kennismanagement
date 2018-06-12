@@ -26,6 +26,7 @@ namespace La_Game.Controllers
         AnswerOptionsController answerOptionsController = new AnswerOptionsController();
         private string fileUpdateName;
         private byte likert;
+        private int correctAnswer;
 
         // GET: Questions
         public ActionResult Index()
@@ -139,29 +140,29 @@ namespace La_Game.Controllers
                     string correct = Request.Form["correctAnswer"];
                     string[] bools = correct.Split(',');
 
-
                     int count = 0;
 
                     while (count <= answers.Length - 1)
-                    {
-                        AnswerOption answerOption = new AnswerOption();
-                        string text2 = Request.Form["correctAnswer"];
-                        answerOption.answerText = answers[count];
-                        answerOption.Question_idQuestion = max;
+                    {                    
+                                            
                         if (bools[count] == "1")
                         {
-                            answerOption.correctAnswer = 1;
+                            correctAnswer = 1;
                         }
                         else if (bools[count] == "0")
                         {
-                            answerOption.correctAnswer = 0;
+                           correctAnswer = 0;
                         }
 
-                        answerOptionsController.Create(answerOption);
+                        string answer =  answers[count];
+                        int questionId = max;
+                        string answerOption = "INSERT INTO AnswerOption(Question_idQuestion, correctAnswer, answerText) VALUES ('" + max + "','" + correctAnswer + "',N'" + answer + "')";
+                        db.Database.ExecuteSqlCommand(answerOption);
+                        
                         count++;
                     }
                 }
-                db.SaveChanges();
+                
                 return RedirectToAction("Index");
             }
 
