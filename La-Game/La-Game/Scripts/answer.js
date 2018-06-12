@@ -1,7 +1,7 @@
 ﻿var count = 2;
-
 var answerType = $('input[name=answerType]');
 
+// Checks which answer is selected and show/hide divs depending on which answer is selected.
 answerType.change(function () {
     var selected = $('input[name=answerType]:checked');
     if (selected.val() === "multiplechoice") {
@@ -15,12 +15,12 @@ answerType.change(function () {
     }
 }
 );
-
+// Adds a new Partialview
+// 
 $('#AddAnswer').click(function (e) {
     e.preventDefault();
 
-
-
+    
     if (count < 6) {
         url = $(this).data('url');
 
@@ -42,6 +42,8 @@ $('#AddAnswer').click(function (e) {
 }
 );
 
+// Delete PartialView
+// 
 $(document).on('click', '.deleteAnswer', function (e) {
     e.preventDefault();
     if (count > 2) {
@@ -67,6 +69,8 @@ function deleteAnswer(button) {
     optionDiv.load(optionDiv);
 }
 
+
+// Shows a previes of the uploaded Image.
 function readURL(input) {
     if (input.files && input.files[0]) {
         var reader = new FileReader();
@@ -81,31 +85,17 @@ $("#fileImage").change(function () {
     readURL(this);
 });
 
-
+// If there is no image uploaded hide the image view.
 document.addEventListener("DOMContentLoaded", function (event) {
     document.querySelectorAll('img').forEach(function (img) {
         img.onerror = function () { this.style.display = 'none'; };
     })
 });
 
-
+// If there is no audio uploaded hide the player view
 document.addEventListener("DOMContentLoaded", function (event) {
     document.querySelectorAll('audio').forEach(function (audio) {
         audio.onerror = function () { this.style.display = 'none'; };
     })
 });
 
-function readURL(input) {
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            document.getElementById("impPrev").style.display = 'inline';
-            $('#impPrev').attr('src', e.target.result);
-        }
-
-        reader.readAsDataURL(input.files[0]);
-    }
-}
-$("#fileImage").change(function () {
-    readURL(this);
-});

@@ -201,6 +201,8 @@ namespace La_Game.Controllers
                 containerName = container.Name;
 
 
+                // Checks if there is a image uploaded.
+                // If there is a image upload it to the blob and update the filename in the database.
                 ImageUpdate = Request.Files[0];
                 if (ImageUpdate.ContentLength > 0)
                 {
@@ -215,6 +217,8 @@ namespace La_Game.Controllers
 
                 }
 
+                // Checks if there is a audio uploaded.
+                // If there is a audio upload it to the blob and update the filename in the database.
                 AudioUpdate = Request.Files[1];
                 if (AudioUpdate.ContentLength > 0)
                 {
@@ -229,7 +233,7 @@ namespace La_Game.Controllers
 
                 }
 
-
+                // Update the Question in the database.
                 string updateQuestion = question.questionText;
                 string queryQuestion = "Update Question SET questionText ='" +updateQuestion +"' WHERE idQuestion = " + id;
                 db.Database.ExecuteSqlCommand(queryQuestion);
