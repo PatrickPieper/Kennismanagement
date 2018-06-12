@@ -268,7 +268,7 @@ namespace La_Game.Controllers
             }
 
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace La_Game.Controllers
             db.SaveChanges();
 
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace La_Game.Controllers
             }
             
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
