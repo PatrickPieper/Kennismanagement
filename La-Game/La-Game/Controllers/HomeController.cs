@@ -10,52 +10,72 @@ namespace La_Game.Controllers
     public class HomeController : Controller
     {
         private readonly LaGameDBContext db = new LaGameDBContext();
-
         [AllowAnonymous]
-        public ActionResult Index(string participationCode,string firstName, string lastName, string studentCode)
+        public ActionResult Index()
         {
-            Participant participant =null;
-            string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + participationCode + "'";
-            List<QuestionList> questionListData = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
+            return View();
 
-            if (firstName != null && lastName != null && studentCode != null)
-            { 
-                sqlString = "SELECT * FROM PARTICIPANT WHERE studentCode='" + studentCode + "' AND firstName='" + firstName + "' AND lastName='" + lastName+"'";
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(StartListModel model)
+        {
+            
+            if (ModelState.IsValid)
+            {
 
 
-                if (db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
-                { 
-                    participant = db.Participants.SqlQuery(sqlString).First();
+                Participant participant = null;
+                string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + model.Participationcode + "'";
+                List<QuestionList> questionListData = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
+
+                if ( model.Studentcode != null)
+                {
+                    sqlString = "SELECT * FROM PARTICIPANT WHERE studentCode='" + model.Studentcode +"'";
+
+
+                    if (db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
+                    {
+                        participant = db.Participants.SqlQuery(sqlString).First();
+                    }
                 }
-            }
 
 
-            if (questionListData.Count != 0 && participant != null)
-            {
-                int questionListID = questionListData[0].idQuestionList;
-                // String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
-                 sqlString = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion" +
-                " JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + participationCode + "' ORDER BY qo.[order]";
+                if (questionListData.Count != 0 && participant != null)
+                {
+                    int questionListID = questionListData[0].idQuestionList;
+                    // String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
+                    sqlString = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion" +
+                   " JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + model.Participationcode + "' ORDER BY qo.[order]";
 
-                List<Question> questionData = db.Questions.SqlQuery(sqlString).ToList<Question>();
+                    List<Question> questionData = db.Questions.SqlQuery(sqlString).ToList<Question>();
 
-                TempData["questionListData"] = questionListData;
-                TempData["questionData"] = questionData;
-                TempData["participant"] = participant;
-                return RedirectToAction("Index", "StudentTest");
+                    TempData["questionListData"] = questionListData;
+                    TempData["questionData"] = questionData;
+                    TempData["participant"] = participant;
+                    return RedirectToAction("Index", "StudentTest");
                     //View("~/Views/StudentTest/MultipleChoice.cshtml");
-            }
-            else if(participationCode != null || firstName != null || lastName != null || studentCode != null)
-            {
-                ViewBag.Message = "something is not typed correctly";
+                }
+                else if (model.Participationcode != null ||  model.Studentcode != null)
+                {
+                    ViewBag.Message = "something is not typed correctly";
+                    return View();
+                }
+
+                if (TempData["doneMessage"] != null)
+                {
+                    ViewBag.doneMessage = TempData["doneMessage"];
+                }
                 return View();
             }
-
-            if (TempData["doneMessage"] != null)
+            else
             {
-                ViewBag.doneMessage = TempData["doneMessage"];
+                ModelState.AddModelError(String.Empty, "Invalid input(s)");
             }
-            return View();
+
+            return View(model);
         }
 
         /// <summary>
@@ -84,4 +104,6 @@ namespace La_Game.Controllers
             return PartialView("_LanguageOverview", data.ToList());
         }
     }
+
+
 }

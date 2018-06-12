@@ -1,16 +1,40 @@
-﻿@{
+﻿@using La_Game.Models
+@model StartListModel
+
+@{
     ViewBag.Title = "Home Page";
 }
 <h2>@ViewBag.doneMessage</h2>
 
-<div class="container-code">
-    <form method="get">
-        <p>First name:</p> <input class="input" name="firstName" type="text" /> <br />
-        <p>Last name: </p><input class="input" name="lastName" type="text" /> <br />
-        <p>Student code:</p> <input class="input" name="studentCode" type="number" /> <br />
-        <p>Participation code:</p> <input class="input" name="participationCode" type="text" /><br/><br/>
-        <input class="submit" value="go" type="submit" />
-    </form>
+<div class="row">
+    <div class="col-md-8">
+        <section id="loginForm">
+            @using (Html.BeginForm("Index", "Home" , FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+            {
+                @Html.AntiForgeryToken()
+                <h4>Enter test</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Studentcode, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Studentcode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Studentcode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(m => m.Participationcode, new { @class = "col-md-2 control-label" })
+                    <div class="col-md-10">
+                        @Html.TextBoxFor(m => m.Participationcode, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Participationcode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="go" class="btn btn-default" />
+                    </div>
+                </div>
+            }
+        </section>
+    </div>
 </div>
-
-<p>@ViewBag.Message</p>
