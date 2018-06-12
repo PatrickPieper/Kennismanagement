@@ -10,24 +10,33 @@
     <thead>
         <tr>
             <th>
-                Id
+                Email
             </th>
             <th>
-                Username
+                Name
             </th>
+            <th></th>
         </tr>
     </thead>
 
     <tbody>
         @foreach (var item in Model)
         {
-            //var link = Url.Action("Details", "Members", new { id = item.idMember });
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.idMember)
+                    @Html.DisplayFor(modelItem => item.email)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.username)
+                    @Html.DisplayFor(modelItem => item.firstname) @Html.DisplayFor(modelItem => item.lastname)
+                </td>
+                <td>
+                    @using (Html.BeginForm("RemoveMemberFromLanguage", "Languages", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                    }
                 </td>
             </tr>
         }
