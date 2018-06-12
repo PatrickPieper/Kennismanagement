@@ -237,6 +237,20 @@ namespace La_Game.Controllers
 
             List<int> questionIds = GetQuestionIds(questionlistId);
 
+            List<Question> questions = db.Questions.Where(q => questionIds.Any(s => q.idQuestion.Equals(s))).ToList();
+
+            List<int?> attempts = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId) && q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.attempt).Distinct().ToList();
+
+            List<KeyValuePair<int?, List<AnswerOption>>> results = new List<KeyValuePair<int?, List<AnswerOption>>>();
+
+            foreach (var attempt in attempts)
+            {
+                List<int> answerOptionIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId) && q.QuestionList_idQuestionList.Equals(questionlistId) && q.attempt == attempt).Select(q => q.AnswerOption_idAnswer).ToList();
+                List<AnswerOption> answers = db.AnswerOptions.Where(q => answerOptionIds.Any(s => q.idAnswer.Equals(s))).ToList();
+                results.Add(new KeyValuePair<int?, List<AnswerOption>>(attempt, answers));
+            }
+            ViewBag.givenAnswers = results;
+            ViewBag.questions = questions;
 
             List<AnswerOption> correctAnswers = db.AnswerOptions.Where(q => questionIds.Any(s => q.Question_idQuestion.Equals(s)) && q.correctAnswer == 1).ToList();
 
@@ -245,6 +259,7 @@ namespace La_Game.Controllers
                 int questionId = db.Questions.Where(q => q.idQuestion.Equals(correctAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
                 correctAnswerList.Add(new KeyValuePair<int, AnswerOption>(questionId, correctAnswer));
             }
+            ViewBag.correctAnswers = correctAnswerList;
 
             return View(participant);
         }
