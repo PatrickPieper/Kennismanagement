@@ -25,6 +25,7 @@ namespace La_Game.Controllers
         BlobsController blobsController = new BlobsController();
         AnswerOptionsController answerOptionsController = new AnswerOptionsController();
         private string fileUpdateName;
+        private byte likert;
 
         // GET: Questions
         public ActionResult Index()
@@ -68,8 +69,8 @@ namespace La_Game.Controllers
                 // If likert scale is selected get the value of the choosing option for likert scale and write it to the database.
                 if (answerType == "likert")
                 {                  
-                    byte test = byte.Parse(Request.Form["likertOption"]);                    
-                    question.likertScale = test;
+                    byte scaleOption = byte.Parse(Request.Form["likertOption"]);
+                    likert = scaleOption;                   
                 }
                 if (db.Questions.Count() != 0)
                 {
@@ -108,7 +109,7 @@ namespace La_Game.Controllers
 
                 // Get the question Text from the from and add it to the database with Multilingual.
                 string qText = question.questionText;
-                string queryText = "INSERT INTO Question(questionText, picture, audio) VALUES (N'" + qText +"', '" + fileName +"','" + audioName +"')";
+                string queryText = "INSERT INTO Question(questionText, picture, audio, likertScale) VALUES (N'" + qText +"', '" + fileName +"','" + audioName +"','" + likert +"')";
                 db.Database.ExecuteSqlCommand(queryText);
 
                 // If the Question option is likert write 5 anwser to the database with values -2 to 2.
