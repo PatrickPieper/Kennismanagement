@@ -1,4 +1,5 @@
-﻿function val() {
+﻿//Checks if correctAnswer option is selected if yes is selected twice give a alert and hide it after a few seconds.
+function val() {
     var count = 0;
     selects = document.getElementsByName("correctAnswer");
     alertbox = $('#alertBox');
