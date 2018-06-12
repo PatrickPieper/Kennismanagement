@@ -30,7 +30,8 @@ namespace La_Game.Controllers
         // GET: Questions
         public ActionResult Index()
         {
-            return View(db.Questions.ToList());
+            return View(db.Questions.ToList().Where(s => s.isHidden != 1));
+      
         }
 
         // GET: Questions/Details/5
@@ -272,7 +273,8 @@ namespace La_Game.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Question question = db.Questions.Find(id);
-            db.Questions.Remove(question);
+            question.isHidden = 1;
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }
