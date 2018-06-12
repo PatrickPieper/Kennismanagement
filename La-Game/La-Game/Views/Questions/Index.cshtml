@@ -5,6 +5,12 @@
 }
 @Styles.Render("~/Content/dataTables")
 
+<script type="text/javascript">
+    function Redirect(link) {
+        location.href = link;
+    }
+</script>
+
 <h2> Question Overview </h2>
 
 <p>
@@ -57,7 +63,7 @@
 </table>
 <p>
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
-        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
     </button>
 </p>
 

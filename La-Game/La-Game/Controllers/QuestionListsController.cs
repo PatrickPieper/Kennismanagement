@@ -268,7 +268,7 @@ namespace La_Game.Controllers
             }
 
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
@@ -325,7 +325,7 @@ namespace La_Game.Controllers
             db.SaveChanges();
 
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
@@ -362,7 +362,7 @@ namespace La_Game.Controllers
             }
             
             // Redirect back to the list to reload the data
-            return RedirectToAction("ModifyQuestionList", new { idLesson = collection.Get("QuestionList_idQuestionList") });
+            return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
 
         /// <summary>
@@ -394,15 +394,15 @@ namespace La_Game.Controllers
         /// GET: QuestionLists/GetQuestionListTableForLesson/[id]
         /// Return a PartialView containing all the lists that belong to a certain lesson.
         /// </summary>
-        /// <param name="id"> Id of the lesson. </param>
-        public PartialViewResult GetQuestionListsTableForLesson(int? id)
+        /// <param name="idLesson"> Id of the lesson. </param>
+        public PartialViewResult GetQuestionListsTableForLesson(int? idLesson)
         {
             // Get the lists from the database
-            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + id + ");";
+            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + ");";
             IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
             
             // Set the lessonId and return the PartialView
-            ViewBag.lessonID = id;
+            ViewBag.lessonID = idLesson;
             return PartialView("_AddQuestionListLessonTable", data);
         }
 

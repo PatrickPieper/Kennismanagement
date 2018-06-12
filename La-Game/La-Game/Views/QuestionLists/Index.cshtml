@@ -27,12 +27,6 @@
             <th>
                 <p>Description</p>
             </th>
-            <th>
-                <p>Code</p>
-            </th>
-            <th>
-                <p>Active</p>
-            </th>
             <th></th>
         </tr>
     </thead>
@@ -48,19 +42,6 @@
                 <td onclick="Redirect('@link')">
                     @Html.DisplayFor(modelItem => item.questionListDescription)
                 </td>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.participationCode)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @if (item.isActive == 0 || item.isActive == null)
-                    {
-                        <t>No</t>
-                    }
-                    else
-                    {
-                        <t>Yes</t>
-                    }
-                </td>
                 <td>
                     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "QuestionLists", new { id = item.idQuestionList }) + "'");">
                         <span class="glyphicon glyphicon-wrench"></span> Edit
@@ -75,7 +56,7 @@
 </table>
 <p>
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
-        <span class="glyphicon glyphicon-menu-left"></span> Back to dashboard
+        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
     </button>
 </p>
 
@@ -90,8 +71,7 @@
                 {
                     "pagingType": "simple",
                     "columnDefs": [
-                        { targets: [2, 4], orderable: false },
-                        { targets: '_all', orderable: true }
+                        { targets: 2, orderable: false }
                     ]
                 }
             );

@@ -31,31 +31,6 @@
         <dd>
             @Html.DisplayFor(model => model.questionListDescription)
         </dd>
-
-        <dt>
-            Code
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.participationCode)
-        </dd>
-
-        <dt>
-            Active
-        </dt>
-
-        <dd>
-            @{
-                if (Model.isActive == 0 || Model.isActive == null)
-                {
-                    <t>No</t>
-                }
-                else
-                {
-                    <t>Yes</t>
-                }
-            }
-        </dd>
     </dl>
 
     <h3>
@@ -107,7 +82,7 @@
 </div>
 <p>
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
-        <span class="glyphicon glyphicon-menu-left"></span> Back to list
+        <span class="glyphicon glyphicon-chevron-left"></span> Back to list
     </button>
 </p>
 

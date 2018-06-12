@@ -1,5 +1,8 @@
 ﻿@model La_Game.Models.AnswerOption
 
+
+
+
 <div class="col-sm-12 answerWrapper">
     <div class="form-group col-sm-6">
         @Html.LabelFor(model => model.answerText, "Answer", htmlAttributes: new { @class = "control-label col-sm-4" })
@@ -12,9 +15,9 @@
     <div class="form-group col-sm-4">
         @Html.LabelFor(model => model.correctAnswer, "Correct Answer", htmlAttributes: new { @class = "form-check-label col-sm-5" })
         <div class="col-sm-5">
-            <select class="form-control" name="correctAnswer">
+            <select class="form-control" name="correctAnswer" id="select_option">
                 <option value="1">Yes</option>
-                <option value="0">No</option>
+                <option value="0" selected>No</option>
             </select>
             @Html.ValidationMessageFor(model => model.correctAnswer, "", new { @class = "text-danger" })
         </div>

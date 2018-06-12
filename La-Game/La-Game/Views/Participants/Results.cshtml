@@ -4,6 +4,11 @@
     ViewBag.Title = "Results";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var results = ViewBag.questionslist;
+    var answersids = ViewBag.answerids;
+    var answers = ViewBag.answers;
+    int correct = 0;
+    int count = 0;
+    int qlistId = 0;
 }
 
 <h2>Results from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName)</h2>
@@ -11,17 +16,50 @@
 @foreach (var item in results)
 {
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Panel title</h3>
-        </div>
-        <div class="panel-body">
-
-            @foreach (var question in @item.Value)
+        @foreach (var kvPair in @item)
+        {
+            if(kvPair.Key == "ID")
             {
-                <p>@Html.Raw(question)</p>
+                qlistId = kvPair.Value;
             }
+            if (kvPair.Key == "Name")
+            {
+                <div class="panel-heading">
+                    <h3 class="panel-title">@Html.Raw(kvPair.Value)</h3>
+                </div>
+            }
+        }
 
-        </div>
+                <div class="panel-body">
+
+                    @foreach (var kvPair in @item)
+                    {
+
+                        if (kvPair.Key == "countQuestions")
+                        {
+                            count = kvPair.Value;
+                        }
+
+                        if (kvPair.Key == "correctAnswerCount")
+                        {
+                            correct = kvPair.Value;
+                        }
+
+
+                    }
+                    <div class="row">
+                        <div class="col-md-4">
+                            <p>Questions in questionlist:</p>
+                            <div class="well col-md-8">
+                                <h2 style="text-align: center">@count</h2>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            @Html.RouteLink("Details", "ParticipantResultQuestionList", new { participantId = Model.idParticipant, questionlistId = qlistId, }, new { @class = "btn btn-default" })
+                        </div>
+                    </div>
+                </div>
+
+        
     </div>
-    
 }
