@@ -4,6 +4,7 @@
     ViewBag.Title = "Details";
 }
 
+
 <h2>Details</h2>
 
 <div>
@@ -11,23 +12,24 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.picture)
+            @Html.LabelFor(model => model.picture, "Picture")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.picture)
+            <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" />
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.audio)
+            @Html.LabelFor(model => model.audio, "Audio")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.audio)
+            <audio controls
+                   src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)"></audio>
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.questionText)
+            @Html.LabelFor(model => model.questionText, "Question")
         </dt>
 
         <dd>
@@ -40,3 +42,10 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestion }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/ValidateFileUpload.js")
+    @Scripts.Render("~/Scripts/answer.js")
+
+}

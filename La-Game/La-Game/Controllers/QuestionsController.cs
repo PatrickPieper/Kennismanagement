@@ -22,6 +22,9 @@ namespace La_Game.Controllers
         private Stream audioStream;
         private Stream imageStream;
         private string containerName;
+        BlobsController blobsController = new BlobsController();
+        AnswerOptionsController answerOptionsController = new AnswerOptionsController();
+        private string fileUpdateName;
 
         // GET: Questions
         public ActionResult Index()
@@ -61,22 +64,50 @@ namespace La_Game.Controllers
             {
 
                 String answerType = Request.Form["answerType"];
-                // If likert scale is selected get the value of the choosing option for likert scale and write it to the database
+                // If likert scale is selected get the value of the choosing option for likert scale and write it to the database.
                 if (answerType == "likert")
                 {                  
                     byte test = byte.Parse(Request.Form["likertOption"]);                    
                     question.likertScale = test;
                 }
 
-                db.Questions.Add(question);
-                db.SaveChanges();
-                var max = db.Questions.Max(q => q.idQuestion);                
-               
-                BlobsController blobsController = new BlobsController();
+                var max = db.Questions.Max(q => q.idQuestion) + 1;                
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
                 containerName = container.Name;
-                AnswerOptionsController answerOptionsController = new AnswerOptionsController();
+                
 
+                // Checks if there is a image uploaded.
+                // If there is a image upload it to the blob and write the filename to the database.
+                FileImage = Request.Files[0];
+                if (FileImage.ContentLength > 0)
+                {
+                    fileName = Path.GetFileName(FileImage.FileName);
+                    imageStream = FileImage.InputStream;
+
+                    blobsController.UploadBlob(fileName, imageStream, containerName);
+                    question.picture = fileName;
+
+                }
+
+                // Checks if there is a audiofile uploaded
+                // If there is a audiofile upload it to the blob and write the filename to the database.
+                FileAudio = Request.Files[1];
+                if (FileAudio.ContentLength > 0)
+                {
+                    audioName = Path.GetFileName(FileAudio.FileName);
+                    audioStream = FileAudio.InputStream;
+
+                    //Use questionnumber as last parameter to search right container.
+                    blobsController.UploadBlob(audioName, audioStream, containerName);
+                    question.audio = audioName;
+                }
+
+                // Get the question Text from the from and add it to the database with Multilingual.
+                string qText = question.questionText;
+                string queryText = "INSERT INTO Question(questionText, picture, audio) VALUES (N'" + qText +"', '" + fileName +"','" + audioName +"')";
+                db.Database.ExecuteSqlCommand(queryText);
+
+                // If the Question option is likert write 5 anwser to the database with values -2 to 2.
                 if (answerType == "likert")
                 {
                     int count = -2;
@@ -84,22 +115,24 @@ namespace La_Game.Controllers
                     while (count <= 2)
                     {
                         AnswerOption option = new AnswerOption();
-                        String text = count.ToString();                        
+                        String text = count.ToString();
                         option.answerText = text;
-                        option.correctAnswer = 0;
+                        option.correctAnswer = 1;
                         option.Question_idQuestion = max;
                         answerOptionsController.Create(option);
                         count++;
                     }
 
                 }
-                // If multiple choice is selected put the anwsers in a array
+                // If multiple choice is selected put the anwsers in a array and write it to the database.
+                
                 else if (answerType == "multiplechoice")
                 {
                     string text = Request.Form["answerText"];
                     string[] answers = text.Split(',');
                     string correct = Request.Form["correctAnswer"];
                     string[] bools = correct.Split(',');
+
 
                     int count = 0;
 
@@ -122,31 +155,7 @@ namespace La_Game.Controllers
                         count++;
                     }
                 }
-
-                // Checks if there is a image uploaded
-                // If there is a image upload it to the blob and write the filename to the database
-                FileImage = Request.Files[0];
-                if (FileImage.ContentLength > 0)
-                {
-                    fileName = Path.GetFileName(FileImage.FileName);
-                    imageStream = FileImage.InputStream;
-
-                    blobsController.UploadBlob(fileName, imageStream, containerName);
-                    question.picture = fileName;
-                }
-
-                // Checks if there is a audiofile uploaded
-                // If there is a audiofile upload it to the blob and write the filename to the database
-                FileAudio = Request.Files[1];
-                if (FileAudio.ContentLength > 0)
-                {
-                    audioName = Path.GetFileName(FileAudio.FileName);
-                    audioStream = FileAudio.InputStream;
-
-                    //Use questionnumber as last parameter to search right container
-                    blobsController.UploadBlob(audioName, audioStream, containerName);
-                    question.audio = audioName;
-                }
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -175,12 +184,6 @@ namespace La_Game.Controllers
                 CloudBlockBlob blob = container.GetBlockBlobReference(question.picture);
                 ViewData["Blob"] = blob;
             }
-
-
-
-
-
-
             return View(question);
         }
 
@@ -189,14 +192,57 @@ namespace La_Game.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idQuestion,picture,audio,questionText")] Question question)
+        public ActionResult Edit([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase ImageUpdate, HttpPostedFileBase AudioUpdate)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(question).State = EntityState.Modified;
-                db.SaveChanges();
+                CloudBlobContainer container = blobsController.GetCloudBlobContainer(question.idQuestion.ToString());
+                int id = question.idQuestion;
+                containerName = container.Name;
+
+
+                // Checks if there is a image uploaded.
+                // If there is a image upload it to the blob and update the filename in the database.
+                ImageUpdate = Request.Files[0];
+                if (ImageUpdate.ContentLength > 0)
+                {
+                    fileUpdateName = ImageUpdate.FileName;
+
+                    fileName = Path.GetFileName(ImageUpdate.FileName);
+                    imageStream = ImageUpdate.InputStream;
+
+                    blobsController.UploadBlob(fileUpdateName, imageStream, containerName);
+                    string queryText = "UPDATE Question SET picture = '" + fileUpdateName + "' WHERE idQuestion = " + id;
+                    db.Database.ExecuteSqlCommand(queryText);
+
+                }
+
+                // Checks if there is a audio uploaded.
+                // If there is a audio upload it to the blob and update the filename in the database.
+                AudioUpdate = Request.Files[1];
+                if (AudioUpdate.ContentLength > 0)
+                {
+                    fileUpdateName = AudioUpdate.FileName;
+
+                    fileName = Path.GetFileName(AudioUpdate.FileName);
+                    imageStream = AudioUpdate.InputStream;
+
+                    blobsController.UploadBlob(fileUpdateName, imageStream, containerName);
+                    string queryText = "UPDATE Question SET audio = '" + fileUpdateName + "' WHERE idQuestion = " + id;
+                    db.Database.ExecuteSqlCommand(queryText);
+
+                }
+
+                // Update the Question in the database.
+                string updateQuestion = question.questionText;
+                string queryQuestion = "Update Question SET questionText = (N'" + updateQuestion + "') WHERE idQuestion = " + id;
+                db.Database.ExecuteSqlCommand(queryQuestion);
+
+
                 return RedirectToAction("Index");
             }
+
+
             return View(question);
         }
 

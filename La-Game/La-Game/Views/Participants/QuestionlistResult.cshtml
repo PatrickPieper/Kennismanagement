@@ -1,0 +1,80 @@
+﻿@model La_Game.Models.Participant
+
+@{
+    ViewBag.Title = "QuestionlistResult";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var qlist = ViewBag.questionList;
+    var correctAnswers = ViewBag.correctAnswers;
+    var givenAnswers = ViewBag.givenAnswers;
+    var questions = ViewBag.questions;
+    var likert = new List<int>();
+}
+
+<h2>@qlist.questionListName</h2>
+<hr />
+
+
+<div class="container-fluid">
+    <table class="table table-responsive">
+        <thead>
+        <th>Vraag:</th>
+        @foreach (var question in questions)
+        {
+            <th>@question.questionText</th>
+        }
+        </thead>
+        <tbody>
+
+            @foreach (var givenAnswer in givenAnswers)
+            {
+            <tr>
+                <td></td>
+                @foreach (var question in questions)
+                {
+                    if (givenAnswer.Key == question.idQuestion)
+                    {
+                        if (question.likertScale != null)
+                        {
+                            likert.Add(question.idQuestion);
+                        }
+                    }
+                }
+                @{
+                    var given = givenAnswer.Value;
+                }
+                @foreach (var givenans in given)
+                {
+                    foreach (var correctAnswer in correctAnswers)
+                    {
+                        var correct = correctAnswer.Value;
+
+                        if (correctAnswer.Key == givenans.Question_idQuestion)
+                        {
+                            if (likert.Contains(givenans.Question_idQuestion))
+                            {
+                                <td><p style="color:forestgreen">@givenans.answerText</p></td>
+                                break;
+                            }
+                            else
+                            {
+                                if (correct.idAnswer == givenans.idAnswer)
+                                {
+                                    <td><p style="color:forestgreen">@givenans.answerText (@givenans.startTime)</p></td>
+                                }
+                                else
+                                {
+                                    <td><p style="color:darkred">@givenans.answerText</p></td>
+
+                                }
+                            }
+                            break;
+                        }
+
+                    }
+                }
+            </tr>
+        }
+
+            </tbody>
+        </table>
+</div>
