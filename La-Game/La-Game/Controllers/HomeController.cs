@@ -2,79 +2,88 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Home/Dashboard Controller.
+    /// </summary>
     public class HomeController : Controller
     {
-        private readonly LaGameDBContext db = new LaGameDBContext();
+        // Database Context
+        private LaGameDBContext db = new LaGameDBContext();
+
+        /// <summary>
+        /// GET: /Home/Index
+        /// Go to the main page.
+        /// </summary>
         [AllowAnonymous]
         public ActionResult Index()
         {
-            return View();
+            // if a doneMessage was given, put it in the ViewBag
+            if (TempData["doneMessage"] != null)
+            {
+                ViewBag.doneMessage = TempData["doneMessage"];
+            }
 
+            // Go to the page
+            return View();
         }
 
+        /// <summary>
+        /// POST: /Home/Index
+        /// Check the codes that were entered and try to redirect to the questionlist.
+        /// </summary>
+        /// <param name="model"> The codes that were entered. </param>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Index(StartListModel model)
         {
-            
+            // Check if data is valid
             if (ModelState.IsValid)
             {
-
-
-                Participant participant = null;
+                // Get the questionlist
                 string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + model.Participationcode + "'";
                 List<QuestionList> questionListData = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
 
-                if ( model.Studentcode != null)
+                // Get the participant
+                Participant participant = null;
+                sqlString = "SELECT * FROM PARTICIPANT WHERE studentCode='" + model.Studentcode + "'";
+                if (db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
                 {
-                    sqlString = "SELECT * FROM PARTICIPANT WHERE studentCode='" + model.Studentcode +"'";
-
-
-                    if (db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
-                    {
-                        participant = db.Participants.SqlQuery(sqlString).First();
-                    }
+                    participant = db.Participants.SqlQuery(sqlString).First();
                 }
 
-
+                // If both the codes are valid, continue
                 if (questionListData.Count != 0 && participant != null)
                 {
+                    // Get the questions
                     int questionListID = questionListData[0].idQuestionList;
-                    // String selectQuery = "SELECT * FROM Question WHERE idQuestion IN(SELECT Question_idQuestion FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionListID + "); ";
                     sqlString = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion" +
-                   " JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + model.Participationcode + "' ORDER BY qo.[order]";
-
+                    " JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + model.Participationcode + "' ORDER BY qo.[order]";
                     List<Question> questionData = db.Questions.SqlQuery(sqlString).ToList<Question>();
 
+                    // Set the tempdata and redirect to the questionlist
                     TempData["questionListData"] = questionListData;
                     TempData["questionData"] = questionData;
                     TempData["participant"] = participant;
                     return RedirectToAction("Index", "StudentTest");
-                    //View("~/Views/StudentTest/MultipleChoice.cshtml");
                 }
-                else if (model.Participationcode != null ||  model.Studentcode != null)
+                else
                 {
-                    ViewBag.Message = "something is not typed correctly";
-                    return View();
+                    // One of the codes was incorrect
+                    ModelState.AddModelError(String.Empty, "The participationcode and/or studentcode was not valid.");
                 }
-
-                if (TempData["doneMessage"] != null)
-                {
-                    ViewBag.doneMessage = TempData["doneMessage"];
-                }
-                return View();
             }
             else
             {
+                // The data in one of the fields was invalid
                 ModelState.AddModelError(String.Empty, "Invalid input(s)");
             }
 
+            // Stay on the page with the current data
             return View(model);
         }
 
@@ -104,6 +113,4 @@ namespace La_Game.Controllers
             return PartialView("_LanguageOverview", data.ToList());
         }
     }
-
-
 }

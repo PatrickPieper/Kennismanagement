@@ -79,17 +79,9 @@ namespace La_Game.Models
 	/// <summary>
 	public class StartListModel
     {
-        //[Required]
-        //[Display(Name = "First Name")]
-        //public string FirstName { get; set; }
-
-        //[Required]
-        //[Display(Name = "Last Name")]
-        //public string LastName { get; set; }
-
         [Required]
         [Display(Name = "Studentcode")]
-        public string Studentcode { get; set; }
+        public int Studentcode { get; set; }
 
         [Required]
         [Display(Name = "Participationcode")]

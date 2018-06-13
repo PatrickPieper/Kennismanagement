@@ -50,8 +50,8 @@
                     <span class="glyphicon glyphicon-list-alt"></span> Manage Questionlists
                 </button>
             </h3>
-            <div class="table-responsive col-md-6">
-                @{Html.RenderAction("GetQuestionListsTableForLesson", "QuestionLists");}
+            <div class="table-responsive col-md-8">
+                @{Html.RenderAction("GetQuestionListsTableForLesson", "QuestionLists", new { idLesson = Model.idLesson });}
             </div>
         </div>
     </div>

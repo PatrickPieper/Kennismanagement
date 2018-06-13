@@ -141,7 +141,7 @@ namespace La_Game.Controllers
         /// </summary>
         public ActionResult ChangePassword()
         {
-            // Go to the AccountDetails page
+            // Go to the ChangePassword page
             return View();
         }
 
@@ -225,6 +225,7 @@ namespace La_Game.Controllers
                 }
                 catch
                 {
+                    // Error
                     ModelState.AddModelError(string.Empty, "Error while adding the account.");
                 }
             }

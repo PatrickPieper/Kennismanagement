@@ -23,6 +23,7 @@ namespace La_Game.Controllers
             return View(db.QuestionLists.ToList().Where(s => s.isHidden != 1));
         }
 
+        #region Details and Create/Edit/Delete
         /// <summary>
         /// GET: QuestionLists/Details/[id]
         /// Get the details of a list and show it on a seperate page.
@@ -192,7 +193,9 @@ namespace La_Game.Controllers
             // Redirect to index
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region Functions for adding and removing questions within the list
         /// <summary>
         /// GET: QuestionLists/ModifyQuestionList/[id]
         /// Navigate to page where questions can be added and/or removed from the list.
@@ -360,7 +363,7 @@ namespace La_Game.Controllers
             {
                 // Failed to delete
             }
-            
+
             // Redirect back to the list to reload the data
             return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
@@ -389,6 +392,7 @@ namespace La_Game.Controllers
             ViewBag.listId = id;
             return PartialView("_AddQuestionTable", allQuestions);
         }
+        #endregion
 
         /// <summary>
         /// GET: QuestionLists/GetQuestionListTableForLesson/[id]
@@ -400,10 +404,75 @@ namespace La_Game.Controllers
             // Get the lists from the database
             String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + ");";
             IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
-            
+
             // Set the lessonId and return the PartialView
             ViewBag.lessonID = idLesson;
             return PartialView("_AddQuestionListLessonTable", data);
+        }
+
+        /// <summary>
+        /// POST: /QuestionLists/ActivateList
+        /// </summary>
+        /// <param name="collection"> Collection containing the necessary ids and a ActivationString </param>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ActivateList([Bind(Include = "idQuestionList,idLesson,ActivationString")] FormCollection collection)
+        {
+            // Check if id was given
+            if (collection.Get("idQuestionList") == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Try to find the list, if it does not exist return 404
+            QuestionList questionList = db.QuestionLists.Find(int.Parse(collection.Get("idQuestionList")));
+            if (questionList != null)
+            {
+                // Check if you want to activate or deactivate the list
+                if (collection.Get("ActivationString") == "activate" || collection.Get("ActivationString") == null)
+                {
+                    // Create a participationcode
+                    int participationCode;
+                    Random rng = new Random();
+                    while (true)
+                    {
+                        participationCode = rng.Next(1000, 9999);
+                        string sqlstring = "SELECT * FROM QuestionList WHERE participationCode = " + int.Parse(collection.Get("idQuestionList"));
+                        List<QuestionList> lists = db.QuestionLists.SqlQuery(sqlstring).ToList();
+                        
+                        if (lists.Count == 0)
+                        {
+                            // Activate the list
+                            questionList.participationCode = participationCode.ToString();
+                            questionList.isActive = 1;
+
+                            // Change the database entry and save the changes
+                            db.Entry(questionList).State = EntityState.Modified;
+                            db.SaveChanges();
+
+                            break;
+                        }
+                    }
+                }
+                else if (collection.Get("ActivationString") == "deactivate")
+                {
+                    // Deactivate the list
+                    questionList.participationCode = null;
+                    questionList.isActive = 0;
+
+                    // Change the database entry and save the changes
+                    db.Entry(questionList).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+
+                // Return to the view
+                return RedirectToAction("Details", "Lessons", new { idLesson = collection.Get("idLesson") });
+            }
+            else
+            {
+                // Questionlist was not found
+                return HttpNotFound();
+            }
         }
 
         protected override void Dispose(bool disposing)
