@@ -28,6 +28,9 @@ namespace La_Game.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            string test = Request.UrlReferrer.ToString();
+            ViewBag.returnUrl = test;
+
             // Verification     
             if (Request.IsAuthenticated)
             {
@@ -54,7 +57,7 @@ namespace La_Game.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel model)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
@@ -71,6 +74,7 @@ namespace La_Game.Controllers
                         var claims = new List<Claim>
                         {
                             new Claim(ClaimTypes.Name, loginInfo.First().email)
+                            //new Claim(ClaimTypes.Role, loginInfo.First().isAdmin)
                         };
                         var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
                         var authenticationManager = Request.GetOwinContext().Authentication;
@@ -78,8 +82,17 @@ namespace La_Game.Controllers
                         // Sign in   
                         authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, claimIdenties);
 
-                        // Redirect to Dashboard  
-                        return RedirectToAction("Dashboard", "Home");
+                        // Check if the URL is valid
+                        if (Url.IsLocalUrl(returnUrl))
+                        {
+                            // Redirect to the given URL  
+                            return Redirect(returnUrl);
+                        }
+                        else
+                        {
+                            // Redirect to Dashboard  
+                            return RedirectToAction("Dashboard", "Home");
+                        }
                     }
                     catch (Exception ex)
                     {

@@ -82,8 +82,8 @@ namespace La_Game.Controllers
                 db.Lessons.Add(lesson);
                 db.SaveChanges();
 
-                // Redirect to index
-                return RedirectToAction("Index");
+                // Redirect to list
+                return RedirectToAction("Index", "Lessons", new { idLanguage = lesson.Language_idLanguage });
             }
 
             // If not valid, stay on the edit page with the current data
@@ -130,8 +130,8 @@ namespace La_Game.Controllers
                 db.Entry(lesson).State = EntityState.Modified;
                 db.SaveChanges();
 
-                // Redirect to index
-                return RedirectToAction("Index");
+                // Redirect to list
+                return RedirectToAction("Index", "Lessons", new { idLanguage = lesson.Language_idLanguage });
             }
 
             // If not valid, stay on the edit page with the current data
@@ -171,10 +171,12 @@ namespace La_Game.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int idLesson)
         {
+            // Find the lesson
+            Lesson lesson = db.Lessons.Find(idLesson);
+
             try
             {
-                // Find the lesson and set it to hidden
-                Lesson lesson = db.Lessons.Find(idLesson);
+                // Set to lesson to hidden
                 lesson.isHidden = 1;
 
                 // Save the changes
@@ -186,8 +188,8 @@ namespace La_Game.Controllers
                 // Delete failed
             }
 
-            // Redirect to index
-            return RedirectToAction("Index");
+            // Redirect to list
+            return RedirectToAction("Index", "Lessons", new { idLanguage = lesson.Language_idLanguage });
         }
 
         /// <summary>
