@@ -20,6 +20,12 @@ namespace La_Game.Controllers
             if (index == null)
             {
                 ViewBag.index = 0;
+                if (TempData["attempt"] == null && TempData["questionData"] != null)
+                {
+                    List<Question> questions = (List<Question>)TempData["questionData"];
+                    Question firstQuestion = questions.First();
+                    //firstQuestion.id
+                }
                 
             }
             else
@@ -80,7 +86,7 @@ namespace La_Game.Controllers
 
             if (ViewBag.questionData.Count <= ViewBag.index)
             {
-                TempData["doneMessage"] = "your have completed the test";
+                TempData["doneMessage"] = "You have completed the test";
                 return RedirectToAction("Index", "Home");
             }
 

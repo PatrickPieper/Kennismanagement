@@ -3,78 +3,36 @@
 @{
     ViewBag.Title = "QuestionlistResult";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var qlist = ViewBag.questionList;
-    var correctAnswers = ViewBag.correctAnswers;
-    var givenAnswers = ViewBag.givenAnswers;
-    var questions = ViewBag.questions;
-    var likert = new List<int>();
+    var qlist = ViewBag.questionListName;
+    var results = ViewBag.results;
+    var attempts = ViewBag.attempts;
 }
 
-<h2>@qlist.questionListName</h2>
+<h2>@qlist</h2>
 <hr />
 
 
 <div class="container-fluid">
     <table class="table table-responsive">
         <thead>
-        <th>Vraag:</th>
-        @foreach (var question in questions)
+        <th></th>
+        @foreach (var attempt in attempts)
         {
-            <th>@question.questionText</th>
+            <th>Attempt @attempt</th>
         }
         </thead>
         <tbody>
-
-            @foreach (var givenAnswer in givenAnswers)
+            @foreach (var result in results)
             {
-            <tr>
-                <td></td>
-                @foreach (var question in questions)
-                {
-                    if (givenAnswer.Key == question.idQuestion)
+                <tr>
+                    <td></td>
+                    @foreach (var attempt in result)
                     {
-                        if (question.likertScale != null)
-                        {
-                            likert.Add(question.idQuestion);
-                        }
+                        <td data-value="@Html.Raw(attempt.attempt)">@Html.Raw(attempt.answerText)</td>
                     }
-                }
-                @{
-                    var given = givenAnswer.Value;
-                }
-                @foreach (var givenans in given)
-                {
-                    foreach (var correctAnswer in correctAnswers)
-                    {
-                        var correct = correctAnswer.Value;
 
-                        if (correctAnswer.Key == givenans.Question_idQuestion)
-                        {
-                            if (likert.Contains(givenans.Question_idQuestion))
-                            {
-                                <td><p style="color:forestgreen">@givenans.answerText</p></td>
-                                break;
-                            }
-                            else
-                            {
-                                if (correct.idAnswer == givenans.idAnswer)
-                                {
-                                    <td><p style="color:forestgreen">@givenans.answerText</p></td>
-                                }
-                                else
-                                {
-                                    <td><p style="color:darkred">@givenans.answerText</p></td>
-
-                                }
-                            }
-                            break;
-                        }
-
-                    }
-                }
-            </tr>
-        }
-
-            </tbody>
-        </table>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
