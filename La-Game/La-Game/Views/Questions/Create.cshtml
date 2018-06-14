@@ -4,6 +4,7 @@
     ViewBag.Title = "Create";
 }
 
+
 <h2>Create Question</h2>
 
 
@@ -26,7 +27,7 @@
             <div class="col-md-10">
                 <input name="image" type="file" id="fileImage" accept=".jpg,.jpeg,.png" onchange="readURL(this)" />
 
-                    <img id="impPrev" Height="250" width="250" style="display:none" />
+                <img id="impPrev" Height="250" width="250" style="display:none" />
             </div>
         </div>
         <div class="form-group">
@@ -43,7 +44,7 @@
             <hr />
             <div class="form-check col-md-4">
                 <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="answerType" id="likert" value="likert">
+                    <input type="radio" class="form-check-input" name="answerType" id="likert" value="likert" required>
                     Likert scale
                 </label>
             </div>
@@ -60,7 +61,7 @@
             <div class="form-horizontal">
                 <div id="test" style="display:none" class="col-sm-12">
                     <hr />
-                    <input type="radio" name="likertOption" value="1"> Thumbs<br>
+                    <input type="radio" name="likertOption" value="1" required> Thumbs<br>
                     <input type="radio" name="likertOption" value="2"> Smileys<br>
                     <input type="radio" name="likertOption" value="3"> Numbers
                 </div>
@@ -78,15 +79,11 @@
         </div>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Create" class="btn btn-default" id="btnSubmit"/>
             </div>
         </div>
     </div>
 }
-
-
-
-
 
 <div>
     @Html.ActionLink("Back to List", "Index")
@@ -97,5 +94,6 @@
     @Scripts.Render("~/Scripts/ValidateFileUpload.js")
     @Scripts.Render("~/Scripts/answer.js")
     @Scripts.Render("~/Scripts/correctAnswer.js")
+    @Scripts.Render("~/Scripts/CheckForEmptyFields.js")
 
 }
