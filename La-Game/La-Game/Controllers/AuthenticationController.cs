@@ -24,24 +24,13 @@ namespace La_Game.Controllers
         /// GET: /Authentication/Login  
         /// Go to the login page.
         /// </summary>  
-        /// <param name="returnUrl"> URL of the previous page. </param> 
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
-            string test = Request.UrlReferrer.ToString();
-            ViewBag.returnUrl = test;
-
             // Verification     
             if (Request.IsAuthenticated)
             {
-                // User is already logged in  
-                if (Url.IsLocalUrl(returnUrl))
-                {
-                    // Redirect to the given URL  
-                    return Redirect(returnUrl);
-                }
-
-                // If the URL was invalid, redirect to home page  
+                // User is already logged in; redirect to homepage
                 return RedirectToAction("Index", "Home");
             }
 
@@ -57,7 +46,7 @@ namespace La_Game.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel model, string returnUrl)
+        public ActionResult Login(LoginViewModel model)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
@@ -82,17 +71,8 @@ namespace La_Game.Controllers
                         // Sign in   
                         authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, claimIdenties);
 
-                        // Check if the URL is valid
-                        if (Url.IsLocalUrl(returnUrl))
-                        {
-                            // Redirect to the given URL  
-                            return Redirect(returnUrl);
-                        }
-                        else
-                        {
-                            // Redirect to Dashboard  
-                            return RedirectToAction("Dashboard", "Home");
-                        }
+                        // Redirect to Dashboard  
+                        return RedirectToAction("Dashboard", "Home");
                     }
                     catch (Exception ex)
                     {
