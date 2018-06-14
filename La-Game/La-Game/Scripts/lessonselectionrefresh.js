@@ -26,6 +26,18 @@ $('#ddlanguages').change(function (e) {
     $("#ddlanguages").prop("selectedIndex", selectedLanguageIndex);
 }
 );
+$('#ddlessons').change(function (e) {
+    //Store the currently selected indexes
+    if ($('#ddlanguages').prop("selectedIndex") !== 0)
+    {
+        $("#btnselectionadd").prop('disabled', false);
+    }
+    if ($('#ddquestionLists').prop("selectedIndex") !== 0)
+    {
+        $("#btnselectionadd").prop('disabled', false);
+    }
+}
+);
 
 //Add chart data for the selection in the dropdowns
 function addSelectionToChart()
@@ -33,6 +45,8 @@ function addSelectionToChart()
     updateChart($('#ddlanguages').val(), $('#ddlessons').val());
     $("#ddlanguages").prop("selectedIndex", 0);
     $("#ddlessons").prop("selectedIndex", 0);
+    $("#btnselectionadd").prop('disabled', true);
+    $("#btnclearchartdata").prop('disabled', false);
 }
 //Clear the chart data
 function clearChartData()
@@ -40,6 +54,8 @@ function clearChartData()
     clearChart();
     $("#ddlanguages").prop("selectedIndex", 0);
     $("#ddlessons").prop("selectedIndex", 0);
+    $("#btnselectionadd").prop('disabled', true);
+    $("#btnclearchartdata").prop('disabled', true);
 }
 
 //Update chart with new data
