@@ -11,7 +11,8 @@ namespace La_Game.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class AnswerOption
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -23,6 +24,7 @@ namespace La_Game.Models
         public int idAnswer { get; set; }
         public int Question_idQuestion { get; set; }
         public Nullable<short> correctAnswer { get; set; }
+        [Required(ErrorMessage = "answer is required")]
         public string answerText { get; set; }
     
         public virtual Question Question { get; set; }

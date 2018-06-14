@@ -20,7 +20,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" id="impPrev" />
+                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" id="impPrev"  class="img-responsive"/>
                 <input name="image" type="file" id="fileImage" accept=".jpg,.jpeg,.png" onchange="readURL(this)" />
               </div>
         </div>
