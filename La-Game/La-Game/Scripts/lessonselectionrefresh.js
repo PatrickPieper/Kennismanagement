@@ -24,35 +24,48 @@ $('#ddlanguages').change(function (e) {
     });
     //Set index back after replacing filter partial
     $("#ddlanguages").prop("selectedIndex", selectedLanguageIndex);
-    //Update chart with new filters
-    updateChart($(this).val(), idLesson);
 }
 );
-//If lessons dropdown selection changes
-$('#ddlessons').change(function (e) {
-    //Store the currently selected indexes
-    var selectedLessonIndex = $(this).prop("selectedIndex");
-    var selectedLanguageIndex = $("#ddlanguages").prop("selectedIndex");
-    var idLesson = -1;
-    var idQuestionList = -1;
-    if ($('#ddquestionLists').prop("selectedIndex") !== -1) {
-        idQuestionList: $('#ddquestionList').val();
+
+//Add chart data for the selection in the dropdowns
+function addSelectionToChart()
+{
+    updateChart($('#ddlanguages').val(), $('#ddlessons').val());
+    $("#ddlanguages").prop("selectedIndex", 0);
+    $("#ddlessons").prop("selectedIndex", 0);
+}
+//Clear the chart data
+function clearChartData()
+{
+    clearChart();
+    $("#ddlanguages").prop("selectedIndex", 0);
+    $("#ddlessons").prop("selectedIndex", 0);
+}
+
+//Update chart with new data
+function updateChart(idLanguage, idLesson)
+{
+    //Get the two datasets as jsonresult from controller
+    var tData = $.getValues('/Statistics/BarChartDataCompareLessons?idLanguage=' + idLanguage + '&idLesson=' + idLesson);
+    //If the chart doesn't have datasets in its array, add both full datasets
+    if (myBarChart.data.datasets.length === 0) {
+        myBarChart.data.datasets.push(tData[0]);
+        myBarChart.data.datasets.push(tData[1]);
+        myBarChart.data.labels.push('Lesson ' + myBarChart.data.datasets[0].data.length);
     }
-    //Replace the filter partial with a new one, with the dropdown values
-    $.ajax({
-        url: '/Statistics/CompareLessonSelection',
-        type: 'GET',
-        dataType: 'html',
-        async: false,
-        data: { idLanguage: $('#ddlanguages').val(), idLesson: $(this).val() },
-        success: function (data) {
-            $('#filter').html(data);
-        }
-    });
-    //Set indexes back after replacing filter partial
-    $("#ddlanguages").prop("selectedIndex", selectedLanguageIndex);
-    $("#ddlessons").prop("selectedIndex", selectedLessonIndex);
-    //Update chart with new filters
-    updateChart($('#ddlanguages').val(), $(this).val());
+    //If it already has datasets, add the data in the returned datasets instead
+    else
+    {
+        myBarChart.data.datasets[0].data.push(tData[0].data);
+        myBarChart.data.datasets[1].data.push(tData[1].data);
+        myBarChart.data.labels.push('Lesson ' + myBarChart.data.datasets[0].data.length);
+    }
+    myBarChart.update();
 }
-);
+//Update chart with empty arrays
+function clearChart()
+{
+    myBarChart.data.datasets = [];
+    myBarChart.data.labels = [];
+    myBarChart.update();
+}

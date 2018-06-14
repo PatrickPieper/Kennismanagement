@@ -31,10 +31,12 @@
         {
             var c = document.getElementById("barChart");
             var ctx = c.getContext("2d");
-            var tData = $.getValues('/Statistics/BarChartDataCompareLessons');
             myBarChart = new Chart(ctx, {
                 type: 'bar',
-                data: tData,
+                data: {
+                    labels: null,
+                    datasets: null,
+                },
                 options: {
                     scales: {
                         yAxes: [{
@@ -66,12 +68,6 @@
                     }
                 }
             );
-        }
-        function updateChart(idLanguage, idLesson)
-        {
-            var tData = $.getValues('/Statistics/BarChartDataCompareLessons?idLanguage=' + idLanguage + '&idLesson=' + idLesson);
-            myBarChart.data = tData;
-            myBarChart.update();
         }
     </script>
     @Scripts.Render("~/bundles/jqueryval")

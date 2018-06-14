@@ -221,6 +221,7 @@
     <Compile Include="Models\AnswerOption.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CompareLessonResult.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\DatabaseModel.Context.cs">

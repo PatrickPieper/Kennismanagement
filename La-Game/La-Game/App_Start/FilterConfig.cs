@@ -10,7 +10,7 @@ namespace La_Game
             filters.Add(new HandleErrorAttribute());
 
             // If you want access without logging in for testing purposes, comment the filter or use [AllowAnonymous] on things you need to test.
-            filters.Add(new AuthorizeAttribute());
+            //filters.Add(new AuthorizeAttribute());
         }
     }
 }
