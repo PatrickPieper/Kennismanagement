@@ -94,6 +94,11 @@ namespace La_Game.Controllers
         {
             return PartialView("_TestEntryForm");
         }
+        [AllowAnonymous]
+        public PartialViewResult TestQuestionForm(TestQuestionData testQuestionData)
+        {
+            return PartialView("_TestQuestionForm", testQuestionData);
+        }
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -102,31 +107,25 @@ namespace La_Game.Controllers
             if (ModelState.IsValid)
             {
                 // Get the questionlist
-                string sqlString = "SELECT * FROM QuestionList WHERE participationCode ='" + model.Participationcode + "'";
-                List<QuestionList> questionListData = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
+                var questionList = db.QuestionLists.Where(ql => ql.participationCode.Equals(model.Participationcode));
 
                 // Get the participant
-                Participant participant = null;
-                sqlString = "SELECT * FROM PARTICIPANT WHERE studentCode='" + model.Studentcode + "'";
-                if (db.Participants.SqlQuery(sqlString).ToList<Participant>().Count != 0)
-                {
-                    participant = db.Participants.SqlQuery(sqlString).First();
-                }
+                var participant = db.Participants.Where(p => p.studentCode == model.Studentcode);
 
                 // If both the codes are valid, continue
-                if (questionListData.Count != 0 && participant != null)
+                if (questionList.Count() != 0 && participant.Count() != 0)
                 {
                     // Get the questions
-                    int questionListID = questionListData[0].idQuestionList;
-                    sqlString = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion" +
-                    " JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + model.Participationcode + "' ORDER BY qo.[order]";
-                    List<Question> questionData = db.Questions.SqlQuery(sqlString).ToList<Question>();
+                    //int questionListID = questionListData[0].idQuestionList;
+                    //sqlString = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion" +
+                    //" JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + model.Participationcode + "' ORDER BY qo.[order]";
+                    //List<Question> questionData = db.Questions.SqlQuery(sqlString).ToList<Question>();
 
-                    // Set the tempdata and redirect to the questionlist
-                    TempData["questionListData"] = questionListData;
-                    TempData["questionData"] = questionData;
-                    TempData["participant"] = participant;
-                    return PartialView("_TestForm", model);
+                    //// Set the tempdata and redirect to the questionlist
+                    //TempData["questionListData"] = questionListData;
+                    //TempData["questionData"] = questionData;
+                    //TempData["participant"] = participant;
+                    return TestForm(model, questionList.First().idQuestionList);
                 }
                 else
                 {
@@ -150,9 +149,30 @@ namespace La_Game.Controllers
            
         }
         [AllowAnonymous]
-        public PartialViewResult TestForm(int? questionIndex)
+        public PartialViewResult TestForm(StartListModel model, int idQuestionList)
         {
-            return PartialView("_TestForm");
+            string sqlStringQuestions = "select q.* from Question as q join QuestionOrder as qo on qo.Question_idQuestion = q.idQuestion " +
+                                        " join QuestionList as ql on ql.idQuestionList = qo.QuestionList_idQuestionList " +
+                                        " where ql.participationCode = '" + model.Participationcode + "' order by qo.[order] ";
+            var questionData = db.Database.SqlQuery<Question>(sqlStringQuestions);
+
+            string sqlStringAnswerOptions = "select ao.* from AnswerOption as ao " +
+                                            "join Question as q on q.idQuestion = ao.Question_idQuestion " +
+                                            "join QuestionList_Question as qlq on qlq.Question_idQuestion = q.idQuestion " +
+                                            "where qlq.QuestionList_idQuestionList = " + idQuestionList;
+            var answerOptionData = db.Database.SqlQuery<AnswerOption>(sqlStringAnswerOptions);
+
+            List<TestQuestionData> testQuestionData = new List<TestQuestionData>();
+            foreach(Question question in questionData)
+            {
+                testQuestionData.Add(new TestQuestionData
+                {
+                    questionData = question,
+                    answerOptions = answerOptionData.Where(ao => question.idQuestion == ao.Question_idQuestion).ToList()
+                });
+            }
+
+            return PartialView("_TestForm", testQuestionData);
         }
         [AllowAnonymous]
         public ActionResult LikertScale(int? index)

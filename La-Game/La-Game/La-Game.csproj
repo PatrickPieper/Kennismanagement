@@ -221,6 +221,7 @@
     <Compile Include="Models\AnswerOption.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TestQuestionData.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\DatabaseModel.Context.cs">
@@ -640,6 +641,7 @@
     <Content Include="Views\Participants\QuestionlistResult.cshtml" />
     <Content Include="Views\StudentTest\_TestEntryForm.cshtml" />
     <Content Include="Views\StudentTest\_TestForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestQuestionForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
