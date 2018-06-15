@@ -17,23 +17,35 @@ namespace La_Game.Controllers
         public ActionResult Index(int? index, int studentAnswerId = 0)
         {
             ViewBag.participant = TempData["participant"];
+            Participant participant = (Participant)TempData["participant"];
             if (index == null)
             {
                 ViewBag.index = 0;
+                var data = TempData["attempt"];
                 if (TempData["attempt"] == null && TempData["questionData"] != null)
                 {
                     List<Question> questions = (List<Question>)TempData["questionData"];
                     Question firstQuestion = questions.First();
-                    //firstQuestion.id
+                    var test = (List<QuestionList>)TempData["questionListData"];
+                    QuestionList qlist = test.Single();
+
+                    string getLastAttempt = "SELECT MAX(Q2.attempt) as lastAttempt FROM AnswerOption as ao" +
+                        " join QuestionResult Q2 on ao.idAnswer = Q2.AnswerOption_idAnswer" + 
+                        " WHERE ao.Question_idQuestion = " + firstQuestion.idQuestion + 
+                        " AND Q2.Participant_idParticipant = " + participant.idParticipant + 
+                        " AND Q2.QuestionList_idQuestionList = " + qlist.idQuestionList;
+
+                    int? lastAttempt = db.Database.SqlQuery<int?>(getLastAttempt).Single();
+                    ViewBag.attempt = lastAttempt;
                 }
-                
             }
             else
             {
                 index++;
                 ViewBag.index = index;
             }
-            
+
+            ViewBag.attempt = TempData["attempt"];
 
             if (TempData["questionListData"] != null && TempData["questionData"] != null)
             { 
@@ -58,17 +70,6 @@ namespace La_Game.Controllers
                 DateTime startTime = DateTime.ParseExact((string)TempData["startTime"], "yyyy:MM:dd HH:mm:ss:fff", null);
                 int questionListId = ViewBag.questionListData[0].idQuestionList;
                 int questionId = db.AnswerOptions.Find(studentAnswerId).Question_idQuestion;
-                Participant participant = (Participant)TempData["participant"];
-                // when I have the id from participant set it here
-                string questionResultAttempt = "select qr.* from QuestionResult as qr" +
-                                                        " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
-                                                        " where ao.Question_idQuestion =" + questionId +  
-                                                        " and qr.Participant_idParticipant = " + participant.idParticipant +
-                                                        " and qr.QuestionList_idQuestionList = "+ questionListId +
-                                                        " order by qr.attempt";
-                IEnumerable < QuestionResult > questionResults = db.Database.SqlQuery<QuestionResult>(questionResultAttempt);
-               int? lastAttempt = questionResults.Count() != 0 ? questionResults.Last().attempt : null;
-
 
                 QuestionResult questionResult = new QuestionResult()
                 {
@@ -77,7 +78,7 @@ namespace La_Game.Controllers
                     Participant_idParticipant = participant.idParticipant,
                     startTime = startTime,
                     endTime = DateTime.ParseExact(endTime, "yyyy:MM:dd HH:mm:ss:fff", null),
-                    attempt = lastAttempt.HasValue ? lastAttempt.Value+1 : 1
+                    attempt = TempData["attempt"] != null ? (int)TempData["attempt"] + 1 : 1
                 };
                 db.QuestionResults.Add(questionResult);
                 db.SaveChanges();
