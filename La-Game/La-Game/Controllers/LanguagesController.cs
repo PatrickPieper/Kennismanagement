@@ -18,8 +18,8 @@ namespace La_Game.Controllers
         /// </summary>
         public ActionResult Index()
         {
-            // Return view containing all the languages
-            return View(db.Languages.ToList());
+            // Return view containing all active languages
+            return View(db.Languages.ToList().Where(l => l.isHidden != 1));
         }
 
         /// <summary>
@@ -163,18 +163,13 @@ namespace La_Game.Controllers
         {
             try
             {
-                // TODO - Add isHidden field to language
-                Language language = db.Languages.Find(id);
-                db.Languages.Remove(language);
-                db.SaveChanges();
-
                 // Find the language and set it to hidden
-                //Language language = db.Languages.Find(id);
-                //language.isHidden = 1;
+                Language language = db.Languages.Find(id);
+                language.isHidden = 1;
 
                 // Save the changes
-                //db.Entry(language).State = EntityState.Modified;
-                //db.SaveChanges();
+                db.Entry(language).State = EntityState.Modified;
+                db.SaveChanges();
             }
             catch
             {

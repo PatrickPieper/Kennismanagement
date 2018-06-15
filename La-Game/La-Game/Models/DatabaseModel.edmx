@@ -12,7 +12,7 @@
           <Property Name="idAnswer" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Question_idQuestion" Type="int" Nullable="false" />
           <Property Name="correctAnswer" Type="smallint" />
-          <Property Name="answerText" Type="varchar" MaxLength="45" />
+          <Property Name="answerText" Type="nvarchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="Language">
           <Key>
@@ -20,6 +20,7 @@
           </Key>
           <Property Name="idLanguage" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="languageName" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="isHidden" Type="tinyint" />
         </EntityType>
         <EntityType Name="Language_Member">
           <Key>
@@ -393,7 +394,7 @@
           <Property Name="idAnswer" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Question_idQuestion" Type="Int32" Nullable="false" />
           <Property Name="correctAnswer" Type="Int16" />
-          <Property Name="answerText" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="answerText" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Question" Relationship="Self.fk_Answer_Question1" FromRole="AnswerOption" ToRole="Question" />
           <NavigationProperty Name="QuestionResults" Relationship="Self.fk_QuestionResult_Answer1" FromRole="AnswerOption" ToRole="QuestionResult" />
         </EntityType>
@@ -405,6 +406,7 @@
           <Property Name="languageName" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Language_Member" Relationship="Self.fk_Language_User_Language1" FromRole="Language" ToRole="Language_Member" />
           <NavigationProperty Name="Lessons" Relationship="Self.fk_Lesson_Language" FromRole="Language" ToRole="Lesson" />
+          <Property Name="isHidden" Type="Byte" />
         </EntityType>
         <EntityType Name="Language_Member">
           <Key>
@@ -812,6 +814,7 @@
           <EntitySetMapping Name="Languages">
             <EntityTypeMapping TypeName="Model.Language">
               <MappingFragment StoreEntitySet="Language">
+                <ScalarProperty Name="isHidden" ColumnName="isHidden" />
                 <ScalarProperty Name="idLanguage" ColumnName="idLanguage" />
                 <ScalarProperty Name="languageName" ColumnName="languageName" />
               </MappingFragment>
