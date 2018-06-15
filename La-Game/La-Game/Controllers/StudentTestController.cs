@@ -44,9 +44,10 @@ namespace La_Game.Controllers
                 index++;
                 ViewBag.index = index;
             }
-
-            ViewBag.attempt = TempData["attempt"];
-
+            if (TempData["attempt"] != null)
+            {
+                ViewBag.attempt = TempData["attempt"];
+            }
             if (TempData["questionListData"] != null && TempData["questionData"] != null)
             { 
                 ViewBag.questionListData = TempData["questionListData"];

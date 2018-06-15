@@ -13,6 +13,7 @@ namespace La_Game.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
+            TempData["attempt"] = null;
             return View();
 
         }
