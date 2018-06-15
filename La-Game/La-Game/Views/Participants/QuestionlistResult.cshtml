@@ -6,6 +6,7 @@
     var qlist = ViewBag.questionListName;
     var results = ViewBag.results;
     var attempts = ViewBag.attempts;
+    
 }
 
 <h2>@qlist</h2>
@@ -35,4 +36,49 @@
             }
         </tbody>
     </table>
+    <canvas id="bar-chart-horizontal" width="800" height="200"></canvas>
 </div>
+<script src="~/Scripts/Chart.js"></script>
+<script src="~/Scripts/Common.js"></script>
+<script>
+
+    var labels = @Html.Raw(Json.Encode(ViewBag.attempts));
+    var max = @Html.Raw(Json.Encode(ViewBag.numOfQuestions));
+    var results = [2,5,7];
+
+
+    new Chart(document.getElementById("bar-chart-horizontal"), {
+    type: 'horizontalBar',
+        data: {
+            labels: labels,
+      datasets: [
+        {
+          label: "Correct answer",
+              backgroundColor: ["#3e95cd", "#8e5ea2", "#3cba9f", "#e8c3b9", "#c45850"],
+              data: results
+        }
+      ]
+    },
+        options: {
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Attempts"
+                    }
+                }],
+                xAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        suggestedMax: max
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Correct answers"
+                    }
+                }]
+            }
+        }
+});
+</script>
+
