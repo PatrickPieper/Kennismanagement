@@ -223,9 +223,18 @@ namespace La_Game.Controllers
                 " where qr.QuestionList_idQuestionList = " +  questionlistId +
                 " and qr.Participant_idParticipant = " + participantId);
             results = db.Database.SqlQuery<QuestionListResult>(sqlQueryString.ToString()).OrderBy(qr => qr.idQuestion).OrderBy(qr => qr.attempt).ToList();
+
             var questions = results.Select(r => r.idQuestion).Distinct().ToList();
             List<List<QuestionListResult>> sortedList = new List<List<QuestionListResult>>();
             List<int> attempts = results.Select(r => r.attempt).Distinct().ToList();
+
+            List<int> correctAnswers = new List<int>();
+            foreach (int attempt in attempts)
+            {
+                int correctPerAttempt = results.Where(r => r.attempt == attempt && r.correctAnswer == 1).Count();
+                correctAnswers.Add(correctPerAttempt);
+            }
+            
             ViewBag.attempts = attempts;
             foreach(var question in questions)
             {
