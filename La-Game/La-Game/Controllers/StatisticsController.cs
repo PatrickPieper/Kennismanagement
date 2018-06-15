@@ -76,6 +76,31 @@ namespace La_Game.Controllers
 
             return PartialView("_CommonWrongAnswerFilter");
         }
+
+        public ActionResult QuestionListChoice()
+        {
+            string sqlString = "SELECT * FROM QuestionList";
+            List<QuestionList> questionLists =  db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
+            ViewBag.questionLists = questionLists;
+
+            return View();
+        }
+
+        public ActionResult QuestionListStatistics(int questionListId)
+        {
+            string sqlString = "select qr.Participant_idParticipant,P.firstName,P.lastName, qr.startTime, qr.endTime, qr.attempt, ao.correctAnswer  from QuestionResult as qr " +
+            "left join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer " +
+            "join QuestionList as ql on qr.QuestionList_idQuestionList = ql.idQuestionList " +
+            "join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList " +
+            "join Participant P on qr.Participant_idParticipant = P.idParticipant " +
+            "where ql.idQuestionList = 28 " +
+            "and attempt = 1 " +
+            "order by Participant_idParticipant ,startTime";
+
+            List<>
+            return View();
+        }
+
         #endregion
         #region Json Results
         /// <summary>
