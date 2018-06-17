@@ -11,7 +11,8 @@ namespace La_Game.Controllers
     public class StudentTestController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
-        
+        List<TestQuestionData> testQuestionData;
+
         // GET: StudentTest
         [AllowAnonymous]
         public ActionResult Index()
@@ -95,9 +96,10 @@ namespace La_Game.Controllers
             return PartialView("_TestEntryForm");
         }
         [AllowAnonymous]
-        public PartialViewResult TestQuestionForm(TestQuestionData testQuestionData)
+        public PartialViewResult TestQuestionForm(int? index)
         {
-            return PartialView("_TestQuestionForm", testQuestionData);
+            List<TestQuestionData> testQuestionData = TempData["testQuestionData"] as List<TestQuestionData>;
+            return PartialView("_TestQuestionForm", testQuestionData[index.HasValue ? index.Value : 0]);
         }
         [HttpPost]
         [AllowAnonymous]
@@ -162,7 +164,7 @@ namespace La_Game.Controllers
                                             "where qlq.QuestionList_idQuestionList = " + idQuestionList;
             var answerOptionData = db.Database.SqlQuery<AnswerOption>(sqlStringAnswerOptions);
 
-            List<TestQuestionData> testQuestionData = new List<TestQuestionData>();
+            testQuestionData = new List<TestQuestionData>();
             foreach(Question question in questionData)
             {
                 testQuestionData.Add(new TestQuestionData
@@ -172,7 +174,10 @@ namespace La_Game.Controllers
                 });
             }
 
-            return PartialView("_TestForm", testQuestionData);
+            TempData["testQuestionData"] = testQuestionData;
+            TempData.Keep();
+
+            return PartialView("_TestForm");
         }
         [AllowAnonymous]
         public ActionResult LikertScale(int? index)
