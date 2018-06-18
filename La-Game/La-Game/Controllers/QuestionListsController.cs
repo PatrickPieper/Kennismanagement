@@ -14,13 +14,33 @@ namespace La_Game.Controllers
         private LaGameDBContext db = new LaGameDBContext();
 
         /// <summary>
-        /// GET: QuestionLists
+        /// GET: /QuestionLists
         /// Get a overview of all active questionlists.
         /// </summary>
-        public ActionResult Index()
+        /// <param name="filter"> Optional filter for admin to see deactivated items. </param>
+        public ActionResult Index(string filter)
         {
-            // Return the list of all active lists
-            return View(db.QuestionLists.ToList().Where(s => s.isHidden != 1));
+            // Get all the active lists
+            var lists = db.QuestionLists.Where(s => s.isHidden != 1);
+
+            // If the filter was given, use it
+            if (!String.IsNullOrEmpty(filter))
+            {
+                switch (filter)
+                {
+                    case "active":
+                        break;
+                    case "inactive":
+                        lists = db.QuestionLists.Where(l => l.isHidden == 1);
+                        break;
+                    case "all":
+                        lists = db.QuestionLists;
+                        break;
+                }
+            }
+            
+            // Return view containing the questionlists
+            return View(lists.ToList());
         }
 
         #region Details and Create/Edit/Delete
@@ -136,49 +156,58 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: QuestionLists/Delete/[id]
+        /// GET: /QuestionLists/Delete?idQuestionList=[idQuestionList]
         /// Find the list that has to be deleted and redirect to a seperate deletion page for confirmation.
         /// </summary>
-        /// <param name="id"> Id of the list that has to be deactivated. </param>
-        public ActionResult Delete(int? id, int? listId)
+        /// <param name="idQuestionList"> Id of the list that has to be deactivated. </param>
+        public ActionResult Delete(int? idQuestionList, int? listId)
         {
             // Check if id was given
-            if (id == null)
+            if (idQuestionList == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the list, if it does not exist return 404
-            QuestionList questionList = db.QuestionLists.Find(id);
+            QuestionList questionList = db.QuestionLists.Find(idQuestionList);
             if (questionList == null)
             {
                 return HttpNotFound();
             }
 
-            // Return the delete page with the questionlist information
+            // Return the page with the questionlist information
             return View(questionList);
         }
 
         /// <summary>
-        /// POST: QuestionLists/Delete/[id]
+        /// POST: /QuestionLists/Delete?idQuestionList=[idQuestionList]
         /// After confirming that the questionlist can be deleted, deactivate it in the database.
         /// </summary>
-        /// <param name="id"> Id of the list that has to be deactivated. </param>
+        /// <param name="idQuestionList"> Id of the list that has to be deactivated. </param>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int idQuestionList)
         {
             try
             {
-                // Find the questionlist and set it to hidden
-                QuestionList questionList = db.QuestionLists.Find(id);
-                questionList.isHidden = 1;
-
-                // Check if the questionlist is active, if true deactivate the list
-                if (questionList.isActive == 1)
+                // Find the questionlist
+                QuestionList questionList = db.QuestionLists.Find(idQuestionList);
+                if (questionList.isHidden == 1)
                 {
-                    questionList.participationCode = null;
-                    questionList.isActive = 0;
+                    // If the list was hidden, reactivate it
+                    questionList.isHidden = 0;
+                }
+                else
+                {
+                    // If the list was not hidden, hide it
+                    questionList.isHidden = 1;
+
+                    // Check if the questionlist is active, if true deactivate the list
+                    if (questionList.isActive == 1)
+                    {
+                        questionList.participationCode = null;
+                        questionList.isActive = 0;
+                    }
                 }
 
                 // Save the changes
@@ -187,7 +216,7 @@ namespace La_Game.Controllers
             }
             catch
             {
-                // Delete failed
+                // Remove/Activation failed
             }
 
             // Redirect to index
@@ -439,7 +468,7 @@ namespace La_Game.Controllers
                         participationCode = rng.Next(1000, 9999);
                         string sqlstring = "SELECT * FROM QuestionList WHERE participationCode = " + int.Parse(collection.Get("idQuestionList"));
                         List<QuestionList> lists = db.QuestionLists.SqlQuery(sqlstring).ToList();
-                        
+
                         if (lists.Count == 0)
                         {
                             // Activate the list

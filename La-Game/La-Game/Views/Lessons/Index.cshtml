@@ -5,13 +5,26 @@
 }
 @Styles.Render("~/Content/dataTables")
 
-<h2> Overview Lessons - @ViewBag.Language.languageName</h2>
-
-<p>
+<h2>
+    Overview Lessons - @ViewBag.Language.languageName
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Lessons", new { idLanguage = ViewBag.Language.idLanguage }) + "'");">
         <span class="glyphicon glyphicon-plus"></span> Create New
     </button>
-</p>
+</h2>
+
+@using (Html.BeginForm("Index", "Lessons", FormMethod.Get))
+{
+    <div class="form-inline">
+        <select name="filter" class="form-control input-sm">
+            <option value="active">Show active</option>
+            <option value="inactive">Show inactive</option>
+            <option value="all">Show all</option>
+        </select>
+        <input type="hidden" name="idLanguage" value="@ViewBag.Language.idLanguage" />
+        <button type="submit" value="filter" class="btn btn-default btn-sm"> Filter </button>
+    </div>
+}
+
 <table id="lessonOverview" class="table table table-striped table-hover">
     <thead>
         <tr>
@@ -40,9 +53,18 @@
                     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Lessons", new { idLesson = item.idLesson }) + "'");">
                         <span class="glyphicon glyphicon-wrench"></span> Edit
                     </button>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Lessons", new { idLesson = item.idLesson }) + "'");">
-                        <span class="glyphicon glyphicon-remove"></span> Remove
-                    </button>
+                    @if (item.isHidden == 1)
+                    {
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Lessons", new { idLesson = item.idLesson }) + "'");">
+                            <span class="glyphicon glyphicon-plus"></span> Activate
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Lessons", new { idLesson = item.idLesson }) + "'");">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                    }
                 </td>
             </tr>
         }

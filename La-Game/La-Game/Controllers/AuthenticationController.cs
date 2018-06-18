@@ -63,10 +63,10 @@ namespace La_Game.Controllers
                         {
                             // Setting  
                             var claims = new List<Claim>
-                        {
-                            new Claim(ClaimTypes.Name, loginInfo.First().email)
-                            //new Claim(ClaimTypes.Role, loginInfo.First().isAdmin)
-                        };
+                            {
+                                new Claim(ClaimTypes.Name, loginInfo.First().email),
+                                new Claim(ClaimTypes.Role, loginInfo.First().isAdmin.ToString())
+                            };
                             var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
                             var authenticationManager = Request.GetOwinContext().Authentication;
 

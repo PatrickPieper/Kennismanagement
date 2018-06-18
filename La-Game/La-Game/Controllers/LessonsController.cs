@@ -13,10 +13,12 @@ namespace La_Game.Controllers
         private LaGameDBContext db = new LaGameDBContext();
 
         /// <summary>
-        /// GET: Lessons?idLanguage=[idLanguage]
+        /// GET: /Lessons?idLanguage=[idLanguage]
         /// Get a overview of all the active lessons.
         /// </summary>
-        public ActionResult Index(int? idLanguage)
+        /// <param name="idLanguage"> Id of the language. </param>
+        /// <param name="filter"> Optional filter for admin to see deactivated items. </param>
+        public ActionResult Index(int? idLanguage, string filter)
         {
             // Check if id was given
             if (idLanguage == null)
@@ -24,10 +26,27 @@ namespace La_Game.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Include the language and then return the list of all active lessons
+            // Get all the active lessons and the relevant language
             var lessons = db.Lessons.Where(s => s.isHidden != 1 && s.Language_idLanguage == idLanguage);
             ViewBag.Language = db.Languages.Where(l => l.idLanguage == idLanguage).FirstOrDefault();
 
+            // If the filter was given, use it
+            if (!String.IsNullOrEmpty(filter))
+            {
+                switch (filter)
+                {
+                    case "active":
+                        break;
+                    case "inactive":
+                        lessons = db.Lessons.Where(s => s.isHidden == 1 && s.Language_idLanguage == idLanguage);
+                        break;
+                    case "all":
+                        lessons = db.Lessons.Where(s => s.Language_idLanguage == idLanguage);
+                        break;
+                }
+            }
+
+            // Return view containing the lessons
             return View(lessons.ToList());
         }
 
@@ -139,7 +158,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: Lessons/Delete/[id]
+        /// GET: /Lessons/Delete?idLesson=[idLesson]
         /// Find the lesson that has to be deleted and redirect to a seperate deletion page for confirmation.
         /// </summary>
         /// <param name="idLesson"> Id of the lesson that has to be deactivated. </param>
@@ -163,7 +182,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// POST: Lessons/Delete/[id]
+        /// POST: /Lessons/Delete?idLesson=[idLesson]
         /// After confirming that the lesson can be deleted, deactivate it in the database.
         /// </summary>
         /// <param name="idLesson"> Id of the lesson that has to be deactivated. </param>
@@ -176,8 +195,16 @@ namespace La_Game.Controllers
 
             try
             {
-                // Set to lesson to hidden
-                lesson.isHidden = 1;
+                if (lesson.isHidden == 1)
+                {
+                    // If the lesson was hidden, reactivate it
+                    lesson.isHidden = 0;
+                }
+                else
+                {
+                    // If the lesson was not hidden, hide it
+                    lesson.isHidden = 1;
+                }
 
                 // Save the changes
                 db.Entry(lesson).State = EntityState.Modified;
@@ -185,7 +212,7 @@ namespace La_Game.Controllers
             }
             catch
             {
-                // Delete failed
+                // Remove/Activation failed
             }
 
             // Redirect to list
