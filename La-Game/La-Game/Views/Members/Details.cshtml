@@ -36,6 +36,21 @@
                 }
             }
         </dd>
+        <dt>
+            Status
+        </dt>
+        <dd>
+            @{
+                if (Model.isActive == 1)
+                {
+                    <t>Active</t>
+                }
+                else
+                {
+                    <t>Inactive</t>
+                }
+            }
+        </dd>
     </dl>
 </div>
 <p>

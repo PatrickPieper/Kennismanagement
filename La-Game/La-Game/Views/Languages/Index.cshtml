@@ -5,12 +5,6 @@
 }
 @Styles.Render("~/Content/dataTables")
 
-<script type="text/javascript">
-    function Redirect(link) {
-        location.href = link;
-    }
-</script>
-
 <h2>
     Languages
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Languages") + "'");">

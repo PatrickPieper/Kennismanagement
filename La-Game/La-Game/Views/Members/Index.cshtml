@@ -6,12 +6,6 @@
 }
 @Styles.Render("~/Content/dataTables")
 
-<script type="text/javascript">
-    function Redirect(link) {
-        location.href = link;
-    }
-</script>
-
 <div>
     <h2>Member Overview</h2>
 
@@ -36,6 +30,9 @@
                         </th>
                         <th>
                             Admin Rights
+                        </th>
+                        <th>
+                            Status
                         </th>
                         <th></th>
                     </tr>
@@ -64,6 +61,18 @@
                                     else
                                     {
                                         <p><span class="glyphicon glyphicon-remove"></span></p>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @{
+                                    if (item.isActive == 1)
+                                    {
+                                        <t>Active</t>
+                                    }
+                                    else
+                                    {
+                                        <t>Inactive</t>
                                     }
                                 }
                             </td>
