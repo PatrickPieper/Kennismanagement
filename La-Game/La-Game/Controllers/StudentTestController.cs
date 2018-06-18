@@ -175,6 +175,17 @@ namespace La_Game.Controllers
                                             "where qlq.QuestionList_idQuestionList = " + idQuestionList;
             var answerOptionData = db.Database.SqlQuery<AnswerOption>(sqlStringAnswerOptions);
 
+            int idParticipant = db.Participants.Where(p => p.studentCode == model.Studentcode).First().idParticipant;
+
+            string getLastAttempt = "SELECT MAX(Q2.attempt) as lastAttempt FROM AnswerOption as ao" +
+                        " join QuestionResult Q2 on ao.idAnswer = Q2.AnswerOption_idAnswer" +
+                        " WHERE ao.Question_idQuestion = " + questionData.First().idQuestion +
+                        " AND Q2.Participant_idParticipant = " + idParticipant +
+                        " AND Q2.QuestionList_idQuestionList = " + idQuestionList;
+
+            int? lastAttempt = db.Database.SqlQuery<int?>(getLastAttempt).Single();
+            ViewBag.attempt = lastAttempt;
+
             testQuestionData = new List<TestQuestionData>();
             foreach (Question question in questionData)
             {
@@ -183,11 +194,12 @@ namespace La_Game.Controllers
                     questionData = question,
                     answerOptions = answerOptionData.Where(ao => question.idQuestion == ao.Question_idQuestion).ToList(),
                     idQuestionList = idQuestionList,
-                    idParticipant = db.Participants.Where(p => p.studentCode == model.Studentcode).First().idParticipant
+                    idParticipant = idParticipant
                 });
             }
 
             TempData["testQuestionData"] = testQuestionData;
+            TempData["attempt"] = lastAttempt + 1;
             TempData.Keep();
 
             return PartialView("_TestForm");
@@ -204,8 +216,11 @@ namespace La_Game.Controllers
                 Participant_idParticipant = idParticipant,
                 startTime = DateTime.ParseExact(startTime, "yyyy:MM:dd HH:mm:ss:fff", null),
                 endTime = DateTime.Now,
-                attempt = 1
+                attempt = TempData["attempt"] != null ? (int)TempData["attempt"] : 1
             };
+            TempData.Keep();
+            db.QuestionResults.Add(questionResult);
+            db.SaveChanges();
         }
         [AllowAnonymous]
         public ActionResult LikertScale(int? index)

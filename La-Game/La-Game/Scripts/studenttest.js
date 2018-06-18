@@ -13,6 +13,8 @@ $(function () {
             //$.post(_form.attr("action"), _form.serialize(), function (data) {
             //    //check the result and do whatever you want
             //})
+            $("#btntestentry").text('Loading..');
+            $("#btntestentry").prop('disabled', true);
             $.ajax({
                 url: _form.attr("action"),
                 type: 'POST',
@@ -20,6 +22,8 @@ $(function () {
                 data: _form.serialize(),
                 success: function (data) {
                     $('#partialContainer').html(data);
+                    $('#loginlink').hide();
+                    $('#indexlink').removeAttr('href');
                 }
             });
         }
@@ -42,6 +46,7 @@ $(document).on('click', '#debugnext', function () { replaceQuestionPartial();});
 $(document).on('click', '.answerbutton', function (e) {
     var form = $('#__AjaxAntiForgeryForm');
     var token = $('input[name="__RequestVerificationToken"]', form).val();
+    $(".answerbutton").prop('disabled', true);
     $.ajax({
         url: "StudentTest/SubmitQuestionAnswer",
         type: 'POST',
