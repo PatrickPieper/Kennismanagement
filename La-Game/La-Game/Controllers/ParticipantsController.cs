@@ -238,7 +238,9 @@ namespace La_Game.Controllers
                 int correctPerAttempt = results.Where(r => r.attempt == attempt && r.correctAnswer == 1).Count();
                 correctAnswers.Add(correctPerAttempt);
             }
-            
+            ViewBag.correctAnswers = correctAnswers;
+
+
             ViewBag.attempts = attempts;
             foreach(var question in questions)
             {
