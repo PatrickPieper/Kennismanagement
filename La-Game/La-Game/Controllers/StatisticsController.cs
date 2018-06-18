@@ -96,8 +96,7 @@ namespace La_Game.Controllers
             "where ql.idQuestionList = 28 " +
             "and attempt = 1 " +
             "order by Participant_idParticipant ,startTime";
-
-            List<>
+            
             return View();
         }
 
