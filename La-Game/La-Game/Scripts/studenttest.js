@@ -1,4 +1,5 @@
-﻿$(function () {
+﻿var count = 1;
+$(function () {
 
     $("#btntestentry").click(function (e) {
 
@@ -23,5 +24,31 @@
             });
         }
 
+    });
+});
+function replaceQuestionPartial() {
+    $.ajax({
+        url: "/StudentTest/TestQuestionForm",
+        type: 'GET',
+        dataType: 'html',
+        data: { index: count },
+        success: function (data) {
+            $('#testQuestionPartialContainer').html(data);
+        }
+    });
+    count++;
+}
+$(document).on('click', '#debugnext', function () { replaceQuestionPartial();});
+$(document).on('click', '.answerbutton', function (e) {
+    var form = $('#__AjaxAntiForgeryForm');
+    var token = $('input[name="__RequestVerificationToken"]', form).val();
+    $.ajax({
+        url: "StudentTest/SubmitQuestionAnswer",
+        type: 'POST',
+        dataType: 'html',
+        data: { __RequestVerificationToken: token, idAnswer: $(this).val(), idParticipant: $('#idParticipant').val(), idQuestionList: $('#idQuestionList').val(), startTime : $('#startTime').val() },
+        success: function (data) {
+            replaceQuestionPartial();
+        }
     });
 });

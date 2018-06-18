@@ -1,8 +1,6 @@
 ﻿@model La_Game.Models.TestQuestionData
 
 <div class="col-md-8">
-    <h4>Answer Question</h4>
-    <hr />
     <div>
         @{Html.RenderAction("TestQuestionForm", "StudentTest", 1);}
     </div>
@@ -16,18 +14,5 @@
     //        x.style.display = "none";
     //    }
     //}
-
-    $(document).ready(function () {
-        $('body,html').on('click', '#debugnext', function (e) {
-            $.ajax({
-                url: "/StudentTest/TestQuestionForm",
-                type: 'GET',
-                dataType: 'html',
-                data: { index: 2 },
-                success: function (data) {
-                    $('#testQuestionPartialContainer').html(data);
-                }
-            });
-        }
-
+    
 </script>

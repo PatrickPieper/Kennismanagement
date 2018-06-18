@@ -99,7 +99,18 @@ namespace La_Game.Controllers
         public PartialViewResult TestQuestionForm(int? index)
         {
             List<TestQuestionData> testQuestionData = TempData["testQuestionData"] as List<TestQuestionData>;
-            return PartialView("_TestQuestionForm", testQuestionData[index.HasValue ? index.Value : 0]);
+            TempData.Keep();
+            if(index < testQuestionData.Count() || !index.HasValue)
+            {
+                TestQuestionData questionData = testQuestionData[index.HasValue ? index.Value : 0];
+                ViewBag.idQuestionList = questionData.idQuestionList;
+                ViewBag.idParticipant = questionData.idParticipant;
+                return PartialView("_TestQuestionForm", questionData);
+            }
+            else
+            {
+                return PartialView("_TestCompleted");
+            }
         }
         [HttpPost]
         [AllowAnonymous]
@@ -142,13 +153,13 @@ namespace La_Game.Controllers
             }
 
             // Stay on the page with the current data
-            return PartialView("_TestEntryForm",model);
+            return PartialView("_TestEntryForm", model);
         }
         [AllowAnonymous]
         public ActionResult MultipleChoice()
         {
             return View();
-           
+
         }
         [AllowAnonymous]
         public PartialViewResult TestForm(StartListModel model, int idQuestionList)
@@ -165,12 +176,14 @@ namespace La_Game.Controllers
             var answerOptionData = db.Database.SqlQuery<AnswerOption>(sqlStringAnswerOptions);
 
             testQuestionData = new List<TestQuestionData>();
-            foreach(Question question in questionData)
+            foreach (Question question in questionData)
             {
                 testQuestionData.Add(new TestQuestionData
                 {
                     questionData = question,
-                    answerOptions = answerOptionData.Where(ao => question.idQuestion == ao.Question_idQuestion).ToList()
+                    answerOptions = answerOptionData.Where(ao => question.idQuestion == ao.Question_idQuestion).ToList(),
+                    idQuestionList = idQuestionList,
+                    idParticipant = db.Participants.Where(p => p.studentCode == model.Studentcode).First().idParticipant
                 });
             }
 
@@ -178,6 +191,21 @@ namespace La_Game.Controllers
             TempData.Keep();
 
             return PartialView("_TestForm");
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public void SubmitQuestionAnswer(int idAnswer, int idParticipant, int idQuestionList, string startTime )
+        {
+            QuestionResult questionResult = new QuestionResult()
+            {
+                QuestionList_idQuestionList = idQuestionList,
+                AnswerOption_idAnswer = idAnswer,
+                Participant_idParticipant = idParticipant,
+                startTime = DateTime.ParseExact(startTime, "yyyy:MM:dd HH:mm:ss:fff", null),
+                endTime = DateTime.Now,
+                attempt = 1
+            };
         }
         [AllowAnonymous]
         public ActionResult LikertScale(int? index)

@@ -642,6 +642,7 @@
     <Content Include="Views\StudentTest\_TestEntryForm.cshtml" />
     <Content Include="Views\StudentTest\_TestForm.cshtml" />
     <Content Include="Views\StudentTest\_TestQuestionForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestCompleted.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

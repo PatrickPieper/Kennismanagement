@@ -1,51 +1,59 @@
 ﻿@model La_Game.Models.TestQuestionData
 @{
-    <div id="testQuestionPartialContainer">
-        <p> Vraag </p>
+<div id="testQuestionPartialContainer">
+    <h4>Answer Question</h4>
+    <hr />
 
-        @if (Model.questionData.picture != "")
+    @if (Model.questionData.picture != "")
+    {
+        <img style="max-height:250px; max-width:250px;" class="img-responsive" src=https://lagame2.blob.core.windows.net/questions/@(Model.questionData.idQuestion)/@(Model.questionData.picture) />
+    }
+    @if (Model.questionData.audio != "")
+    {
+        <audio controls>
+            <source src=https://lagame2.blob.core.windows.net/questions/@(Model.questionData.idQuestion)/@(Model.questionData.audio) type="audio/mp3" />
+        </audio>
+
+    }
+    <p>@Model.questionData.questionText</p>
+
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "__AjaxAntiForgeryForm" }))
+    {
+        @Html.AntiForgeryToken()
+    }
+    @{
+
+        int likertIndex = 1;
+        foreach (var item in Model.answerOptions)
         {
-            <img style="max-height:250px; max-width:250px;" class="img-responsive" src=https://lagame2.blob.core.windows.net/questions/@(Model.questionData.idQuestion)/@(Model.questionData.picture) />
-        }
-        @if (Model.questionData.audio != "")
-        {
-            <audio controls>
-                <source src=https://lagame2.blob.core.windows.net/questions/@(Model.questionData.idQuestion)/@(Model.questionData.audio) type="audio/mp3" />
-            </audio>
-
-        }
-        <p>@Model.questionData.questionText</p>
-
-        @{
-            int likertIndex = 1;
-            foreach (var item in Model.answerOptions)
+            if (Model.questionData.likertScale == null)
             {
-                if (Model.questionData.likertScale == null)
-                {
 
-                    <button style="min-height:50px" class="col-xs-6" type="submit" value="@item.idAnswer" name="studentAnswerId">@item.answerText</button>
+                <button style="min-height:50px" class="col-xs-6 answerbutton" type="submit" value="@item.idAnswer" name="studentAnswerId">@item.answerText</button>
 
-                }
-                else if (Model.questionData.likertScale == 1)
-                {
-                    <button style="padding:0px; min-height:25px" class="col-xs-2" type="submit" value="@item.idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px" src="https://lagame2.blob.core.windows.net/images/thumb-@(likertIndex).jpg" /></button>
-                    likertIndex++;
-                }
-                else if (Model.questionData.likertScale == 2)
-                {
-                    <button style="padding:0px;" class="col-xs-2" type="submit" value="@item.idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px; min-width:25px; margin-left:auto; margin-right:auto;" src="https://lagame2.blob.core.windows.net/images/emo-@(likertIndex).jpg" /></button>
-                    likertIndex++;
-                }
-                else if (Model.questionData.likertScale == 3)
-                {
-                    <button style="padding:0px" class="col-xs-2" type="submit" value="@item.idAnswer" name="studentAnswerId">@item.answerText</button>
-                }
             }
-
-            <input type="hidden" value="@ViewBag.index" name="index" />
-            <button value="go next" name="studentAnswer" id="debugnext" />
+            else if (Model.questionData.likertScale == 1)
+            {
+                <button style="padding:0px; min-height:25px" class="col-xs-2 answerbutton" type="submit" value="@item.idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px" src="https://lagame2.blob.core.windows.net/images/thumb-@(likertIndex).jpg" /></button>
+                likertIndex++;
+            }
+            else if (Model.questionData.likertScale == 2)
+            {
+                <button style="padding:0px;" class="col-xs-2 answerbutton" type="submit" value="@item.idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px; min-width:25px; margin-left:auto; margin-right:auto;" src="https://lagame2.blob.core.windows.net/images/emo-@(likertIndex).jpg" /></button>
+                likertIndex++;
+            }
+            else if (Model.questionData.likertScale == 3)
+            {
+                <button style="padding:0px" class="col-xs-2 answerbutton" type="submit" value="@item.idAnswer" name="studentAnswerId">@item.answerText</button>
+            }
         }
-    </div>
+
+        <input type="hidden" id="idQuestionList" value="@ViewBag.idQuestionList" name="idQuestionList" />
+        <input type="hidden" id="idParticipant" value="@ViewBag.idParticipant" name="idParticipant" />
+        <input type="hidden" id="startTime" value="@DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff")" name="startTime" />
+        <button value="go next" name="studentAnswer" id="debugnext" />
+    }
+</div>
     string startTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
     //TempData["startTime"] = startTime;
 }
