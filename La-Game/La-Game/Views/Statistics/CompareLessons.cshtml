@@ -48,26 +48,6 @@
                     }
                 }
             });
-            $("#barChart").click(
-                function (evt) {
-                    var activePoints = myBarChart.getElementsAtEvent(evt);
-
-                    if (activePoints.length > 0) {
-                        //get the internal index of slice in pie chart
-                        var clickedElementindex = activePoints[0]["_index"];
-
-                        //get specific label by index
-                        var label = myBarChart.data.labels[clickedElementindex];
-
-                        //get value by index
-                        var value = myBarChart.data.datasets[0].data[clickedElementindex];
-
-                        /* other stuff that requires slice's label and value */
-                        var url = '@Url.Action("Details", "Lessons", new {})' + "?id=" + label.split(':')[0];
-                        window.location.href = url;
-                    }
-                }
-            );
         }
     </script>
     @Scripts.Render("~/bundles/jqueryval")
