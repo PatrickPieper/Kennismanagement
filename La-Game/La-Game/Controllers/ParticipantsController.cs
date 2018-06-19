@@ -213,7 +213,11 @@ namespace La_Game.Controllers
             QuestionList qlist = db.QuestionLists.Find(questionlistId);
             ViewBag.questionListName = qlist.questionListName;
 
-            List<QuestionListResult> results = new List<QuestionListResult>();
+            string getNumOfQuestions = "SELECT COUNT(Question_idQuestion) as numQuestions FROM QuestionList_Question WHERE QuestionList_idQuestionList =" + qlist.idQuestionList;
+            int numOfQuestions = db.Database.SqlQuery<int>(getNumOfQuestions).Single();
+            ViewBag.numOfQuestions = numOfQuestions;
+
+            List <QuestionListResult> results = new List<QuestionListResult>();
             StringBuilder sqlQueryString = new StringBuilder();
             int i = 1;
             
@@ -234,7 +238,9 @@ namespace La_Game.Controllers
                 int correctPerAttempt = results.Where(r => r.attempt == attempt && r.correctAnswer == 1).Count();
                 correctAnswers.Add(correctPerAttempt);
             }
-            
+            ViewBag.correctAnswers = correctAnswers;
+
+
             ViewBag.attempts = attempts;
             ViewBag.attemptCount = attempts.Last();
             foreach(var question in questions)
