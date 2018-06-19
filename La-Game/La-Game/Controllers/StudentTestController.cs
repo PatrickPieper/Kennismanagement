@@ -11,7 +11,6 @@ namespace La_Game.Controllers
     public class StudentTestController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
-        List<TestQuestionData> testQuestionData;
 
         // GET: StudentTest
         [AllowAnonymous]
@@ -186,7 +185,7 @@ namespace La_Game.Controllers
             int? lastAttempt = db.Database.SqlQuery<int?>(getLastAttempt).Single();
             ViewBag.attempt = lastAttempt;
 
-            testQuestionData = new List<TestQuestionData>();
+            List<TestQuestionData> testQuestionData = new List<TestQuestionData>();
             foreach (Question question in questionData)
             {
                 testQuestionData.Add(new TestQuestionData
