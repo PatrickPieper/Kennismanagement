@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
@@ -142,7 +143,7 @@ namespace La_Game.Controllers
         {
             Participant participant = db.Participants.Find(id);
             List<List<KeyValuePair<String, object>>> questionlists = new List<List<KeyValuePair<String, object>>>();
-            List<int> listIds = this.GetLists(participant.idParticipant);
+            List<int> listIds = this.GetLists(id);
             foreach (int questionlistId in listIds)
             {
                 String qListName = db.QuestionLists.Where(q => q.idQuestionList.Equals(questionlistId)).Select(q => q.questionListName).Single();
@@ -207,50 +208,61 @@ namespace La_Game.Controllers
 
         public ActionResult QuestionlistResult(int participantId, int questionlistId)
         {
+            
             Participant participant = db.Participants.Find(participantId);
             QuestionList qlist = db.QuestionLists.Find(questionlistId);
-            ViewBag.questionList = qlist;
+            ViewBag.questionListName = qlist.questionListName;
 
-            List<KeyValuePair<int, AnswerOption>> givenanswerList = new List<KeyValuePair<int, AnswerOption>>();
+            string getNumOfQuestions = "SELECT COUNT(Question_idQuestion) as numQuestions FROM QuestionList_Question WHERE QuestionList_idQuestionList =" + qlist.idQuestionList;
+            int numOfQuestions = db.Database.SqlQuery<int>(getNumOfQuestions).Single();
+            ViewBag.numOfQuestions = numOfQuestions;
 
-            List<int> answerids = GetAnswerIds(participantId, questionlistId);
+            List <QuestionListResult> results = new List<QuestionListResult>();
+            StringBuilder sqlQueryString = new StringBuilder();
+            int i = 1;
+            
+            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt from QuestionResult as qr" +
+                " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
+                " join Question as q on q.idQuestion = ao.Question_idQuestion" +
+                " where qr.QuestionList_idQuestionList = " +  questionlistId +
+                " and qr.Participant_idParticipant = " + participantId);
+            results = db.Database.SqlQuery<QuestionListResult>(sqlQueryString.ToString()).OrderBy(qr => qr.idQuestion).OrderBy(qr => qr.attempt).ToList();
 
-            List<AnswerOption> givenAnswers = db.AnswerOptions.Where(ao => answerids.Any(s => ao.idAnswer.Equals(s))).ToList();
+            var questions = results.Select(r => r.idQuestion).Distinct().ToList();
+            List<Dictionary<int, QuestionListResult>> sortedList = new List<Dictionary<int, QuestionListResult>>();
+            List<int> attempts = results.Select(r => r.attempt).Distinct().ToList();
 
-            foreach (var givenAnswer in givenAnswers)
+            List<int> correctAnswers = new List<int>();
+            foreach (int attempt in attempts)
             {
-                int questionId = db.Questions.Where(q => q.idQuestion.Equals(givenAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
-                givenanswerList.Add(new KeyValuePair<int, AnswerOption>(questionId, givenAnswer));
+                int correctPerAttempt = results.Where(r => r.attempt == attempt && r.correctAnswer == 1).Count();
+                correctAnswers.Add(correctPerAttempt);
             }
+            ViewBag.correctAnswers = correctAnswers;
 
 
-            List<KeyValuePair<int, AnswerOption>> correctAnswerList = new List<KeyValuePair<int, AnswerOption>>();
-
-            List<int> questionIds = GetQuestionIds(questionlistId);
-
-            List<Question> questions = db.Questions.Where(q => questionIds.Any(s => q.idQuestion.Equals(s))).ToList();
-
-            List<int?> attempts = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId) && q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.attempt).Distinct().ToList();
-
-            List<KeyValuePair<int?, List<AnswerOption>>> results = new List<KeyValuePair<int?, List<AnswerOption>>>();
-
-            foreach (var attempt in attempts)
+            ViewBag.attempts = attempts;
+            ViewBag.attemptCount = attempts.Last();
+            foreach(var question in questions)
             {
-                List<int> answerOptionIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId) && q.QuestionList_idQuestionList.Equals(questionlistId) && q.attempt == attempt).Select(q => q.AnswerOption_idAnswer).ToList();
-                List<AnswerOption> answers = db.AnswerOptions.Where(q => answerOptionIds.Any(s => q.idAnswer.Equals(s))).ToList();
-                results.Add(new KeyValuePair<int?, List<AnswerOption>>(attempt, answers));
-            }
-            ViewBag.givenAnswers = results;
-            ViewBag.questions = questions;
+                List<QuestionListResult> questionListResults = results.Where(qr => qr.idQuestion.Equals(question)).ToList();
+                Dictionary<int, QuestionListResult> dict = new Dictionary<int, QuestionListResult>();
 
-            List<AnswerOption> correctAnswers = db.AnswerOptions.Where(q => questionIds.Any(s => q.Question_idQuestion.Equals(s)) && q.correctAnswer == 1).ToList();
+                foreach (int attempt in attempts)
+                {
+                    if(!questionListResults.Where(qr => qr.attempt == attempt).Count().Equals(0)) { 
+                    QuestionListResult attemptQuestion = questionListResults.Where(qr => qr.attempt == attempt).Single();
+                    if (attemptQuestion != null)
+                    {
+                        dict.Add(attempt, attemptQuestion);
+                    }
+                    }
+                }
 
-            foreach (var correctAnswer in correctAnswers)
-            {
-                int questionId = db.Questions.Where(q => q.idQuestion.Equals(correctAnswer.Question_idQuestion)).Select(q => q.idQuestion).Single();
-                correctAnswerList.Add(new KeyValuePair<int, AnswerOption>(questionId, correctAnswer));
+                sortedList.Add(dict);
             }
-            ViewBag.correctAnswers = correctAnswerList;
+            ViewBag.results = sortedList;
+            
 
             return View(participant);
         }

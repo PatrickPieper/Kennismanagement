@@ -13,7 +13,6 @@ function val() {
             alertbox.show();
             window.scrollTo(0, 0);
             selects[i].value = 0;
-            alertbox.hide(10000)
         }
         else if (count <= 1) {
             alertbox.hide();

@@ -3,78 +3,112 @@
 @{
     ViewBag.Title = "QuestionlistResult";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    var qlist = ViewBag.questionList;
-    var correctAnswers = ViewBag.correctAnswers;
-    var givenAnswers = ViewBag.givenAnswers;
-    var questions = ViewBag.questions;
-    var likert = new List<int>();
+    var qlist = ViewBag.questionListName;
+    var results = ViewBag.results;
+    var attempts = ViewBag.attempts;
+    var attemptCount = ViewBag.attemptCount;
 }
 
-<h2>@qlist.questionListName</h2>
+<h2>@qlist</h2>
 <hr />
 
 
 <div class="container-fluid">
     <table class="table table-responsive">
         <thead>
-        <th>Vraag:</th>
-        @foreach (var question in questions)
+        <th></th>
+        @foreach (var attempt in attempts)
         {
-            <th>@question.questionText</th>
+            <th>Attempt @attempt</th>
         }
         </thead>
         <tbody>
-
-            @foreach (var givenAnswer in givenAnswers)
+            @foreach (var result in results)
             {
-            <tr>
-                <td></td>
-                @foreach (var question in questions)
-                {
-                    if (givenAnswer.Key == question.idQuestion)
+                <tr>
+                    <td> </td>
+                    @for (int i = 1; i <= attemptCount; i++)
                     {
-                        if (question.likertScale != null)
+                        if (result.ContainsKey(i))
                         {
-                            likert.Add(question.idQuestion);
+                            var value = result[i];
+                            <td>@Html.Raw(value.answerText)</td>
+                        }
+                        else
+                        {
+                            <td>-</td>
                         }
                     }
-                }
-                @{
-                    var given = givenAnswer.Value;
-                }
-                @foreach (var givenans in given)
-                {
-                    foreach (var correctAnswer in correctAnswers)
-                    {
-                        var correct = correctAnswer.Value;
 
-                        if (correctAnswer.Key == givenans.Question_idQuestion)
-                        {
-                            if (likert.Contains(givenans.Question_idQuestion))
-                            {
-                                <td><p style="color:forestgreen">@givenans.answerText</p></td>
-                                break;
-                            }
-                            else
-                            {
-                                if (correct.idAnswer == givenans.idAnswer)
-                                {
-                                    <td><p style="color:forestgreen">@givenans.answerText</p></td>
-                                }
-                                else
-                                {
-                                    <td><p style="color:darkred">@givenans.answerText</p></td>
-
-                                }
-                            }
-                            break;
-                        }
-
-                    }
-                }
-            </tr>
-        }
-
-            </tbody>
-        </table>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <button onclick="showBar()">Bar Chart</button>
+    <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
+<script src="~/Scripts/Chart.js"></script>
+<script src="~/Scripts/Common.js"></script>
+<script>
+    var labels = @Html.Raw(Json.Encode(ViewBag.attempts));
+    var max = @Html.Raw(Json.Encode(ViewBag.numOfQuestions));
+    var results = @Html.Raw(Json.Encode(ViewBag.correctAnswers));
+    var colors = [];
+    var i = 0;
+
+        while (i < labels.length)
+        {
+            colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
+            i++
+        }
+        bar();
+
+    function showBar() {
+
+        var x = document.getElementById("barChart")
+
+        if (x.style.display === "none") {
+            x.style.display = "inline";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    function bar() {
+        new Chart(document.getElementById("barChart"), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Correct answers",
+                        backgroundColor: colors,
+                        data: results,
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            suggestedMax: max
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Correct Answers"
+                        }
+                    }],
+                    xAxes: [{
+
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Attempts"
+                        }
+                    }]
+                }
+            }
+        });
+    }
+</script>
+
