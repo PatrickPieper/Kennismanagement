@@ -1,23 +1,23 @@
 ﻿@{
-    ViewBag.Title = "Common Wrong Answers";
+    ViewBag.Title = "Compare Lessons";
 }
 
-<h2> Common Wrong Answers </h2>
+<h2> Compare Lessons </h2>
 
 <div>
     <div class="col-lg-12">
         <div class="row">
             <div class="form-group">
-                <h4>Filter Questions</h4>
-                @{Html.RenderAction("CommonWrongAnswerFilter", "Statistics", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID });}
+                <h4>Select Lesson to compare</h4>
+                @{Html.RenderAction("CompareLessonSelection", "Statistics", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID });}
                 <canvas id="barChart" width="400" height="150"></canvas>
             </div>
         </div>
     </div>
 </div>
 <p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionStatistics", "Statistics") + "'");">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to Question Statistics
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("LessonStatistics", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to Lesson Statistics
     </button>
 </p>
 @section scripts {
@@ -31,13 +31,15 @@
         {
             var c = document.getElementById("barChart");
             var ctx = c.getContext("2d");
-            var tData = $.getValues('/Statistics/BarChartDataCommonWrongAnswers');
             myBarChart = new Chart(ctx, {
-                type: 'horizontalBar',
-                data: tData,
+                type: 'bar',
+                data: {
+                    labels: null,
+                    datasets: null,
+                },
                 options: {
                     scales: {
-                        xAxes: [{
+                        yAxes: [{
                             ticks: {
                                 beginAtZero: true,
                                 suggestedMax: 10
@@ -61,19 +63,13 @@
                         var value = myBarChart.data.datasets[0].data[clickedElementindex];
 
                         /* other stuff that requires slice's label and value */
-                        var url = '@Url.Action("Details", "Questions", new {})' + "?id=" + label.split(':')[0];
+                        var url = '@Url.Action("Details", "Lessons", new {})' + "?id=" + label.split(':')[0];
                         window.location.href = url;
                     }
                 }
             );
         }
-        function updateChart(idLanguage, idLesson, idQuestionList)
-        {
-            var tData = $.getValues('/Statistics/BarChartDataCommonWrongAnswers?idLanguage=' + idLanguage + '&idLesson=' + idLesson + '&idQuestionList=' + idQuestionList);
-            myBarChart.data = tData;
-            myBarChart.update();
-        }
     </script>
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/filterrefresh.js")
+    @Scripts.Render("~/Scripts/lessonselectionrefresh.js")
 }

@@ -221,6 +221,7 @@
     <Compile Include="Models\AnswerOption.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\CompareLessonResult.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\DatabaseModel.Context.cs">
@@ -559,6 +560,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\lessonselectionrefresh.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\ValidateFileUpload.js" />
     <Content Include="Web.config" />
@@ -637,6 +639,9 @@
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Authentication\AccountOverview.cshtml" />
     <Content Include="Views\Participants\QuestionlistResult.cshtml" />
+    <Content Include="Views\Statistics\LessonStatistics.cshtml" />
+    <Content Include="Views\Statistics\CompareLessons.cshtml" />
+    <Content Include="Views\Statistics\_CompareLessonSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

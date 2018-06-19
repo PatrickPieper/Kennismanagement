@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -22,7 +23,18 @@ namespace La_Game.Controllers
         {
             return View();
         }
+        // GET: LessonStatistics
+        public ActionResult LessonStatistics()
+        {
+            return View();
+        }
+        // GET: CommonWrongAnswers
         public ActionResult CommonWrongAnswers()
+        {
+            return View();
+        }
+        // GET: CompareLessons
+        public ActionResult CompareLessons()
         {
             return View();
         }
@@ -76,6 +88,34 @@ namespace La_Game.Controllers
 
             return PartialView("_CommonWrongAnswerFilter");
         }
+        /// <summary>
+        /// GET: CompareLessonSelection
+        /// </summary>
+        /// <param name="idLanguage">Language filter</param>
+        /// <param name="idLesson">Lesson filter</param>
+        /// <returns>Partial view for the lesson comparison selection</returns>
+        public PartialViewResult CompareLessonSelection(int? idLanguage, int? idLesson)
+        {
+            List<Language> lst_Language = db.Languages.ToList();
+            List<Lesson> lst_Lesson;
+
+            //Create the query string for lessons
+            StringBuilder lessonQueryString = new StringBuilder();
+            lessonQueryString.Append("SELECT le.* FROM Lesson AS le");
+            //If a language id is given, a language has been set and narrow the lesson results to said language
+            if (idLanguage != null && idLanguage != -1)
+            {
+                lessonQueryString.Append(" WHERE le.Language_idLanguage = " + idLanguage);
+
+            }
+            lst_Lesson = db.Database.SqlQuery<Lesson>(lessonQueryString.ToString()).ToList();
+
+            //Create the selectlists for the dropdowns
+            ViewBag.lst_Languages = new SelectList(lst_Language, "idLanguage", "languageName");
+            ViewBag.lst_Lessons = new SelectList(lst_Lesson, "idLesson", "lessonName");
+
+            return PartialView("_CompareLessonSelection");
+        }
         #endregion
         #region Json Results
         /// <summary>
@@ -105,7 +145,7 @@ namespace La_Game.Controllers
             {
                 sqlQueryString.Append(" and le.idLesson = " + idLesson);
             }
-            if(idQuestionList != null && idQuestionList != -1)
+            if (idQuestionList != null && idQuestionList != -1)
             {
                 sqlQueryString.Append(" and ql.idQuestionList = " + idQuestionList);
             }
@@ -130,6 +170,7 @@ namespace La_Game.Controllers
                 barColors.Add(String.Format("#{0:X6}", random.Next(0x1000000)));
             }
 
+            //Create new chart and dataset
             Chart _chart = new Chart();
             _chart.labels = questionTexts.ToArray();
             _chart.datasets = new List<Datasets>();
@@ -138,13 +179,67 @@ namespace La_Game.Controllers
             {
                 label = "Number of Wrong Answers",
                 data = questionData.ToArray(),
-                backgroundColor = barColors.ToArray(),
-                borderColor = barColors.ToArray(),
+                backgroundColor = barColors[0],
+                borderColor = barColors[0],
+                hoverBackgroundColor = barColors[0],
                 borderWidth = "1"
             });
             _chart.datasets = _dataSet;
             return Json(_chart, JsonRequestBehavior.AllowGet);
         }
+        /// <summary>
+        /// Method to get bar chart data as JsonResult from database
+        /// </summary>
+        /// <param name="idLanguage">Language selection</param>
+        /// <param name="idLesson">Lesson selection</param>
+        /// <returns>JsonResult containing 2 datasets, based on the language/lesson combination</returns>
+        public JsonResult BarChartDataCompareLessons(int? idLanguage, int? idLesson)
+        {
+            var random = new Random();
+            //Query to select questions that were answered wrongly the most, with their amount
+            StringBuilder sqlQueryString = new StringBuilder();
+            sqlQueryString.Append("select le.idLesson, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount' from QuestionResult as qr" +
+                                " left join AnswerOption as cao on qr.AnswerOption_idAnswer = cao.idAnswer and cao.correctAnswer = 1" +
+                                " left join AnswerOption as wao on qr.AnswerOption_idAnswer = wao.idAnswer and wao.correctAnswer = 0" +
+                                " join QuestionList as ql on qr.QuestionList_idQuestionList = ql.idQuestionList" +
+                                " join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList" +
+                                " join Lesson as le on lq.Lesson_idLesson = le.idLesson");
+            //Append the filter values to the query, if set
+            if (idLanguage != null && idLanguage != -1)
+            {
+                sqlQueryString.Append(" where le.Language_idLanguage = " + idLanguage);
+            }
+            if (idLesson != null && idLesson != -1)
+            {
+                sqlQueryString.Append(" and le.idLesson = " + idLesson);
+            }
+            sqlQueryString.Append(" group by le.idLesson");
+            var queryResult = db.Database.SqlQuery<CompareLessonResult>(sqlQueryString.ToString()).First();
+
+            //Create two datasets, one for correct, one for wrong answers
+            List<Datasets> _dataSet = new List<Datasets>();
+            _dataSet.Add(new Datasets()
+            {
+                label = "Correct Answers",
+                data = new int[] {queryResult.correctCount },
+                backgroundColor = ColorTranslator.ToHtml(Color.Green),
+                borderColor = ColorTranslator.ToHtml(Color.Green),
+                hoverBackgroundColor = ColorTranslator.ToHtml(Color.Green),
+                borderWidth = "1"
+            });
+            _dataSet.Add(new Datasets()
+            {
+                label = "Wrong Answers",
+                data = new int[] { queryResult.wrongCount },
+                backgroundColor = ColorTranslator.ToHtml(Color.Red),
+                borderColor =  ColorTranslator.ToHtml(Color.Red),
+                hoverBackgroundColor = ColorTranslator.ToHtml(Color.Red),
+                borderWidth = "1"
+            });
+
+            return Json(_dataSet, JsonRequestBehavior.AllowGet);
+        }
+
         #endregion JsonResults
         protected override void Dispose(bool disposing)
         {

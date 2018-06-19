@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Lesson Statistics";
+}
+
+<h2> Lesson Statistics </h2>
+
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("CompareLessons", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-stats"></span> Compare Lessons
+    </button>
+</p>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to Statistics
+    </button>
+</p>
