@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<La_Game.Models.Question>
+@using System.Security.Claims;
 
 @{
     ViewBag.Title = "Index";
@@ -12,16 +13,19 @@
     </button>
 </h2>
 
-@using (Html.BeginForm("Index", "Questions", FormMethod.Get))
+@if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
 {
-    <div class="form-inline">
-        <select name="filter" class="form-control input-sm">
-            <option value="active">Show active</option>
-            <option value="inactive">Show inactive</option>
-            <option value="all">Show all</option>
-        </select>
-        <button type="submit" value="filter" class="btn btn-default btn-sm"> Filter </button>
-    </div>
+    using (Html.BeginForm("Index", "Questions", FormMethod.Get))
+    {
+        <div class="form-inline">
+            <select name="filter" class="form-control input-sm">
+                <option value="active">Show active</option>
+                <option value="inactive">Show inactive</option>
+                <option value="all">Show all</option>
+            </select>
+            <button type="submit" value="filter" class="btn btn-default btn-sm"> Filter </button>
+        </div>
+    }
 }
 
 <table id="questionOverview" class="table table table-striped table-hover">

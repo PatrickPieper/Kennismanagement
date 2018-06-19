@@ -23,7 +23,6 @@ namespace La_Game.Controllers
         {
             // Get all the active languages
             var languages = db.Languages.Where(l => l.isHidden != 1);
-            var test = ((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value; // Role test
 
             // If the filter was given, use it
             if (!String.IsNullOrEmpty(filter))
