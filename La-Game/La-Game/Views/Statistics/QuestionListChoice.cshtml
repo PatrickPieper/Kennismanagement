@@ -8,6 +8,6 @@
 @{ 
     for (int i=0; i<ViewBag.questionLists.Count; i++)
     { 
-       <p><a href="@Url.Action("QuestionListStatistics","Statistics",new {questionListId = ViewBag.questionLists[0].idQuestionList })">@ViewBag.questionLists[i].questionListName</a></p>
+       <p><a href="@Url.Action("QuestionListStatistics","Statistics",new {questionListId = ViewBag.questionLists[i].idQuestionList })">@ViewBag.questionLists[i].questionListName</a></p>
     }
 }
