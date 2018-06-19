@@ -12,7 +12,7 @@
           <Property Name="idAnswer" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Question_idQuestion" Type="int" Nullable="false" />
           <Property Name="correctAnswer" Type="smallint" />
-          <Property Name="answerText" Type="varchar" MaxLength="45" />
+          <Property Name="answerText" Type="nvarchar" MaxLength="45" />
         </EntityType>
         <EntityType Name="Language">
           <Key>
@@ -393,7 +393,7 @@
           <Property Name="idAnswer" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Question_idQuestion" Type="Int32" Nullable="false" />
           <Property Name="correctAnswer" Type="Int16" />
-          <Property Name="answerText" Type="String" MaxLength="45" FixedLength="false" Unicode="false" />
+          <Property Name="answerText" Type="String" MaxLength="45" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Question" Relationship="Self.fk_Answer_Question1" FromRole="AnswerOption" ToRole="Question" />
           <NavigationProperty Name="QuestionResults" Relationship="Self.fk_QuestionResult_Answer1" FromRole="AnswerOption" ToRole="QuestionResult" />
         </EntityType>

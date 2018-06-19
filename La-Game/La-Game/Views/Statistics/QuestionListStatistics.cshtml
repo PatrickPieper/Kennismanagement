@@ -1,0 +1,75 @@
+﻿
+@{
+    ViewBag.Title = "QuestionListStatistics";
+    
+
+#line default
+#line hidden
+}
+
+<h2>@ViewBag.questionListName</h2>
+
+
+@using (Html.BeginForm("QuestionListStatistics", "Statistics", FormMethod.Post)){
+    if (ViewBag.questionListInfo.Count != 0)
+    {
+        <select id="dropdown" onchange="this.form.submit()" name="attempt">
+            @for (int j = 0; j < ViewBag.questionListInfo[0].MaxAttempt; j++)
+            {
+                if (j == ViewBag.attempt - 1) {
+                    <option selected value="@(j + 1)">attempt @(j + 1)</option>
+                } else
+                {
+                <option value="@(j + 1)">attempt @(j + 1)</option>
+                }
+            }
+        </select>
+        <input type="hidden" name="questionListId" value="@ViewBag.questionListInfo[0].IdQuestionList" />
+    }
+}
+
+<table style="width:100%">
+    <tr>
+        <th>
+            First Name
+        </th>
+        <th>
+            Last name
+        </th>
+        <th>
+            Start time
+        </th>
+        <th>
+            End time
+        </th>
+        <th>
+            Total time
+        </th>
+        <th>
+            Correct answers
+        </th>
+        <th>
+            Wrong answers
+        </th>
+        <th>
+            Missing answers
+        </th>
+    </tr>
+    @{
+        for (int i = 0; i < ViewBag.questionListStatistics.Count; i++)
+        {
+            <tr>
+                <td>@ViewBag.questionListStatistics[i].FirstName</td>
+                <td>@ViewBag.questionListStatistics[i].LastName</td>
+                <td>@ViewBag.questionListStatistics[i].StartTime</td>
+                <td>@ViewBag.questionListStatistics[i].EndTime</td>
+                <td>@ViewBag.questionListStatistics[i].TotalTime</td>
+                <td>@ViewBag.questionListStatistics[i].CorrectCount</td>
+                <td>@ViewBag.questionListStatistics[i].WrongCount</td>
+                <td>@(ViewBag.questionListInfo[0].QuestionCount - ViewBag.questionListStatistics[i].CorrectCount - ViewBag.questionListStatistics[i].WrongCount)</td>
+            </tr>
+        }
+    }
+</table>
+
+<a href="~/Statistics/QuestionListChoice">Back</a>

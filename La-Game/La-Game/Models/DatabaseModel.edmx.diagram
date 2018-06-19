@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="8ba5e72855c546bc8207eb111cbac540" Name="Diagram1" ZoomLevel="59">
+      <Diagram DiagramId="8ba5e72855c546bc8207eb111cbac540" Name="Diagram1" ZoomLevel="101">
         <EntityTypeShape EntityType="Model.AnswerOption" Width="1.5" PointX="9.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Language" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Language_Member" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
@@ -24,7 +24,7 @@
         <AssociationConnector Association="Model.fk_Language_Participant_Participant1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.fk_QuestionResult_Participant1" ManuallyRouted="false" />
         <AssociationConnector Association="Model.fk_QuestionResult_QuestionList1" ManuallyRouted="false" />
-        <EntityTypeShape EntityType="Model.QuestionList_Question" Width="1.5" PointX="6.125" PointY="13.375" />
+        <EntityTypeShape EntityType="Model.QuestionList_Question" Width="1.5" PointX="6.125" PointY="13.125" />
         <AssociationConnector Association="Model.fk_QuestionList_Question_Question1" />
         <AssociationConnector Association="Model.fk_QuestionList_Question_QuestionList1" />
         <EntityTypeShape EntityType="Model.Lesson_QuestionList" Width="1.5" PointX="7.5" PointY="6.875" />
