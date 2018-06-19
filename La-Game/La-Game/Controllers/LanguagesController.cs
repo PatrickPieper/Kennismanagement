@@ -18,6 +18,7 @@ namespace La_Game.Controllers
         /// Get a overview of all the current languages.
         /// </summary>
         /// <param name="filter"> Optional filter for admin to see deactivated items. </param>
+        [AuthorizeAdmin]
         public ActionResult Index(string filter)
         {
             // Get all the active languages
@@ -72,6 +73,7 @@ namespace La_Game.Controllers
         /// GET: Languages/Create
         /// Redirect to the creation page to add a new language to the database.
         /// </summary>
+        [AuthorizeAdmin]
         public ActionResult Create()
         {
             // Go to create page
@@ -85,6 +87,7 @@ namespace La_Game.Controllers
         /// <param name="language"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeAdmin]
         public ActionResult Create([Bind(Include = "idLanguage,languageName")] Language language)
         {
             // Check if the data is valid
@@ -107,6 +110,7 @@ namespace La_Game.Controllers
         /// Find the language that has to be changed and redirect to a seperate edit page.
         /// </summary>
         /// <param name="id"> Id of the language that has to be changed. </param>
+        [AuthorizeAdmin]
         public ActionResult Edit(int? id)
         {
             // Check if id was given
@@ -133,6 +137,7 @@ namespace La_Game.Controllers
         /// <param name="language"> The data that has to be saved. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeAdmin]
         public ActionResult Edit([Bind(Include = "idLanguage,languageName")] Language language)
         {
             // Check if the data is valid
@@ -155,6 +160,7 @@ namespace La_Game.Controllers
         /// Find the language that has to be deleted and redirect to a seperate deletion page for confirmation.
         /// </summary>
         /// <param name="idLanguage"> Id of the language that has to be deactivated. </param>
+        [AuthorizeAdmin]
         public ActionResult Delete(int? idLanguage)
         {
             // Check if id was given
@@ -181,6 +187,7 @@ namespace La_Game.Controllers
         /// <param name="idLanguage"> Id of the language that has to be deactivated. </param>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AuthorizeAdmin]
         public ActionResult DeleteConfirmed(int idLanguage)
         {
             try
