@@ -1,11 +1,11 @@
 ﻿@model La_Game.Models.RegisterViewModel
 @{
-    ViewBag.Title = "Register";
+    ViewBag.Title = "Register Member";
 }
 
-<h2>Register new Account</h2>
+<h2>Register Member</h2>
 
-@using (Html.BeginForm("Register", "Authentication", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Members", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
     <h4>Create a new account</h4>
@@ -49,7 +49,7 @@
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("AccountOverview", "Authentication") + "'");">
+            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Members") + "'");">
                 <span class="glyphicon glyphicon-chevron-left"></span> Back
             </button>
             <button type="submit" value="Register" class="btn btn-default">

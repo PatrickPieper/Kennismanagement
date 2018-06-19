@@ -23,6 +23,7 @@ namespace La_Game.Models
     
         public int idLanguage { get; set; }
         public string languageName { get; set; }
+        public Nullable<byte> isHidden { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Language_Member> Language_Member { get; set; }

@@ -1,23 +1,33 @@
 ﻿@model IEnumerable<La_Game.Models.Question>
+@using System.Security.Claims;
 
 @{
     ViewBag.Title = "Index";
 }
 @Styles.Render("~/Content/dataTables")
 
-<script type="text/javascript">
-    function Redirect(link) {
-        location.href = link;
-    }
-</script>
-
-<h2> Question Overview </h2>
-
-<p>
+<h2>
+    Question Overview
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Questions") + "'");">
         <span class="glyphicon glyphicon-plus"></span> Create New
     </button>
-</p>
+</h2>
+
+@if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
+{
+    using (Html.BeginForm("Index", "Questions", FormMethod.Get))
+    {
+        <div class="form-inline">
+            <select name="filter" class="form-control input-sm">
+                <option value="active">Show active</option>
+                <option value="inactive">Show inactive</option>
+                <option value="all">Show all</option>
+            </select>
+            <button type="submit" value="filter" class="btn btn-default btn-sm"> Filter </button>
+        </div>
+    }
+}
+
 <table id="questionOverview" class="table table table-striped table-hover">
     <thead>
         <tr>
@@ -52,9 +62,18 @@
                     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Questions", new { id = item.idQuestion }) + "'");">
                         <span class="glyphicon glyphicon-wrench"></span> Edit
                     </button>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questions", new { id = item.idQuestion }) + "'");">
-                        <span class="glyphicon glyphicon-remove"></span> Remove
-                    </button>
+                    @if (item.isHidden == 1)
+                    {
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questionss", new { idQuestion = item.idQuestion }) + "'");">
+                            <span class="glyphicon glyphicon-plus"></span> Activate
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questions", new { idQuestion = item.idQuestion }) + "'");">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                    }
                 </td>
             </tr>
         }

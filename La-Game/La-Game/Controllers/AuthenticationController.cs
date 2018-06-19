@@ -24,21 +24,13 @@ namespace La_Game.Controllers
         /// GET: /Authentication/Login  
         /// Go to the login page.
         /// </summary>  
-        /// <param name="returnUrl"> URL of the previous page. </param> 
         [AllowAnonymous]
-        public ActionResult Login(string returnUrl)
+        public ActionResult Login()
         {
             // Verification     
             if (Request.IsAuthenticated)
             {
-                // User is already logged in  
-                if (Url.IsLocalUrl(returnUrl))
-                {
-                    // Redirect to the given URL  
-                    return Redirect(returnUrl);
-                }
-
-                // If the URL was invalid, redirect to home page  
+                // User is already logged in; redirect to homepage
                 return RedirectToAction("Index", "Home");
             }
 
@@ -65,31 +57,40 @@ namespace La_Game.Controllers
                 // Verification
                 if (loginInfo != null && loginInfo.Count() > 0)
                 {
-                    try
+                    if (loginInfo.First().isActive == 1)
                     {
-                        // Setting  
-                        var claims = new List<Claim>
+                        try
                         {
-                            new Claim(ClaimTypes.Name, loginInfo.First().email)
-                        };
-                        var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
-                        var authenticationManager = Request.GetOwinContext().Authentication;
+                            // Setting  
+                            var claims = new List<Claim>
+                            {
+                                new Claim(ClaimTypes.Name, loginInfo.First().email),
+                                new Claim(ClaimTypes.Role, loginInfo.First().isAdmin.ToString())
+                            };
+                            var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
+                            var authenticationManager = Request.GetOwinContext().Authentication;
 
-                        // Sign in   
-                        authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, claimIdenties);
+                            // Sign in   
+                            authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, claimIdenties);
 
-                        // Redirect to Dashboard  
-                        return RedirectToAction("Dashboard", "Home");
+                            // Redirect to Dashboard  
+                            return RedirectToAction("Dashboard", "Home");
+                        }
+                        catch (Exception ex)
+                        {
+                            // Logging in failed
+                            throw ex;
+                        }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        // Logging in failed
-                        throw ex;
+                        // Account has been deactivated 
+                        ModelState.AddModelError(string.Empty, "Account has been deactivated, contact an admin for more information.");
                     }
                 }
                 else
                 {
-                    // Error    
+                    // Account information was invalid 
                     ModelState.AddModelError(string.Empty, "Invalid email or password.");
                 }
             }
@@ -178,60 +179,6 @@ namespace La_Game.Controllers
 
             // If not valid, stay on the page
             return View(model);
-        }
-        #endregion
-
-        #region Account overview and registering new accounts
-        /// <summary>
-        /// GET: /Authentication/AccountOverview
-        /// Get a overview of all member accounts.
-        /// </summary>
-        public ActionResult AccountOverview()
-        {
-            // Return overview of all members excluding the person accessing the list
-            return View(db.Members.ToList().Where(u => u.email != User.Identity.Name));
-        }
-
-        /// <summary>
-        /// GET: /Authentication/Register
-        /// Go to the page where a new account can be created.
-        /// </summary>
-        public ActionResult Register()
-        {
-            // Go to register page
-            return View();
-        }
-
-        /// <summary>
-        /// POST: /Authentication/Register
-        /// After pressing the button add the new account to the database.
-        /// </summary>
-        /// <param name="account"> The account that has to be added. </param>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Register([Bind(Include = "email,password,firstname,lastname,isAdmin")] Member account)
-        {
-            // Check if the data is valid
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    // If valid, add it to the database
-                    db.Members.Add(account);
-                    db.SaveChanges();
-
-                    // Redirect to the page where questions can be assigned to the list
-                    return RedirectToAction("AccountOverview", "Authentication");
-                }
-                catch
-                {
-                    // Error
-                    ModelState.AddModelError(string.Empty, "Error while adding the account.");
-                }
-            }
-
-            // If not valid, stay on the edit page with the current data
-            return View(account);
         }
         #endregion
     }

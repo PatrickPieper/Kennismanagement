@@ -4,12 +4,6 @@
     ViewBag.Title = "Dashboard";
 }
 
-<script type="text/javascript">
-    function Redirect(link) {
-        location.href = link;
-    }
-</script>
-
 <div class="jumbotron">
     <h1>Welcome, @Html.DisplayFor(model => model.firstname) @Html.DisplayFor(model => model.lastname) </h1>
     <p class="lead"> From this page you will be able to access all the functions of the application.</p>
@@ -22,7 +16,7 @@
                 <div>
                     <h2>Members</h2>
                     <p>
-                        <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("AccountOverview", "Authentication") + "'");">
+                        <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Members") + "'");">
                             <span class="glyphicon glyphicon-list-alt"></span> Member Overview
                         </button>
                     </p>
@@ -30,7 +24,15 @@
             }
         }
 
-        <h2>Your Languages</h2>
+        <h2>
+            Your Languages
+            @if (Model.isAdmin == 1)
+            {
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Languages") + "'");">
+                    <span class="glyphicon glyphicon-list-alt"></span> Overview
+                </button>
+            }
+        </h2>
         @{Html.RenderAction("GetLanguageOverview", "Home", new { memberId = Model.idMember });}
     </div>
     <div class="col-md-4">

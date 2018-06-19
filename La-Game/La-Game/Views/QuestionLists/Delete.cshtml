@@ -4,10 +4,19 @@
     ViewBag.Title = "Delete Questionlist";
 }
 
-<h2>Delete Questionlist</h2>
+@if (Model.isHidden == 1)
+{
+    <h2>Activate Questionlist</h2>
 
-<h3>Are you sure you want to delete this?</h3>
-<h4>This cannot be undone unless you contact an admin.</h4>
+    <h3>Do you want to reactivate this list?</h3>
+}
+else
+{
+    <h2>Remove Questionlist</h2>
+
+    <h3>Are you sure you want to remove this?</h3>
+    <h4>This cannot be undone unless you contact an admin.</h4>
+}
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -24,13 +33,23 @@
     {
         @Html.AntiForgeryToken()
 
-    <div class="form-actions no-color">
-        <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
-            <span class="glyphicon glyphicon-chevron-left"></span> Back
-        </button>
-        <button type="submit" value="Delete" class="btn btn-default">
-            <span class="glyphicon glyphicon-trash"></span> Delete
-        </button>
-    </div>
+        <div class="form-actions no-color">
+            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+                <span class="glyphicon glyphicon-chevron-left"></span> Back
+            </button>
+
+            @if (Model.isHidden == 1)
+            {
+                <button type="submit" value="Delete" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus"></span> Reactivate
+                </button>
+            }
+            else
+            {
+                <button type="submit" value="Delete" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove"></span> Remove
+                </button>
+            }
+        </div>
     }
 </div>

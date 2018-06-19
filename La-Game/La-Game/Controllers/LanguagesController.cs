@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Web.Mvc;
 using La_Game.Models;
 
@@ -13,13 +14,34 @@ namespace La_Game.Controllers
         private LaGameDBContext db = new LaGameDBContext();
 
         /// <summary>
-        /// GET: Languages
+        /// GET: /Languages
         /// Get a overview of all the current languages.
         /// </summary>
-        public ActionResult Index()
+        /// <param name="filter"> Optional filter for admin to see deactivated items. </param>
+        [AuthorizeAdmin]
+        public ActionResult Index(string filter)
         {
-            // Return view containing all the languages
-            return View(db.Languages.ToList());
+            // Get all the active languages
+            var languages = db.Languages.Where(l => l.isHidden != 1);
+
+            // If the filter was given, use it
+            if (!String.IsNullOrEmpty(filter))
+            {
+                switch (filter)
+                {
+                    case "active":
+                        break;
+                    case "inactive":
+                        languages = db.Languages.Where(l => l.isHidden == 1);
+                        break;
+                    case "all":
+                        languages = db.Languages;
+                        break;
+                }
+            }
+
+            // Return view containing the language list
+            return View(languages.ToList());
         }
 
         /// <summary>
@@ -50,6 +72,7 @@ namespace La_Game.Controllers
         /// GET: Languages/Create
         /// Redirect to the creation page to add a new language to the database.
         /// </summary>
+        [AuthorizeAdmin]
         public ActionResult Create()
         {
             // Go to create page
@@ -63,6 +86,7 @@ namespace La_Game.Controllers
         /// <param name="language"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeAdmin]
         public ActionResult Create([Bind(Include = "idLanguage,languageName")] Language language)
         {
             // Check if the data is valid
@@ -85,6 +109,7 @@ namespace La_Game.Controllers
         /// Find the language that has to be changed and redirect to a seperate edit page.
         /// </summary>
         /// <param name="id"> Id of the language that has to be changed. </param>
+        [AuthorizeAdmin]
         public ActionResult Edit(int? id)
         {
             // Check if id was given
@@ -111,6 +136,7 @@ namespace La_Game.Controllers
         /// <param name="language"> The data that has to be saved. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeAdmin]
         public ActionResult Edit([Bind(Include = "idLanguage,languageName")] Language language)
         {
             // Check if the data is valid
@@ -129,20 +155,21 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: Languages/Delete/[id]
+        /// GET: Languages/Delete?idLanguage=[idLanguage]
         /// Find the language that has to be deleted and redirect to a seperate deletion page for confirmation.
         /// </summary>
-        /// <param name="id"> Id of the language that has to be deactivated. </param>
-        public ActionResult Delete(int? id)
+        /// <param name="idLanguage"> Id of the language that has to be deactivated. </param>
+        [AuthorizeAdmin]
+        public ActionResult Delete(int? idLanguage)
         {
             // Check if id was given
-            if (id == null)
+            if (idLanguage == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the language, if it does not exist return 404
-            Language language = db.Languages.Find(id);
+            Language language = db.Languages.Find(idLanguage);
             if (language == null)
             {
                 return HttpNotFound();
@@ -153,32 +180,37 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// POST: Languages/Delete/[id]
+        /// POST: Languages/Delete/?idLanguage=[idLanguage]
         /// After confirming that the language can be deleted, deactivate it in the database.
         /// </summary>
-        /// <param name="id"> Id of the language that has to be deactivated. </param>
+        /// <param name="idLanguage"> Id of the language that has to be deactivated. </param>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        [AuthorizeAdmin]
+        public ActionResult DeleteConfirmed(int idLanguage)
         {
             try
             {
-                // TODO - Add isHidden field to language
-                Language language = db.Languages.Find(id);
-                db.Languages.Remove(language);
+                // Find the member and check the status
+                Language language = db.Languages.Find(idLanguage);
+                if (language.isHidden == 1)
+                {
+                    // If language was hidden, reactivate it
+                    language.isHidden = 0;
+                }
+                else
+                {
+                    // If language was not hidden, hide it
+                    language.isHidden = 1;
+                }
+
+                // Save the changes to the database
+                db.Entry(language).State = EntityState.Modified;
                 db.SaveChanges();
-
-                // Find the language and set it to hidden
-                //Language language = db.Languages.Find(id);
-                //language.isHidden = 1;
-
-                // Save the changes
-                //db.Entry(language).State = EntityState.Modified;
-                //db.SaveChanges();
             }
             catch
             {
-                // Delete failed
+                // Remove/Activation failed
             }
 
             // Redirect to index

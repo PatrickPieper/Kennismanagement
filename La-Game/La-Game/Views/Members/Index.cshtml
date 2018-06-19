@@ -1,0 +1,131 @@
+﻿@model IEnumerable<La_Game.Models.Member>
+
+@{
+    ViewBag.Title = "Account Overview";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/dataTables")
+
+<div>
+    <h2>Member Overview</h2>
+
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Register", "Members") + "'");">
+            <span class="glyphicon glyphicon-plus"></span> Register new member
+        </button>
+    </p>
+    <div class="container">
+        <div class="row">
+            <table id="accounts" class="table table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>
+                            Email
+                        </th>
+                        <th>
+                            First Name
+                        </th>
+                        <th>
+                            Last Name
+                        </th>
+                        <th>
+                            Admin Rights
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                        <th></th>
+                    </tr>
+                <thead>
+
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var link = Url.Action("Details", "Members", new { idMember = item.idMember });
+                        <tr>
+                            <td onclick="Redirect('@link')">
+                                @Html.DisplayFor(modelItem => item.email)
+                            </td>
+                            <td onclick="Redirect('@link')">
+                                @Html.DisplayFor(modelItem => item.firstname)
+                            </td>
+                            <td onclick="Redirect('@link')">
+                                @Html.DisplayFor(modelItem => item.lastname)
+                            </td>
+                            <td onclick="Redirect('@link')">
+                                @{
+                                    if (item.isAdmin == 1)
+                                    {
+                                        <p><span class="glyphicon glyphicon-ok"></span></p>
+                                    }
+                                    else
+                                    {
+                                        <p><span class="glyphicon glyphicon-remove"></span></p>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                @{
+                                    if (item.isActive == 1)
+                                    {
+                                        <t>Active</t>
+                                    }
+                                    else
+                                    {
+                                        <t>Inactive</t>
+                                    }
+                                }
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Members", new { idMember = item.idMember }) + "'");">
+                                    <span class="glyphicon glyphicon-wrench"></span> Edit
+                                </button>
+
+                                @if (item.isActive == 1)
+                                {
+                                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Activation", "Members", new { idMember = item.idMember }) + "'");">
+                                        <span class="glyphicon glyphicon-remove"></span> Deactivate
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Activation", "Members", new { idMember = item.idMember }) + "'");">
+                                        <span class="glyphicon glyphicon-plus"></span> Activate
+                                    </button>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
+        </button>
+    </p>
+</div>
+
+
+@section scripts {
+
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#accounts').DataTable(
+                {
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        {
+                            targets: [3, 5],
+                            orderable: false
+                        }
+                    ]
+                }
+            );
+        });
+    </script>
+}
