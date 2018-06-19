@@ -225,7 +225,7 @@ namespace La_Game.Controllers
             results = db.Database.SqlQuery<QuestionListResult>(sqlQueryString.ToString()).OrderBy(qr => qr.idQuestion).OrderBy(qr => qr.attempt).ToList();
 
             var questions = results.Select(r => r.idQuestion).Distinct().ToList();
-            List<List<QuestionListResult>> sortedList = new List<List<QuestionListResult>>();
+            List<Dictionary<int, QuestionListResult>> sortedList = new List<Dictionary<int, QuestionListResult>>();
             List<int> attempts = results.Select(r => r.attempt).Distinct().ToList();
 
             List<int> correctAnswers = new List<int>();
@@ -236,11 +236,24 @@ namespace La_Game.Controllers
             }
             
             ViewBag.attempts = attempts;
+            ViewBag.attemptCount = attempts.Last();
             foreach(var question in questions)
             {
                 List<QuestionListResult> questionListResults = results.Where(qr => qr.idQuestion.Equals(question)).ToList();
-                sortedList.Add(questionListResults);
-                i++;
+                Dictionary<int, QuestionListResult> dict = new Dictionary<int, QuestionListResult>();
+
+                foreach (int attempt in attempts)
+                {
+                    if(!questionListResults.Where(qr => qr.attempt == attempt).Count().Equals(0)) { 
+                    QuestionListResult attemptQuestion = questionListResults.Where(qr => qr.attempt == attempt).Single();
+                    if (attemptQuestion != null)
+                    {
+                        dict.Add(attempt, attemptQuestion);
+                    }
+                    }
+                }
+
+                sortedList.Add(dict);
             }
             ViewBag.results = sortedList;
             

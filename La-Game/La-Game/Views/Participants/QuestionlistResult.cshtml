@@ -6,6 +6,7 @@
     var qlist = ViewBag.questionListName;
     var results = ViewBag.results;
     var attempts = ViewBag.attempts;
+    var attemptCount = ViewBag.attemptCount;
 }
 
 <h2>@qlist</h2>
@@ -21,18 +22,25 @@
             <th>Attempt @attempt</th>
         }
         </thead>
-        <tbody>
-            @foreach (var result in results)
-            {
-                <tr>
-                    <td></td>
-                    @foreach (var attempt in result)
-                    {
-                        <td data-value="@Html.Raw(attempt.attempt)">@Html.Raw(attempt.answerText)</td>
-                    }
+            <tbody>
+                @foreach (var result in results)
+                {
+                    <tr>
+                        <td> </td>
+                        @for (int i = 1; i <= attemptCount; i++)
+                        {
+                            if(result.ContainsKey(i))
+                            {
+                                var value = result[i];
+                                <td>@Html.Raw(value.answerText)</td>
+                            } else
+                            {
+                                <td>-</td>
+                            }
+                        }
 
-                </tr>
-            }
-        </tbody>
+                    </tr>
+                }
+            </tbody>
     </table>
 </div>
