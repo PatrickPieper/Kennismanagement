@@ -266,6 +266,8 @@
     <Compile Include="Models\QuestionList.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\QuestionListInfoModel.cs" />
+    <Compile Include="Models\QuestionListStatisticsModel.cs" />
     <Compile Include="Models\QuestionList_Question.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
