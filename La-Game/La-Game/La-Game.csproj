@@ -208,7 +208,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\LessonsController.cs" />
-    <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Controllers\ParticipantsController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
     <Compile Include="Controllers\QuestionResultsController.cs" />
@@ -222,7 +221,7 @@
     <Compile Include="Models\AnswerOption.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\CompareLessonResult.cs" />
+    <Compile Include="Models\TestQuestionData.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\DatabaseModel.Context.cs">
@@ -267,9 +266,6 @@
     <Compile Include="Models\QuestionList.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\QuestionListInfoModel.cs" />
-    <Compile Include="Models\QuestionListResult.cs" />
-    <Compile Include="Models\QuestionListStatisticsModel.cs" />
     <Compile Include="Models\QuestionList_Question.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
@@ -459,7 +455,6 @@
       <DependentUpon>DatabaseModel.edmx</DependentUpon>
       <LastGenOutput>DatabaseModel.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\answer.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
@@ -478,9 +473,7 @@
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\Chart.js" />
     <Content Include="Scripts\Chart.min.js" />
-    <Content Include="Scripts\CheckForEmptyFields.js" />
     <Content Include="Scripts\Common.js" />
-    <Content Include="Scripts\correctAnswer.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap.min.js" />
     <Content Include="Scripts\DataTables\autoFill.bootstrap4.js" />
@@ -567,8 +560,8 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\lessonselectionrefresh.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\studenttest.js" />
     <Content Include="Scripts\ValidateFileUpload.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -646,16 +639,10 @@
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Authentication\AccountOverview.cshtml" />
     <Content Include="Views\Participants\QuestionlistResult.cshtml" />
-    <Content Include="Views\Statistics\LessonStatistics.cshtml" />
-    <Content Include="Views\Statistics\CompareLessons.cshtml" />
-    <Content Include="Views\Statistics\_CompareLessonSelection.cshtml" />
-    <Content Include="Views\Members\Activation.cshtml" />
-    <Content Include="Views\Members\Details.cshtml" />
-    <Content Include="Views\Members\Edit.cshtml" />
-    <Content Include="Views\Members\Index.cshtml" />
-    <Content Include="Views\Members\Register.cshtml" />
-    <Content Include="Views\Statistics\QuestionListStatistics.cshtml" />
-    <Content Include="Views\Statistics\QuestionListChoice.cshtml" />
+    <Content Include="Views\StudentTest\_TestEntryForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestQuestionForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestCompleted.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
