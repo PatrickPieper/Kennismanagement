@@ -645,7 +645,6 @@
     <Content Include="Views\Lessons\ManageLists.cshtml" />
     <Content Include="Views\Lessons\_AddQuestionListTable.cshtml" />
     <Content Include="Views\Authentication\Login.cshtml" />
-    <Content Include="Views\Authentication\AccountOverview.cshtml" />
     <Content Include="Views\Participants\QuestionlistResult.cshtml" />
     <Content Include="Views\StudentTest\_TestEntryForm.cshtml" />
     <Content Include="Views\StudentTest\_TestForm.cshtml" />
