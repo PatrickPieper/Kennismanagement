@@ -29,7 +29,7 @@
                 <ul class="nav navbar-nav">
                     @if (Request.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Dashboard", "Dashboard", "Home") </li>
+                        <li>@Html.ActionLink("Index", "Dashboard") </li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")

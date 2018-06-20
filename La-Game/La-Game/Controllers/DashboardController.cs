@@ -7,18 +7,18 @@ using System.Web.Mvc;
 namespace La_Game.Controllers
 {
     /// <summary>
-    /// Home/Dashboard Controller.
+    /// Dashboard Controller.
     /// </summary>
-    public class HomeController : Controller
+    public class DashboardController : Controller
     {
         // Database Context
         private LaGameDBContext db = new LaGameDBContext();
 
         /// <summary>
-        /// GET: /Home/Dashboard
+        /// GET: /Dashboard
         /// Go to the user dashboard.
         /// </summary>
-        public ActionResult Dashboard()
+        public ActionResult Index()
         {
             // Get member from database and go to dashboard
             Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
@@ -26,7 +26,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: /Home/GetLanguageOverview?memberId=[memberId]
+        /// GET: /Dashboard/GetLanguageOverview?memberId=[memberId]
         /// Return a PartialView containing a list of all languages that the member belongs to.
         /// </summary>
         /// <param name="memberId"> Id of the member. </param>

@@ -30,8 +30,8 @@ namespace La_Game.Controllers
             // Verification     
             if (Request.IsAuthenticated)
             {
-                // User is already logged in; redirect to homepage
-                return RedirectToAction("Index", "Home");
+                // User is already logged in; redirect to accountdetail page
+                return RedirectToAction("AccountDetails", "Authentication");
             }
 
             // Go to login page    
@@ -74,7 +74,7 @@ namespace La_Game.Controllers
                             authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, claimIdenties);
 
                             // Redirect to Dashboard  
-                            return RedirectToAction("Dashboard", "Home");
+                            return RedirectToAction("Index", "Dashboard");
                         }
                         catch (Exception ex)
                         {
