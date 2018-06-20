@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
-using La_Game.ViewModels;
 using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace La_Game.Controllers
@@ -26,13 +22,35 @@ namespace La_Game.Controllers
         AnswerOptionsController answerOptionsController = new AnswerOptionsController();
         private string fileUpdateName;
         private byte likert;
-        private int correctAnswer;
-
-        // GET: Questions
-        public ActionResult Index()
+        
+        /// <summary>
+        /// GET: /Questions
+        /// Get a overview of all active questions.
+        /// </summary>
+        /// <param name="filter"> Optional filter for admin to see deactivated items. </param>
+        public ActionResult Index(string filter)
         {
-            return View(db.Questions.ToList().Where(s => s.isHidden != 1));
-      
+            // Get all the active questions
+            var questions = db.Questions.Where(s => s.isHidden != 1);
+
+            // If the filter was given, use it
+            if (!String.IsNullOrEmpty(filter))
+            {
+                switch (filter)
+                {
+                    case "active":
+                        break;
+                    case "inactive":
+                        questions = db.Questions.Where(l => l.isHidden == 1);
+                        break;
+                    case "all":
+                        questions = db.Questions;
+                        break;
+                }
+            }
+
+            // Return view containing the questions
+            return View(questions.ToList());
         }
 
         // GET: Questions/Details/5
@@ -140,29 +158,29 @@ namespace La_Game.Controllers
                     string correct = Request.Form["correctAnswer"];
                     string[] bools = correct.Split(',');
 
+
                     int count = 0;
 
                     while (count <= answers.Length - 1)
-                    {                    
-                                            
+                    {
+                        AnswerOption answerOption = new AnswerOption();
+                        string text2 = Request.Form["correctAnswer"];
+                        answerOption.answerText = answers[count];
+                        answerOption.Question_idQuestion = max;
                         if (bools[count] == "1")
                         {
-                            correctAnswer = 1;
+                            answerOption.correctAnswer = 1;
                         }
                         else if (bools[count] == "0")
                         {
-                           correctAnswer = 0;
+                            answerOption.correctAnswer = 0;
                         }
 
-                        string answer =  answers[count];
-                        int questionId = max;
-                        string answerOption = "INSERT INTO AnswerOption(Question_idQuestion, correctAnswer, answerText) VALUES ('" + max + "','" + correctAnswer + "',N'" + answer + "')";
-                        db.Database.ExecuteSqlCommand(answerOption);
-                        
+                        answerOptionsController.Create(answerOption);
                         count++;
                     }
                 }
-                
+                db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
@@ -253,30 +271,64 @@ namespace La_Game.Controllers
             return View(question);
         }
 
-        // GET: Questions/Delete/5
+        /// <summary>
+        /// GET: /Questions/Delete?idQuestion=[idQuestion]
+        /// Find the question that has to be removed/activated and redirect to a seperate page for confirmation.
+        /// </summary>
+        /// <param name="idQuestion"> Id of the question. </param>
         public ActionResult Delete(int? id)
         {
+            // Check if id was given
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+
+            // Try to find the question, if it does not exist return 404
             Question question = db.Questions.Find(id);
             if (question == null)
             {
                 return HttpNotFound();
             }
+
+            // Return the page with the question information
             return View(question);
         }
 
-        // POST: Questions/Delete/5
+        /// <summary>
+        /// POST: /Questions/Delete?idQuestion=[idQuestion] 
+        /// After confirming that the question can be deleted, deactivate it in the database.
+        /// </summary>
+        /// <param name="idQuestion"> Id of the question. </param>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int idQuestion)
         {
-            Question question = db.Questions.Find(id);
-            question.isHidden = 1;
+            try
+            {
+                // Find the question
+                Question question = db.Questions.Find(idQuestion);
+                if (question.isHidden == 1)
+                {
+                    // If the question was hidden, reactivate it
+                    question.isHidden = 0;
+                }
+                else
+                {
+                    // If the question was not hidden, hide it
+                    question.isHidden = 1;
+                }
 
-            db.SaveChanges();
+                // Save the changes
+                db.Entry(question).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            catch
+            {
+                // Remove/Activation failed
+            }
+
+            // Redirect to index
             return RedirectToAction("Index");
         }
 

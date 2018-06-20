@@ -5,10 +5,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>MultipleChoice</h2>
+<h2>@ViewBag.questionListData[0].questionListName</h2>
 
 @{
-    <p> vraag @(ViewBag.index+1)</p>
+    <p> vraag @(ViewBag.index + 1)</p>
 
 
     if (ViewBag.questionData.Count > ViewBag.index)
@@ -48,12 +48,12 @@
                         }
                         else if (ViewBag.questionData[ViewBag.index].likertScale == 1)
                         {
-                            <button style="padding:0px; min-height:25px" class="col-xs-2"  type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px" src="https://lagame2.blob.core.windows.net/images/thumb-@(likertIndex).jpg" /></button>
+                            <button style="padding:0px; min-height:25px" class="col-xs-2" type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px" src="https://lagame2.blob.core.windows.net/images/thumb-@(likertIndex).jpg" /></button>
                             likertIndex++;
                         }
                         else if (ViewBag.questionData[ViewBag.index].likertScale == 2)
                         {
-                            <button style="padding:0px;" class="col-xs-2" type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px; min-width:25px; margin-left:auto; margin-right:auto;"  src="https://lagame2.blob.core.windows.net/images/emo-@(likertIndex).jpg" /></button>
+                            <button style="padding:0px;" class="col-xs-2" type="submit" value="@ViewBag.answerOptions[i].idAnswer" name="studentAnswerId"><img class="img-responsive" style="min-height:25px; min-width:25px; margin-left:auto; margin-right:auto;" src="https://lagame2.blob.core.windows.net/images/emo-@(likertIndex).jpg" /></button>
                             likertIndex++;
                         }
                         else if (ViewBag.questionData[ViewBag.index].likertScale == 3)
@@ -77,8 +77,5 @@
     TempData["participant"] = ViewBag.participant;
     TempData["questionData"] = ViewBag.questionData;
     TempData["questionListData"] = ViewBag.questionListData;
-    TempData["attempt"] = ViewBag.attempt;
     TempData["answerOptions"] = ViewBag.answerOptions;
-
-
 }

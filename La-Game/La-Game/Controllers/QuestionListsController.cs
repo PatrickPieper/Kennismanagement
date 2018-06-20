@@ -14,15 +14,54 @@ namespace La_Game.Controllers
         private LaGameDBContext db = new LaGameDBContext();
 
         /// <summary>
-        /// GET: QuestionLists
+        /// GET: /QuestionLists
         /// Get a overview of all active questionlists.
         /// </summary>
-        public ActionResult Index()
+        /// <param name="filter"> Optional filter for admin to see deactivated items. </param>
+        public ActionResult Index(string filter)
         {
-            // Return the list of all active lists
-            return View(db.QuestionLists.ToList().Where(s => s.isHidden != 1));
+            // Get all the active lists
+            var lists = db.QuestionLists.Where(s => s.isHidden != 1);
+
+            // If the filter was given, use it
+            if (!String.IsNullOrEmpty(filter))
+            {
+                switch (filter)
+                {
+                    case "active":
+                        break;
+                    case "inactive":
+                        lists = db.QuestionLists.Where(l => l.isHidden == 1);
+                        break;
+                    case "all":
+                        lists = db.QuestionLists;
+                        break;
+                }
+            }
+            
+            // Create a dictionary that shows if the list can be changed or not
+            Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
+            foreach (QuestionList list in lists)
+            {
+                if (db.QuestionResults.Where(r => r.QuestionList_idQuestionList == list.idQuestionList).Count() == 0)
+                {
+                    // If the list has not been used, it is true
+                    dictionary.Add(list.idQuestionList, true);
+                }
+                else
+                {
+                    // If the list has results, it is false
+                    dictionary.Add(list.idQuestionList, false);
+                }
+            }
+            // Put the dictionary in the viewbag
+            ViewBag.dictionary = dictionary;
+
+            // Return view containing the questionlists
+            return View(lists.ToList());
         }
 
+        #region Details and Create/Edit/Delete
         /// <summary>
         /// GET: QuestionLists/Details/[id]
         /// Get the details of a list and show it on a seperate page.
@@ -48,7 +87,23 @@ namespace La_Game.Controllers
             IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
             ViewBag.questions = data.ToList();
 
-            // Redirect to the detail page
+            // Create a dictionary that shows if the list can be changed or not
+            Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
+
+            if (db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).Count() == 0)
+            {
+                // If the list has not been used, it is true
+                dictionary.Add(questionList.idQuestionList, true);
+            }
+            else
+            {
+                // If the list has results, it is false
+                dictionary.Add(questionList.idQuestionList, false);
+            }
+            // Put the dictionary in the viewbag
+            ViewBag.dictionary = dictionary;
+
+            // Redirect to detail page
             return View(questionList);
         }
 
@@ -106,8 +161,18 @@ namespace La_Game.Controllers
                 return HttpNotFound();
             }
 
-            // Redirect to the edit page
-            return View(questionList);
+            // See if the questionlist has already been used by a participant
+            var results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
+            if (results.Count() == 0)
+            {
+                // Redirect to the edit page
+                return View(questionList);
+            }
+            else
+            {
+                // Redirect to overview
+                return RedirectToAction("Index", "QuestionLists");
+            }
         }
 
         /// <summary>
@@ -135,64 +200,95 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
-        /// GET: QuestionLists/Delete/[id]
+        /// GET: /QuestionLists/Delete?idQuestionList=[idQuestionList]
         /// Find the list that has to be deleted and redirect to a seperate deletion page for confirmation.
         /// </summary>
-        /// <param name="id"> Id of the list that has to be deactivated. </param>
-        public ActionResult Delete(int? id, int? listId)
+        /// <param name="idQuestionList"> Id of the list that has to be deactivated. </param>
+        public ActionResult Delete(int? idQuestionList, int? listId)
         {
             // Check if id was given
-            if (id == null)
+            if (idQuestionList == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the list, if it does not exist return 404
-            QuestionList questionList = db.QuestionLists.Find(id);
+            QuestionList questionList = db.QuestionLists.Find(idQuestionList);
             if (questionList == null)
             {
                 return HttpNotFound();
             }
 
-            // Return the delete page with the questionlist information
+            // Return the page with the questionlist information
             return View(questionList);
         }
 
         /// <summary>
-        /// POST: QuestionLists/Delete/[id]
+        /// POST: /QuestionLists/Delete?idQuestionList=[idQuestionList]
         /// After confirming that the questionlist can be deleted, deactivate it in the database.
         /// </summary>
-        /// <param name="id"> Id of the list that has to be deactivated. </param>
+        /// <param name="idQuestionList"> Id of the list that has to be deactivated. </param>
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(int idQuestionList)
         {
             try
             {
-                // Find the questionlist and set it to hidden
-                QuestionList questionList = db.QuestionLists.Find(id);
-                questionList.isHidden = 1;
+                // Find the questionlist
+                QuestionList questionList = db.QuestionLists.Find(idQuestionList);
 
-                // Check if the questionlist is active, if true deactivate the list
-                if (questionList.isActive == 1)
+                // See if the questionlist has already been used by a participant
+                var results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
+                if (results.Count() == 0)
                 {
-                    questionList.participationCode = null;
-                    questionList.isActive = 0;
-                }
+                    if (questionList.isHidden == 1)
+                    {
+                        // If the list was hidden, reactivate it
+                        questionList.isHidden = 0;
+                    }
+                    else
+                    {
+                        // If the list was not hidden, hide it
+                        questionList.isHidden = 1;
 
-                // Save the changes
-                db.Entry(questionList).State = EntityState.Modified;
-                db.SaveChanges();
+                        // Check if the questionlist is active, if true deactivate the list
+                        if (questionList.isActive == 1)
+                        {
+                            questionList.participationCode = null;
+                            questionList.isActive = 0;
+                        }
+                    }
+
+                    // Save the changes
+                    db.Entry(questionList).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                else
+                {
+                    // Remove the questionorder
+                    string deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    db.Database.ExecuteSqlCommand(deleteQuestionOrder);
+
+                    // Remove the questions from the list
+                    string deleteQuestions = "DELETE FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    db.Database.ExecuteSqlCommand(deleteQuestions);
+
+                    // After removing the order and the questions, delete the list
+                    db.QuestionLists.Remove(questionList);
+                    db.SaveChanges();
+                }
             }
             catch
             {
-                // Delete failed
+                // Remove/Activation failed
             }
 
             // Redirect to index
             return RedirectToAction("Index");
         }
+        #endregion
 
+        #region Functions for adding and removing questions within the list
         /// <summary>
         /// GET: QuestionLists/ModifyQuestionList/[id]
         /// Navigate to page where questions can be added and/or removed from the list.
@@ -360,7 +456,7 @@ namespace La_Game.Controllers
             {
                 // Failed to delete
             }
-            
+
             // Redirect back to the list to reload the data
             return RedirectToAction("ModifyQuestionList", new { id = collection.Get("QuestionList_idQuestionList") });
         }
@@ -389,6 +485,7 @@ namespace La_Game.Controllers
             ViewBag.listId = id;
             return PartialView("_AddQuestionTable", allQuestions);
         }
+        #endregion
 
         /// <summary>
         /// GET: QuestionLists/GetQuestionListTableForLesson/[id]
@@ -400,10 +497,75 @@ namespace La_Game.Controllers
             // Get the lists from the database
             String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + ");";
             IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
-            
+
             // Set the lessonId and return the PartialView
             ViewBag.lessonID = idLesson;
             return PartialView("_AddQuestionListLessonTable", data);
+        }
+
+        /// <summary>
+        /// POST: /QuestionLists/ActivateList
+        /// </summary>
+        /// <param name="collection"> Collection containing the necessary ids and a ActivationString </param>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult ActivateList([Bind(Include = "idQuestionList,idLesson,ActivationString")] FormCollection collection)
+        {
+            // Check if id was given
+            if (collection.Get("idQuestionList") == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Try to find the list, if it does not exist return 404
+            QuestionList questionList = db.QuestionLists.Find(int.Parse(collection.Get("idQuestionList")));
+            if (questionList != null)
+            {
+                // Check if you want to activate or deactivate the list
+                if (collection.Get("ActivationString") == "activate" || collection.Get("ActivationString") == null)
+                {
+                    // Create a participationcode
+                    int participationCode;
+                    Random rng = new Random();
+                    while (true)
+                    {
+                        participationCode = rng.Next(1000, 9999);
+                        string sqlstring = "SELECT * FROM QuestionList WHERE participationCode = " + int.Parse(collection.Get("idQuestionList"));
+                        List<QuestionList> lists = db.QuestionLists.SqlQuery(sqlstring).ToList();
+
+                        if (lists.Count == 0)
+                        {
+                            // Activate the list
+                            questionList.participationCode = participationCode.ToString();
+                            questionList.isActive = 1;
+
+                            // Change the database entry and save the changes
+                            db.Entry(questionList).State = EntityState.Modified;
+                            db.SaveChanges();
+
+                            break;
+                        }
+                    }
+                }
+                else if (collection.Get("ActivationString") == "deactivate")
+                {
+                    // Deactivate the list
+                    questionList.participationCode = null;
+                    questionList.isActive = 0;
+
+                    // Change the database entry and save the changes
+                    db.Entry(questionList).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+
+                // Return to the view
+                return RedirectToAction("Details", "Lessons", new { idLesson = collection.Get("idLesson") });
+            }
+            else
+            {
+                // Questionlist was not found
+                return HttpNotFound();
+            }
         }
 
         protected override void Dispose(bool disposing)

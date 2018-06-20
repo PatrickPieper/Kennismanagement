@@ -47,14 +47,29 @@
                 <td>
                     @if (item.isActive == 0 || item.isActive == null)
                     {
-                        <button type="submit" value="Activate" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-plus"></span> Activate
-                        </button>
+                        using (Html.BeginForm("ActivateList", "QuestionLists", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" value="Activate" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-add"></span> Activate
+                            </button>
+                            <input type="hidden" name="idQuestionList" value="@item.idQuestionList" />
+                            <input type="hidden" name="idLesson" value="@Html.Raw(ViewBag.lessonID)" />
+                            <input type="hidden" name="ActivationString" value="@Html.Raw("activate")" />
+                        }
                     }
                     else
-                    { <button type="submit" value="Activate" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-plus"></span> Deactivate
-                        </button>
+                    {
+                        using (Html.BeginForm("ActivateList", "QuestionLists", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" value="Deactivate" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-remove"></span> Deactivate
+                            </button>
+                            <input type="hidden" name="idQuestionList" value="@item.idQuestionList" />
+                            <input type="hidden" name="idLesson" value="@Html.Raw(ViewBag.lessonID)" />
+                            <input type="hidden" name="ActivationString" value="@Html.Raw("deactivate")" />
+                        }
                     }
                 </td>
                 <td>

@@ -1,17 +1,17 @@
 ﻿@{
-    Layout = null;
+    ViewBag.Title = "Student Test";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title></title>
-</head>
-<body>
-    <div>
-    
+<div>
+    <h2>Student Test</h2>
+    <hr />
+    <div id="partialContainer">
+        @{Html.RenderAction("TestEntryForm", "StudentTest", new { });}
     </div>
-</body>
-</html>
+</div>
+@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @Scripts.Render("~/Scripts/studenttest.js")
+
+}

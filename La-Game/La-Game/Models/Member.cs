@@ -26,6 +26,7 @@ namespace La_Game.Models
         public string firstname { get; set; }
         public string lastname { get; set; }
         public byte isAdmin { get; set; }
+        public Nullable<byte> isActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Language_Member> Language_Member { get; set; }
