@@ -1,0 +1,63 @@
+﻿@{
+    ViewBag.Title = "Effectiveness Lessons";
+}
+
+<h2> Effectiveness Lessons </h2>
+
+<div>
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="form-group">
+                <h4>Select Lesson</h4>
+                @{Html.RenderAction("CompareLessonSelection", "Statistics", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID });}
+                <canvas id="barChart" width="400" height="150"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("LessonStatistics", "Statistics") + "'");">
+        <span class="glyphicon glyphicon-menu-left"></span> Back to Lesson Statistics
+    </button>
+</p>
+@section scripts {
+    <script src="~/Scripts/Chart.js"></script>
+    <script src="~/Scripts/Common.js"></script>
+    <script>
+        var myBarChart;
+        createChart();
+
+        function createChart()
+        {
+            var c = document.getElementById("barChart");
+            var ctx = c.getContext("2d");
+            myBarChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: null,
+                    datasets: null,
+                },
+                options: {
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                suggestedMax: 10
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/lessonselectionrefresh.js")
+}

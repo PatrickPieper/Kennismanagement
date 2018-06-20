@@ -14,6 +14,7 @@ namespace La_Game.Models
         public string borderColor { get; set; }
         public string hoverBackgroundColor { get; set; }
         public string borderWidth { get; set; }
+        public bool fill { get; set; }
         public int[] data { get; set; }
     }
 }

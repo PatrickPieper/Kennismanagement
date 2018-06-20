@@ -38,6 +38,11 @@ namespace La_Game.Controllers
         {
             return View();
         }
+        // GET: EffectivenessLesson
+        public ActionResult EffectivenessLesson()
+        {
+            return View();
+        }
 
         public ActionResult QuestionListChoice()
         {
@@ -257,7 +262,7 @@ namespace La_Game.Controllers
             _dataSet.Add(new Datasets()
             {
                 label = "Correct Answers",
-                data = new int[] {queryResult.correctCount },
+                data = new int[] { queryResult.correctCount },
                 backgroundColor = ColorTranslator.ToHtml(Color.Green),
                 borderColor = ColorTranslator.ToHtml(Color.Green),
                 hoverBackgroundColor = ColorTranslator.ToHtml(Color.Green),
@@ -268,14 +273,70 @@ namespace La_Game.Controllers
                 label = "Wrong Answers",
                 data = new int[] { queryResult.wrongCount },
                 backgroundColor = ColorTranslator.ToHtml(Color.Red),
-                borderColor =  ColorTranslator.ToHtml(Color.Red),
+                borderColor = ColorTranslator.ToHtml(Color.Red),
                 hoverBackgroundColor = ColorTranslator.ToHtml(Color.Red),
                 borderWidth = "1"
             });
 
             return Json(_dataSet, JsonRequestBehavior.AllowGet);
         }
+        public JsonResult LineChartDataEffectivenessLesson(int? idLesson)
+        {
+            var random = new Random();
+            //Query to select questions that were answered wrongly the most, with their amount
+            StringBuilder sqlQueryString = new StringBuilder();
+            sqlQueryString.Append("select q.idQuestion, q.questionText,count(*) as 'wrongCount' from Question as q " +
+                                "join AnswerOption as ao on q.idQuestion = ao.Question_idQuestion " +
+                                "join QuestionResult as qr on ao.idAnswer = qr.AnswerOption_idAnswer " +
+                                "left join QuestionList_Question as qlq on qlq.Question_idQuestion = q.idQuestion " +
+                                "left join QuestionList as ql on qlq.QuestionList_idQuestionList = ql.idQuestionList " +
+                                "left join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList " +
+                                "left join Lesson as le on lq.Lesson_idLesson = le.idLesson " +
+                                "left join[Language] as la on le.Language_idLanguage = la.idLanguage " +
+                                "where ao.correctAnswer = 0 ");
+            //Append the filter values to the query, if set
+            if (idLesson != null && idLesson != -1)
+            {
+                sqlQueryString.Append(" where le.idLesson = " + idLesson);
+            }
+            sqlQueryString.Append(" group by q.idQuestion, q.questionText");
+            var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQueryString.ToString()).OrderByDescending(o => o.wrongCount).ToList();
 
+            //Turn query result into two separate list for use as data/labels for chart.js
+            List<string> questionTexts = new List<string>();
+            foreach (CommonWrongQuestionResult entry in queryResult)
+            {
+                questionTexts.Add(entry.idQuestion + ":" + entry.questionText);
+            }
+            List<int> questionData = new List<int>();
+            foreach (CommonWrongQuestionResult entry in queryResult)
+            {
+                questionData.Add(entry.wrongCount);
+            }
+            //For every result, generate a random bar color
+            List<string> barColors = new List<string>();
+            foreach (CommonWrongQuestionResult entry in queryResult)
+            {
+                barColors.Add(String.Format("#{0:X6}", random.Next(0x1000000)));
+            }
+
+            //Create new chart and dataset
+            Chart _chart = new Chart();
+            _chart.labels = questionTexts.ToArray();
+            _chart.datasets = new List<Datasets>();
+            List<Datasets> _dataSet = new List<Datasets>();
+            _dataSet.Add(new Datasets()
+            {
+                label = "Number of Wrong Answers",
+                data = questionData.ToArray(),
+                backgroundColor = barColors[0],
+                borderColor = barColors[0],
+                hoverBackgroundColor = barColors[0],
+                borderWidth = "1"
+            });
+            _chart.datasets = _dataSet;
+            return Json(_chart, JsonRequestBehavior.AllowGet);
+        }
         #endregion JsonResults
         protected override void Dispose(bool disposing)
         {
