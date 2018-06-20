@@ -39,6 +39,24 @@ namespace La_Game.Controllers
                 }
             }
             
+            // Create a dictionary that shows if the list can be changed or not
+            Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
+            foreach (QuestionList list in lists)
+            {
+                if (db.QuestionResults.Where(r => r.QuestionList_idQuestionList == list.idQuestionList).Count() == 0)
+                {
+                    // If the list has not been used, it is true
+                    dictionary.Add(list.idQuestionList, true);
+                }
+                else
+                {
+                    // If the list has results, it is false
+                    dictionary.Add(list.idQuestionList, false);
+                }
+            }
+            // Put the dictionary in the viewbag
+            ViewBag.dictionary = dictionary;
+
             // Return view containing the questionlists
             return View(lists.ToList());
         }
@@ -69,7 +87,23 @@ namespace La_Game.Controllers
             IEnumerable<Question> data = db.Database.SqlQuery<Question>(selectQuery);
             ViewBag.questions = data.ToList();
 
-            // Redirect to the detail page
+            // Create a dictionary that shows if the list can be changed or not
+            Dictionary<int, bool> dictionary = new Dictionary<int, bool>();
+
+            if (db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).Count() == 0)
+            {
+                // If the list has not been used, it is true
+                dictionary.Add(questionList.idQuestionList, true);
+            }
+            else
+            {
+                // If the list has results, it is false
+                dictionary.Add(questionList.idQuestionList, false);
+            }
+            // Put the dictionary in the viewbag
+            ViewBag.dictionary = dictionary;
+
+            // Redirect to detail page
             return View(questionList);
         }
 
@@ -127,8 +161,18 @@ namespace La_Game.Controllers
                 return HttpNotFound();
             }
 
-            // Redirect to the edit page
-            return View(questionList);
+            // See if the questionlist has already been used by a participant
+            var results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
+            if (results.Count() == 0)
+            {
+                // Redirect to the edit page
+                return View(questionList);
+            }
+            else
+            {
+                // Redirect to overview
+                return RedirectToAction("Index", "QuestionLists");
+            }
         }
 
         /// <summary>
@@ -192,27 +236,47 @@ namespace La_Game.Controllers
             {
                 // Find the questionlist
                 QuestionList questionList = db.QuestionLists.Find(idQuestionList);
-                if (questionList.isHidden == 1)
+
+                // See if the questionlist has already been used by a participant
+                var results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
+                if (results.Count() == 0)
                 {
-                    // If the list was hidden, reactivate it
-                    questionList.isHidden = 0;
+                    if (questionList.isHidden == 1)
+                    {
+                        // If the list was hidden, reactivate it
+                        questionList.isHidden = 0;
+                    }
+                    else
+                    {
+                        // If the list was not hidden, hide it
+                        questionList.isHidden = 1;
+
+                        // Check if the questionlist is active, if true deactivate the list
+                        if (questionList.isActive == 1)
+                        {
+                            questionList.participationCode = null;
+                            questionList.isActive = 0;
+                        }
+                    }
+
+                    // Save the changes
+                    db.Entry(questionList).State = EntityState.Modified;
+                    db.SaveChanges();
                 }
                 else
                 {
-                    // If the list was not hidden, hide it
-                    questionList.isHidden = 1;
+                    // Remove the questionorder
+                    string deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    db.Database.ExecuteSqlCommand(deleteQuestionOrder);
 
-                    // Check if the questionlist is active, if true deactivate the list
-                    if (questionList.isActive == 1)
-                    {
-                        questionList.participationCode = null;
-                        questionList.isActive = 0;
-                    }
+                    // Remove the questions from the list
+                    string deleteQuestions = "DELETE FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    db.Database.ExecuteSqlCommand(deleteQuestions);
+
+                    // After removing the order and the questions, delete the list
+                    db.QuestionLists.Remove(questionList);
+                    db.SaveChanges();
                 }
-
-                // Save the changes
-                db.Entry(questionList).State = EntityState.Modified;
-                db.SaveChanges();
             }
             catch
             {
