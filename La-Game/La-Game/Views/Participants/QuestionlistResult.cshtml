@@ -7,6 +7,7 @@
     var results = ViewBag.results;
     var attempts = ViewBag.attempts;
     var attemptCount = ViewBag.attemptCount;
+    int count = 1;
 }
 
 <h2>@qlist</h2>
@@ -26,13 +27,14 @@
             @foreach (var result in results)
             {
                 <tr>
-                    <td> </td>
+                    <td> @Html.Raw(result[1].questionText)</td>
+                    
                     @for (int i = 1; i <= attemptCount; i++)
                     {
                         if (result.ContainsKey(i))
                         {
                             var value = result[i];
-                            <td>@Html.Raw(value.answerText)</td>
+                            <td>@Html.Raw(value.answerText) (@Html.Raw(value.totalTime))</td>
                         }
                         else
                         {

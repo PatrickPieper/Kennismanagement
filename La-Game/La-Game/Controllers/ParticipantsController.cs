@@ -221,7 +221,7 @@ namespace La_Game.Controllers
             StringBuilder sqlQueryString = new StringBuilder();
             int i = 1;
             
-            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt from QuestionResult as qr" +
+            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt, datediff(s, qr.startTime, qr.endTime) as totalTime from QuestionResult as qr" +
                 " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
                 " join Question as q on q.idQuestion = ao.Question_idQuestion" +
                 " where qr.QuestionList_idQuestionList = " +  questionlistId +
@@ -242,7 +242,14 @@ namespace La_Game.Controllers
 
 
             ViewBag.attempts = attempts;
-            ViewBag.attemptCount = attempts.Last();
+            if (!attempts.Count().Equals(0))
+            {
+                ViewBag.attemptCount = attempts.Last();
+            } else
+            {
+                ViewBag.attemptCount = 0;
+            }
+            
             foreach(var question in questions)
             {
                 List<QuestionListResult> questionListResults = results.Where(qr => qr.idQuestion.Equals(question)).ToList();
