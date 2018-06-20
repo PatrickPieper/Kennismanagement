@@ -7,6 +7,7 @@ namespace La_Game.Models
 {
     public class QuestionListStatisticsModel
     {
+        public int IdParticipant { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public DateTime StartTime { get; set; }
