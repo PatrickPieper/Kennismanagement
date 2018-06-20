@@ -38,7 +38,7 @@ public class AuthorizeAdmin : AuthorizeAttribute
         // Check if the adminlist contains the current user
         if (!adminList.Contains(currentUser))
         {
-            context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Authentication", action = "AccountDetails" }));
+            context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Authentication", action = "Forbidden" }));
         }
     }
 }

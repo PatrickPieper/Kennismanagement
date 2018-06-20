@@ -656,6 +656,7 @@
     <Content Include="Views\Statistics\LessonStatistics.cshtml" />
     <Content Include="Views\Statistics\QuestionListChoice.cshtml" />
     <Content Include="Views\Statistics\QuestionListStatistics.cshtml" />
+    <Content Include="Views\Shared\Forbidden.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

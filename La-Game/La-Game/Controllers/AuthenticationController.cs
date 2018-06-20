@@ -181,5 +181,14 @@ namespace La_Game.Controllers
             return View(model);
         }
         #endregion
+
+        /// <summary>  
+        /// GET: /Authentication/Forbidden 
+        /// Redirect to page when member is not authorized to perform action.
+        /// </summary>  
+        public ActionResult Forbidden()
+        {  
+            return View();
+        }
     }
 }
