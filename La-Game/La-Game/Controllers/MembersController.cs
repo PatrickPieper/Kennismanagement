@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using La_Game.Models;
+using System.Web.Helpers;
 
 namespace La_Game.Controllers
 {
@@ -74,7 +75,10 @@ namespace La_Game.Controllers
             {
                 try
                 {
-                    // If valid, add it to the database
+                    // Hash the password
+                    member.password = Crypto.HashPassword(member.password);
+                    
+                    // If everything is valid, add it to the database
                     db.Members.Add(member);
                     db.SaveChanges();
 
@@ -89,7 +93,7 @@ namespace La_Game.Controllers
             }
 
             // If not valid, stay on the register page with the current data
-            return View(member);
+            return View();
         }
 
         /// <summary>

@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using La_Game.Models;
 using Microsoft.AspNet.Identity;
@@ -51,21 +52,22 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // Try to find the loginInfo in the database   
-                var loginInfo = db.Members.Where(s => s.email == model.Email && s.password == model.Password);
+                // Check the email that was entered and get the hashed password
+                var login = db.Members.Where(e => e.email == model.Email).First();
+                var hashedPassword = login.password;
 
                 // Verification
-                if (loginInfo != null && loginInfo.Count() > 0)
+                if (login != null && Crypto.VerifyHashedPassword(hashedPassword, model.Password))
                 {
-                    if (loginInfo.First().isActive == 1)
+                    if (login.isActive == 1)
                     {
                         try
                         {
                             // Setting  
                             var claims = new List<Claim>
                             {
-                                new Claim(ClaimTypes.Name, loginInfo.First().email),
-                                new Claim(ClaimTypes.Role, loginInfo.First().isAdmin.ToString())
+                                new Claim(ClaimTypes.Name, login.email),
+                                new Claim(ClaimTypes.Role, login.isAdmin.ToString())
                             };
                             var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
                             var authenticationManager = Request.GetOwinContext().Authentication;
@@ -184,10 +186,10 @@ namespace La_Game.Controllers
 
         /// <summary>  
         /// GET: /Authentication/Forbidden 
-        /// Redirect to page when member is not authorized to perform action.
+        /// Redirect to page when member is not authorized to perform the action.
         /// </summary>  
         public ActionResult Forbidden()
-        {  
+        {
             return View();
         }
     }
