@@ -250,30 +250,35 @@ namespace La_Game.Controllers
                 sqlQueryString.Append(" and le.idLesson = " + idLesson);
             }
             sqlQueryString.Append(" group by le.idLesson");
-            var queryResult = db.Database.SqlQuery<CompareLessonResult>(sqlQueryString.ToString()).First();
+            var queryResult = db.Database.SqlQuery<CompareLessonResult>(sqlQueryString.ToString());
 
-            //Create two datasets, one for correct, one for wrong answers
-            List<Datasets> _dataSet = new List<Datasets>();
-            _dataSet.Add(new Datasets()
+            if (queryResult.Count()!= 0)
             {
-                label = "Correct Answers",
-                data = new int[] {queryResult.correctCount },
-                backgroundColor = ColorTranslator.ToHtml(Color.Green),
-                borderColor = ColorTranslator.ToHtml(Color.Green),
-                hoverBackgroundColor = ColorTranslator.ToHtml(Color.Green),
-                borderWidth = "1"
-            });
-            _dataSet.Add(new Datasets()
-            {
-                label = "Wrong Answers",
-                data = new int[] { queryResult.wrongCount },
-                backgroundColor = ColorTranslator.ToHtml(Color.Red),
-                borderColor =  ColorTranslator.ToHtml(Color.Red),
-                hoverBackgroundColor = ColorTranslator.ToHtml(Color.Red),
-                borderWidth = "1"
-            });
+                var firstQueryResult = queryResult.First();
+                List<Datasets> _dataSet = new List<Datasets>();
+                //Create two datasets, one for correct, one for wrong answers
+                _dataSet.Add(new Datasets()
+                {
+                    label = "Correct Answers",
+                    data = new int[] { firstQueryResult.correctCount },
+                    backgroundColor = ColorTranslator.ToHtml(Color.Green),
+                    borderColor = ColorTranslator.ToHtml(Color.Green),
+                    hoverBackgroundColor = ColorTranslator.ToHtml(Color.Green),
+                    borderWidth = "1"
+                });
+                _dataSet.Add(new Datasets()
+                {
+                    label = "Wrong Answers",
+                    data = new int[] { firstQueryResult.wrongCount },
+                    backgroundColor = ColorTranslator.ToHtml(Color.Red),
+                    borderColor = ColorTranslator.ToHtml(Color.Red),
+                    hoverBackgroundColor = ColorTranslator.ToHtml(Color.Red),
+                    borderWidth = "1"
+                });
+                return Json(_dataSet, JsonRequestBehavior.AllowGet);
+            }
 
-            return Json(_dataSet, JsonRequestBehavior.AllowGet);
+            return Json(null, JsonRequestBehavior.AllowGet);
         }
 
         #endregion JsonResults
