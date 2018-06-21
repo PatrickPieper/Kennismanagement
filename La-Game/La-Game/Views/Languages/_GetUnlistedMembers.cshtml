@@ -1,0 +1,42 @@
+﻿@model IEnumerable<La_Game.Models.Member>
+
+<table id="unlistedMembers" class="table table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>
+                Email
+            </th>
+            <th>
+                Name
+            </th>
+            <th></th>
+        </tr>
+    <thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            var link = Url.Action("Details", "Members", new { idMember = item.idMember });
+            <tr>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.email)
+                </td>
+                <td onclick="Redirect('@link')">
+                    @Html.DisplayFor(modelItem => item.firstname) @Html.DisplayFor(modelItem => item.lastname)
+                </td>
+                <td>
+                    @using (Html.BeginForm("ManageMembers", "Languages", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                            <span class="glyphicon glyphicon-plus"></span> Add
+                        </button>
+                        <input type="hidden" name="Language_idLanguage" value="@Html.Raw(ViewBag.idLanguage)" />
+                        <input type="hidden" name="Member_idMember" value="@Html.Raw(item.idMember)" />
+                        <input type="hidden" name="OptionString" value="Add" />
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+
+</table>

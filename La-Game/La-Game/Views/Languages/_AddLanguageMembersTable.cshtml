@@ -9,7 +9,6 @@
             <th>
                 Name
             </th>
-            <th></th>
         </tr>
     </thead>
 
@@ -22,15 +21,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.firstname) @Html.DisplayFor(modelItem => item.lastname)
-                </td>
-                <td>
-                    @using (Html.BeginForm("RemoveMemberFromLanguage", "Languages", FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-                        <button type="submit" value="Remove" class="btn btn-default btn-sm">
-                            <span class="glyphicon glyphicon-remove"></span> Remove
-                        </button>
-                    }
                 </td>
             </tr>
         }

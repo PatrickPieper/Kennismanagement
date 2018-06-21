@@ -652,6 +652,13 @@
     <Content Include="Views\Statistics\QuestionListChoice.cshtml" />
     <Content Include="Views\Statistics\QuestionListStatistics.cshtml" />
     <Content Include="Views\Shared\Forbidden.cshtml" />
+    <Content Include="Views\Languages\ManageMemberList.cshtml" />
+    <Content Include="Views\Languages\_GetUnlistedMembers.cshtml" />
+    <Content Include="Views\Members\Activation.cshtml" />
+    <Content Include="Views\Members\Details.cshtml" />
+    <Content Include="Views\Members\Edit.cshtml" />
+    <Content Include="Views\Members\Index.cshtml" />
+    <Content Include="Views\Members\Register.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

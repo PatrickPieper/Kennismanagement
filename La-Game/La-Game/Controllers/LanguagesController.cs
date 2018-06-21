@@ -233,6 +233,110 @@ namespace La_Game.Controllers
             return PartialView("_AddLanguageMembersTable", data);
         }
 
+        /// <summary>
+        /// GET: /Languages/ManageMemberList?idLanguage=[idLanguage]
+        /// Navigate to page where the admin can manage the members of a language.
+        /// </summary>
+        /// <param name="idLanguage"> Id of the idLanguage. </param>
+        [AuthorizeAdmin]
+        public ActionResult ManageMemberList(int? idLanguage)
+        {
+            // Check if id was given
+            if (idLanguage == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Get the current members from the database
+            String selectQuery = "SELECT * FROM Member WHERE idMember IN(SELECT Member_idMember FROM Language_Member WHERE Language_idLanguage = " + idLanguage + ");";
+            IEnumerable<Member> members = db.Database.SqlQuery<Member>(selectQuery);
+
+            // Give the idLanguage in the ViewBag and go to the page
+            ViewBag.idLanguage = idLanguage;
+            return View(members);
+        }
+
+        /// <summary>
+        /// GET: /Languages/GetUnlistedMembers?idLanguage=[idLanguage]
+        /// Return a PartialView containing a list of all members that are not in the language.
+        /// </summary>
+        /// <param name="idLanguage"> Id of the language. </param>
+        [AuthorizeAdmin]
+        public PartialViewResult GetUnlistedMembers(int? idLanguage)
+        {
+            // Get list of all current members
+            List<Member> memberList = (from m in db.Members select m).ToList();
+
+            // Get all the members that currently have access to the language
+            String selectQuery = "SELECT * FROM Member WHERE idMember IN(SELECT Member_idMember FROM Language_Member WHERE Language_idLanguage = " + idLanguage + ");";
+            IEnumerable<Member> members = db.Database.SqlQuery<Member>(selectQuery);
+
+            // Compare the two lists and remove all the members that are already have access
+            foreach (Member member in members)
+            {
+                memberList.RemoveAll(item => item.idMember == member.idMember);
+            }
+
+            // Give the idLanguage in the ViewBag and return the PartialView
+            ViewBag.idLanguage = idLanguage;
+            return PartialView("_GetUnlistedMembers", memberList);
+        }
+
+        /// <summary>
+        /// POST: /Languages/ManageMembers
+        /// Manage the database entries that connect the member to the language.
+        /// </summary>
+        /// <param name="collection"> Entry that has to be added or removed. </param>
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AuthorizeAdmin]
+        public ActionResult ManageMembers([Bind(Include = "Language_idLanguage,Member_idMember,OptionString")] FormCollection collection)
+        {
+            try
+            {
+                // Check if the neccesary ids were given
+                if (collection.Get("Language_idLanguage") == null || collection.Get("Member_idMember") == null || collection.Get("OptionString") == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+
+                // Check if the entry has to be added or removed
+                if (collection.Get("OptionString") == "Remove")
+                {
+                    // Delete the connection between the language and the member
+                    var deleteQuestionListEntry = "DELETE FROM Language_Member WHERE Language_idLanguage = " + collection.Get("Language_idLanguage") + " AND Member_idMember = " + collection.Get("Member_idMember") + ";";
+                    db.Database.ExecuteSqlCommand(deleteQuestionListEntry);
+                    
+                    // Save the changes
+                    db.SaveChanges();
+                }
+                else if (collection.Get("OptionString") == "Add")
+                {
+                    // Create the connection between the language and the member and add it to the database
+                    Language_Member language_member = new Language_Member
+                    {
+                        Language_idLanguage = int.Parse(collection.Get("Language_idLanguage")),
+                        Member_idMember = int.Parse(collection.Get("Member_idMember"))
+                    };
+                    db.Language_Member.Add(language_member);
+                    
+                    // Save the changes
+                    db.SaveChanges();
+                }
+                else
+                {
+                    // Invalid
+                }
+            }
+            catch
+            {
+                // Action Failed
+            }
+
+            // Redirect back to the list to reload the data
+            return RedirectToAction("ManageMemberList", new { idLanguage = collection.Get("Language_idLanguage") });
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

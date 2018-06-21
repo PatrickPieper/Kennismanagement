@@ -18,7 +18,7 @@ namespace La_Game
 }
 
 /// <summary>
-/// Custom authorization attribute that checks if the user is has admin rights.
+/// Custom authorization attribute that checks if the user has admin rights.
 /// </summary>
 public class AuthorizeAdmin : AuthorizeAttribute
 {
