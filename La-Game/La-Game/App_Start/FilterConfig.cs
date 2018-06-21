@@ -11,7 +11,7 @@ namespace La_Game
         public static void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             // Filters
-            //filters.Add(new HandleErrorAttribute());
+            filters.Add(new HandleErrorAttribute());
             //filters.Add(new AuthorizeAttribute());
         }
     }
