@@ -223,6 +223,10 @@
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CompareLessonResult.cs" />
+    <Compile Include="Models\QuestionListInfoModel.cs" />
+    <Compile Include="Models\QuestionListResult.cs" />
+    <Compile Include="Models\QuestionListStatisticsModel.cs" />
+    <Compile Include="Models\TestQuestionData.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
     <Compile Include="Models\DatabaseModel.Context.cs">
@@ -267,9 +271,6 @@
     <Compile Include="Models\QuestionList.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\QuestionListInfoModel.cs" />
-    <Compile Include="Models\QuestionListResult.cs" />
-    <Compile Include="Models\QuestionListStatisticsModel.cs" />
     <Compile Include="Models\QuestionList_Question.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
@@ -569,6 +570,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\lessonselectionrefresh.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\studenttest.js" />
     <Content Include="Scripts\ValidateFileUpload.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -646,14 +648,14 @@
     <Content Include="Views\Authentication\Login.cshtml" />
     <Content Include="Views\Authentication\AccountOverview.cshtml" />
     <Content Include="Views\Participants\QuestionlistResult.cshtml" />
-    <Content Include="Views\Statistics\LessonStatistics.cshtml" />
-    <Content Include="Views\Statistics\CompareLessons.cshtml" />
+    <Content Include="Views\StudentTest\_TestEntryForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestQuestionForm.cshtml" />
+    <Content Include="Views\StudentTest\_TestCompleted.cshtml" />
     <Content Include="Views\Statistics\_CompareLessonSelection.cshtml" />
-    <Content Include="Views\Members\Activation.cshtml" />
-    <Content Include="Views\Members\Details.cshtml" />
-    <Content Include="Views\Members\Edit.cshtml" />
-    <Content Include="Views\Members\Index.cshtml" />
-    <Content Include="Views\Members\Register.cshtml" />
+    <Content Include="Views\Statistics\CompareLessons.cshtml" />
+    <Content Include="Views\Statistics\LessonStatistics.cshtml" />
+    <Content Include="Views\Statistics\QuestionListChoice.cshtml" />
     <Content Include="Views\Statistics\QuestionListStatistics.cshtml" />
   </ItemGroup>
   <ItemGroup>

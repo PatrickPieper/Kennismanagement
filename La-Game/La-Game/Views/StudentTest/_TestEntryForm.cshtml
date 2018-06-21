@@ -1,0 +1,34 @@
+﻿@model La_Game.Models.StartListModel
+<div class="col-md-8">
+    <section id="loginForm">
+        @using (Html.BeginForm("TestEntryForm", "StudentTest", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+            <h4>Enter Test</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(m => m.Studentcode, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Studentcode, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Studentcode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Participationcode, new { @class = "col-md-2 control-label" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(m => m.Participationcode, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(m => m.Participationcode, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="button" class="btn btn-default" id="btntestentry">
+                        <span class="glyphicon glyphicon-chevron-right"></span> Go
+                    </button>
+                </div>
+            </div>
+        }
+    </section>
+</div>
+<script src="~/Scripts/studenttest.js"></script>
