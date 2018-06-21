@@ -64,7 +64,7 @@
                     </button>
                     @if (item.isHidden == 1)
                     {
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questionss", new { idQuestion = item.idQuestion }) + "'");">
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questions", new { idQuestion = item.idQuestion }) + "'");">
                             <span class="glyphicon glyphicon-plus"></span> Activate
                         </button>
                     }

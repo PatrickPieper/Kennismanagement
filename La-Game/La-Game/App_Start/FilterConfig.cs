@@ -12,7 +12,7 @@ namespace La_Game
         {
             // Filters
             filters.Add(new HandleErrorAttribute());
-            filters.Add(new AuthorizeAttribute());
+            //filters.Add(new AuthorizeAttribute());
         }
     }
 }

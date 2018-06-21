@@ -50,7 +50,6 @@
     <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
 <script src="~/Scripts/Chart.js"></script>
-<script src="~/Scripts/Common.js"></script>
 <script>
     var labels = @Html.Raw(Json.Encode(ViewBag.attempts));
     var max = @Html.Raw(Json.Encode(ViewBag.numOfQuestions));

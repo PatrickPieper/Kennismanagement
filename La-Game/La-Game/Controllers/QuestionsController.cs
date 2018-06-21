@@ -276,16 +276,16 @@ namespace La_Game.Controllers
         /// Find the question that has to be removed/activated and redirect to a seperate page for confirmation.
         /// </summary>
         /// <param name="idQuestion"> Id of the question. </param>
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? idQuestion)
         {
             // Check if id was given
-            if (id == null)
+            if (idQuestion == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the question, if it does not exist return 404
-            Question question = db.Questions.Find(id);
+            Question question = db.Questions.Find(idQuestion);
             if (question == null)
             {
                 return HttpNotFound();
