@@ -46,3 +46,44 @@ p {
     background-color:aqua;
     
 }
+
+.navbar {
+    background-color: #1D81C3;
+}
+
+a.navbar-brand {
+    color: white;
+}
+
+    a.navbar-brand:active {
+        color: white;
+    }
+
+    a.navbar-brand:link {
+        color: white;
+    }
+
+    a.navbar-brand:visited {
+        color: white;
+    }
+
+a#loginLink {
+    color: white;
+}
+
+    a#loginLink:active {
+        color: white;
+    }
+
+    a#loginLink:link {
+        color: white;
+    }
+
+    a#loginLink:visited {
+        color: white;
+    }
+
+
+.navbar-nav li a {
+    color: white;
+}
