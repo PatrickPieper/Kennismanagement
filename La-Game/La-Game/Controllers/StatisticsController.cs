@@ -113,7 +113,6 @@ namespace La_Game.Controllers
                 {
                     questionListQueryString.Append(" JOIN Lesson_QuestionList AS lq on ql.idQuestionList = lq.QuestionList_idQuestionList");
                     questionListQueryString.Append(" WHERE lq.Lesson_idLesson = " + idLesson);
-
                 }
                 lst_QuestionList = db.Database.SqlQuery<QuestionList>(questionListQueryString.ToString()).ToList();
             }
@@ -193,40 +192,47 @@ namespace La_Game.Controllers
             sqlQueryString.Append(" group by q.idQuestion, q.questionText");
             var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQueryString.ToString()).OrderByDescending(o => o.wrongCount).ToList();
 
-            //Turn query result into two separate list for use as data/labels for chart.js
-            List<string> questionTexts = new List<string>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
+            if (queryResult.Count != 0)
             {
-                questionTexts.Add(entry.idQuestion + ":" + entry.questionText);
-            }
-            List<int> questionData = new List<int>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
-            {
-                questionData.Add(entry.wrongCount);
-            }
-            //For every result, generate a random bar color
-            List<string> barColors = new List<string>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
-            {
-                barColors.Add(String.Format("#{0:X6}", random.Next(0x1000000)));
-            }
+                //Turn query result into two separate list for use as data/labels for chart.js
+                List<string> questionTexts = new List<string>();
+                foreach (CommonWrongQuestionResult entry in queryResult)
+                {
+                    questionTexts.Add(entry.idQuestion + ":" + entry.questionText);
+                }
+                List<int> questionData = new List<int>();
+                foreach (CommonWrongQuestionResult entry in queryResult)
+                {
+                    questionData.Add(entry.wrongCount);
+                }
+                //For every result, generate a random bar color
+                List<string> barColors = new List<string>();
+                foreach (CommonWrongQuestionResult entry in queryResult)
+                {
+                    barColors.Add(String.Format("#{0:X6}", random.Next(0x1000000)));
+                }
 
-            //Create new chart and dataset
-            Chart _chart = new Chart();
-            _chart.labels = questionTexts.ToArray();
-            _chart.datasets = new List<Datasets>();
-            List<Datasets> _dataSet = new List<Datasets>();
-            _dataSet.Add(new Datasets()
+                //Create new chart and dataset
+                Chart _chart = new Chart();
+                _chart.labels = questionTexts.ToArray();
+                _chart.datasets = new List<Datasets>();
+                List<Datasets> _dataSet = new List<Datasets>();
+                _dataSet.Add(new Datasets()
+                {
+                    label = "Number of Wrong Answers",
+                    data = questionData.ToArray(),
+                    backgroundColor = barColors[0],
+                    borderColor = barColors[0],
+                    hoverBackgroundColor = barColors[0],
+                    borderWidth = "1"
+                });
+                _chart.datasets = _dataSet;
+                return Json(_chart, JsonRequestBehavior.AllowGet);
+            }
+            else
             {
-                label = "Number of Wrong Answers",
-                data = questionData.ToArray(),
-                backgroundColor = barColors[0],
-                borderColor = barColors[0],
-                hoverBackgroundColor = barColors[0],
-                borderWidth = "1"
-            });
-            _chart.datasets = _dataSet;
-            return Json(_chart, JsonRequestBehavior.AllowGet);
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
         }
         /// <summary>
         /// Method to get bar chart data as JsonResult from database
