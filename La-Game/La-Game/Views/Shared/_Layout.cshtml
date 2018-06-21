@@ -36,9 +36,11 @@
             </div>
         </div>
     </div>
-    <div class="container body-content">
+    <div class="container-fluid">
         <div class="alert" style="display:none" id="alertBox">Test</div>
-        @RenderBody()
+        <div class="col-md-12">
+            @RenderBody()
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

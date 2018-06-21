@@ -7,7 +7,9 @@
     var results = ViewBag.results;
     var attempts = ViewBag.attempts;
     var attemptCount = ViewBag.attemptCount;
-    int count = 1;
+    var questions = ViewBag.questions;
+    var numOfQuestions = ViewBag.numOfQuestions;
+    int count = 0;
 }
 
 <h2>@qlist</h2>
@@ -24,24 +26,32 @@
         }
         </thead>
         <tbody>
-            @foreach (var result in results)
+            @foreach (var question in questions)
             {
                 <tr>
-                    <td> @Html.Raw(result[1].questionText)</td>
-                    
+                    <td>@Html.Raw(question.questionText)</td>
                     @for (int i = 1; i <= attemptCount; i++)
                     {
-                        if (result.ContainsKey(i))
+                        bool answer = false;
+
+                        foreach (var result in results)
                         {
-                            var value = result[i];
-                            <td>@Html.Raw(value.answerText) (@Html.Raw(value.totalTime))</td>
-                        }
-                        else
+                            if (result.ContainsKey(i))
+                            {
+                                var resultQuestion = result[i];
+                                if (resultQuestion.idQuestion == question.idQuestion)
+                                {
+                                    answer = true;
+                                    <td>@Html.Raw(resultQuestion.answerText)</td>
+                                }
+
+                            }
+                        }   
+                        if (answer == false)
                         {
-                            <td>-</td>
+                            <td> - </td>
                         }
                     }
-
                 </tr>
             }
         </tbody>

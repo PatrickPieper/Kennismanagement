@@ -217,6 +217,12 @@ namespace La_Game.Controllers
             int numOfQuestions = db.Database.SqlQuery<int>(getNumOfQuestions).Single();
             ViewBag.numOfQuestions = numOfQuestions;
 
+            string getQuestions = "SELECT * FROM Question JOIN QuestionList_Question Q2 on Question.idQuestion = Q2.Question_idQuestion WHERE Q2.QuestionList_idQuestionList = " + qlist.idQuestionList;
+            List<Question> questionslist = db.Database.SqlQuery<Question>(getQuestions).ToList();
+            Dictionary<int, Question> list = new Dictionary<int, Question>();
+            ViewBag.questions = questionslist;
+
+
             List <QuestionListResult> results = new List<QuestionListResult>();
             StringBuilder sqlQueryString = new StringBuilder();
             int i = 1;
