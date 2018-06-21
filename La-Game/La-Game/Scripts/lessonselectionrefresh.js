@@ -42,11 +42,14 @@ $('#ddlessons').change(function (e) {
 //Add chart data for the selection in the dropdowns
 function addSelectionToChart()
 {
-    updateChart($('#ddlanguages').val(), $('#ddlessons').val());
+    var success = updateChart($('#ddlanguages').val(), $('#ddlessons').val());
     $("#ddlanguages").prop("selectedIndex", 0);
     $("#ddlessons").prop("selectedIndex", 0);
     $("#btnselectionadd").prop('disabled', true);
-    $("#btnclearchartdata").prop('disabled', false);
+    if (success)
+    {
+        $("#btnclearchartdata").prop('disabled', false);
+    }
 }
 //Clear the chart data
 function clearChartData()
@@ -64,19 +67,23 @@ function updateChart(idLanguage, idLesson)
     //Get the two datasets as jsonresult from controller
     var tData = $.getValues('/Statistics/BarChartDataCompareLessons?idLanguage=' + idLanguage + '&idLesson=' + idLesson);
     //If the chart doesn't have datasets in its array, add both full datasets
-    if (myBarChart.data.datasets.length === 0) {
-        myBarChart.data.datasets.push(tData[0]);
-        myBarChart.data.datasets.push(tData[1]);
-        myBarChart.data.labels.push('Lesson ' + myBarChart.data.datasets[0].data.length);
-    }
-    //If it already has datasets, add the data in the returned datasets instead
-    else
+    if (tData !== null)
     {
-        myBarChart.data.datasets[0].data.push(tData[0].data);
-        myBarChart.data.datasets[1].data.push(tData[1].data);
-        myBarChart.data.labels.push('Lesson ' + myBarChart.data.datasets[0].data.length);
+        if (myBarChart.data.datasets.length === 0) {
+            myBarChart.data.datasets.push(tData[0]);
+            myBarChart.data.datasets.push(tData[1]);
+            myBarChart.data.labels.push('Lesson ' + myBarChart.data.datasets[0].data.length);
+        }
+        //If it already has datasets, add the data in the returned datasets instead
+        else {
+            myBarChart.data.datasets[0].data.push(tData[0].data);
+            myBarChart.data.datasets[1].data.push(tData[1].data);
+            myBarChart.data.labels.push('Lesson ' + myBarChart.data.datasets[0].data.length);
+        }
+        myBarChart.update();
+        return true;
     }
-    myBarChart.update();
+    return false;
 }
 //Update chart with empty arrays
 function clearChart()
