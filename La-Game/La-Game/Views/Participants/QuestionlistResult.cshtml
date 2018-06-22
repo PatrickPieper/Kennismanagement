@@ -54,15 +54,9 @@
     var labels = @Html.Raw(Json.Encode(ViewBag.attempts));
     var max = @Html.Raw(Json.Encode(ViewBag.numOfQuestions));
     var results = @Html.Raw(Json.Encode(ViewBag.correctAnswers));
-    var colors = [];
-    var i = 0;
+    var color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
 
-        while (i < labels.length)
-        {
-            colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
-            i++
-        }
-        bar();
+     bar();
 
     function showBar() {
 
@@ -83,7 +77,7 @@
                 datasets: [
                     {
                         label: "Correct answers",
-                        backgroundColor: colors,
+                        backgroundColor: color,
                         data: results,
                     }
                 ]
