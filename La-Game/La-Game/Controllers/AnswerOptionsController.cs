@@ -45,5 +45,17 @@ namespace La_Game.Controllers
             ModelState.AddModelError(string.Empty, "Something went wrong while adding the answeroption.");
             return RedirectToAction("Index");
         }
+
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

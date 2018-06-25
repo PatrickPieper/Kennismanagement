@@ -160,14 +160,15 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // Get member from database
+                // Get member from database and retrieve the hashed password
                 Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
+                var hashedPassword = member.password;
 
-                // Make sure the right password was entered
-                if (member.password == model.OldPassword)
+                // Verify the password
+                if (Crypto.VerifyHashedPassword(hashedPassword, model.OldPassword))
                 {
-                    // Edit the password
-                    member.password = model.NewPassword; // Normal text for now
+                    // Hash the new password and save it to the database
+                    member.password = Crypto.HashPassword(model.NewPassword);
                     db.Entry(member).State = EntityState.Modified;
                     db.SaveChanges();
 
@@ -191,6 +192,18 @@ namespace La_Game.Controllers
         public ActionResult Forbidden()
         {
             return View();
+        }
+
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

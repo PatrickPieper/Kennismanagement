@@ -385,6 +385,9 @@ namespace La_Game.Controllers
             return RedirectToAction("ManageLists", new { idLesson = collection.Get("Lesson_idLesson") });
         }
 
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

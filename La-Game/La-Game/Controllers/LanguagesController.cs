@@ -337,6 +337,9 @@ namespace La_Game.Controllers
             return RedirectToAction("ManageMemberList", new { idLanguage = collection.Get("Language_idLanguage") });
         }
 
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -39,5 +39,17 @@ namespace La_Game.Controllers
             // Return the partialview containing the language table
             return PartialView("_LanguageOverview", data.ToList());
         }
+
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }
