@@ -52,20 +52,20 @@ namespace La_Game.Controllers
             if (ModelState.IsValid)
             {
                 // Try to find the loginInfo in the database   
-                var loginInfo = db.Members.Where(s => s.email == model.Email && s.password == model.Password);
+                var loginInfo = db.Members.FirstOrDefault(s => s.email == model.Email && s.password == model.Password);
 
                 // Verification
-                if (loginInfo != null && loginInfo.Count() > 0)
+                if (loginInfo != null)
                 {
-                    if (loginInfo.First().isActive == 1)
+                    if (loginInfo.isActive == 1)
                     {
                         try
                         {
                             // Setting  
                             var claims = new List<Claim>
                             {
-                                new Claim(ClaimTypes.Name, loginInfo.First().email),
-                                new Claim(ClaimTypes.Role, loginInfo.First().isAdmin.ToString())
+                                new Claim(ClaimTypes.Name, loginInfo.email),
+                                new Claim(ClaimTypes.Role, loginInfo.isAdmin.ToString())
                             };
                             var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
                             var authenticationManager = Request.GetOwinContext().Authentication;
