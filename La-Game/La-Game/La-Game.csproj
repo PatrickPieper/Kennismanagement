@@ -205,7 +205,7 @@
     <Compile Include="Controllers\AuthenticationController.cs" />
     <Compile Include="Controllers\AnswerOptionsController.cs" />
     <Compile Include="Controllers\BlobsController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
     <Compile Include="Controllers\LessonsController.cs" />
     <Compile Include="Controllers\MembersController.cs" />
@@ -583,7 +583,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Authentication\Register.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />
     <Content Include="Views\Authentication\AccountDetails.cshtml" />
@@ -602,11 +601,6 @@
     <Content Include="Views\StudentTest\Index.cshtml" />
     <Content Include="Views\StudentTest\LikertScale.cshtml" />
     <Content Include="Views\StudentTest\MultipleChoice.cshtml" />
-    <Content Include="Views\AnswerOptions\Create.cshtml" />
-    <Content Include="Views\AnswerOptions\Delete.cshtml" />
-    <Content Include="Views\AnswerOptions\Details.cshtml" />
-    <Content Include="Views\AnswerOptions\Edit.cshtml" />
-    <Content Include="Views\AnswerOptions\Index.cshtml" />
     <Content Include="Views\QuestionLists\ModifyQuestionList.cshtml" />
     <Content Include="Views\Shared\_AddQuestionTable.cshtml" />
     <Content Include="Views\Lessons\Create.cshtml" />
@@ -616,9 +610,7 @@
     <Content Include="Views\Lessons\Index.cshtml" />
     <Content Include="Views\Shared\_AddQuestionListLessonTable.cshtml" />
     <Content Include="Views\Lessons\ParticipantLessonOverview.cshtml" />
-    <Content Include="Views\Home\Dashboard.cshtml" />
     <Content Include="Views\Lessons\QuestionResultParticipantOverview.cshtml" />
-    <Content Include="Views\Home\_LanguageOverview.cshtml" />
     <Content Include="Views\Languages\Create.cshtml" />
     <Content Include="Views\Languages\Delete.cshtml" />
     <Content Include="Views\Languages\Details.cshtml" />
@@ -662,6 +654,11 @@
     <Content Include="Views\Members\Edit.cshtml" />
     <Content Include="Views\Members\Index.cshtml" />
     <Content Include="Views\Members\Register.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Dashboard\_LanguageOverview.cshtml" />
+    <Content Include="Views\Languages\_GetUnlistedMembers.cshtml" />
+    <Content Include="Views\Languages\ManageMemberList.cshtml" />
+    <Content Include="Views\Shared\Forbidden.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

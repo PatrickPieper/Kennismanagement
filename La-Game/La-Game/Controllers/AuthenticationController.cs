@@ -53,11 +53,10 @@ namespace La_Game.Controllers
             if (ModelState.IsValid)
             {
                 // Check the email that was entered and get the hashed password
-                var login = db.Members.Where(e => e.email == model.Email).First();
-                var hashedPassword = login.password;
+                var login = db.Members.Where(e => e.email == model.Email).FirstOrDefault();
 
                 // Verification
-                if (login != null && Crypto.VerifyHashedPassword(hashedPassword, model.Password))
+                if (login != null && Crypto.VerifyHashedPassword(login.password, model.Password))
                 {
                     if (login.isActive == 1)
                     {
