@@ -97,16 +97,18 @@ a#loginLink {
 }
 
 .jumbotron {
-    background-color: #1D81C3;
+    background-color: #d1dde4;
 }
 
-.jumbotron h1{
-    color:white;
-}
+    .jumbotron h1 {
+        color: #1D81C3;
+        text-shadow: 0.8px 1px 1px #000;
+    }
 
-.jumbotron p{
-    color: white;
-}
+    .jumbotron p {
+        color: white;
+        text-shadow: 1px 1px 1px #000;
+    }
 
 .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
     background-color: #1D81C3;
