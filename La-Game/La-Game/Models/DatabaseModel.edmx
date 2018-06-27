@@ -62,7 +62,7 @@
           </Key>
           <Property Name="idMember" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="email" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="password" Type="varchar" MaxLength="45" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="firstname" Type="varchar" MaxLength="40" Nullable="false" />
           <Property Name="lastname" Type="varchar" MaxLength="40" Nullable="false" />
           <Property Name="isAdmin" Type="tinyint" Nullable="false" />
@@ -447,7 +447,7 @@
             <PropertyRef Name="idMember" />
           </Key>
           <Property Name="idMember" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="password" Type="String" MaxLength="45" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="password" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
           <NavigationProperty Name="Language_Member" Relationship="Self.fk_Language_User_User1" FromRole="Member" ToRole="Language_Member" />
           <Property Name="email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="firstname" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="false" />

@@ -53,9 +53,10 @@
                     @Html.DisplayFor(modelItem => item.questionListDescription)
                 </td>
                 <td>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "QuestionLists", new { id = item.idQuestionList }) + "'");">
+                    <button type="button" @(!ViewBag.dictionary[item.idQuestionList] ? "disabled" : "") class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "QuestionLists", new { id = item.idQuestionList }) + "'");">
                         <span class="glyphicon glyphicon-wrench"></span> Edit
                     </button>
+
                     @if (item.isHidden == 1)
                     {
                         <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "QuestionLists", new { idQuestionList = item.idQuestionList }) + "'");">
@@ -65,7 +66,7 @@
                     else
                     {
                         <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "QuestionLists", new { idQuestionList = item.idQuestionList }) + "'");">
-                            <span class="glyphicon glyphicon-remove"></span> Remove
+                            <span class="glyphicon glyphicon-remove"></span> @(ViewBag.dictionary[item.idQuestionList] ? "Delete" : "Remove")
                         </button>
                     }
                 </td>
@@ -74,7 +75,7 @@
     </tbody>
 </table>
 <p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
         <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
     </button>
 </p>

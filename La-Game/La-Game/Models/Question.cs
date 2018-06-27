@@ -11,8 +11,7 @@ namespace La_Game.Models
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-
+    
     public partial class Question
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
@@ -26,7 +25,6 @@ namespace La_Game.Models
         public int idQuestion { get; set; }
         public string picture { get; set; }
         public string audio { get; set; }
-        [Required]
         public string questionText { get; set; }
         public Nullable<short> isHidden { get; set; }
         public Nullable<byte> likertScale { get; set; }

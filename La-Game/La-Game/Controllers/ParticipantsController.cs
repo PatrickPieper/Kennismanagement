@@ -219,7 +219,7 @@ namespace La_Game.Controllers
 
             List <QuestionListResult> results = new List<QuestionListResult>();
             StringBuilder sqlQueryString = new StringBuilder();
-            
+
             sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt from QuestionResult as qr" +
                 " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
                 " join Question as q on q.idQuestion = ao.Question_idQuestion" +
@@ -266,6 +266,9 @@ namespace La_Game.Controllers
             return View(participant);
         }
 
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

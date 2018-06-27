@@ -128,6 +128,9 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

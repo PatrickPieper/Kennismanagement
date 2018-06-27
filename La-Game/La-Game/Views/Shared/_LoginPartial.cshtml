@@ -2,7 +2,7 @@
 
 @if (Request.IsAuthenticated)
 {
-    using (Html.BeginForm("Logout", "Authentication", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    using (Html.BeginForm("Logout", "Authentication", FormMethod.Post, new { id = "logoutForm" }))
     {
         @Html.AntiForgeryToken()
 
