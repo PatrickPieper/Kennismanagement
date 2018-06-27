@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
+using System.Web.Helpers;
 using System.Web.Mvc;
 using La_Game.Models;
 using Microsoft.AspNet.Identity;
@@ -30,8 +31,8 @@ namespace La_Game.Controllers
             // Verification     
             if (Request.IsAuthenticated)
             {
-                // User is already logged in; redirect to homepage
-                return RedirectToAction("Index", "Home");
+                // User is already logged in; redirect to accountdetail page
+                return RedirectToAction("AccountDetails", "Authentication");
             }
 
             // Go to login page    
@@ -51,21 +52,22 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // Try to find the loginInfo in the database   
-                var loginInfo = db.Members.Where(s => s.email == model.Email && s.password == model.Password);
+                // Check the email that was entered and get the hashed password
+                var login = db.Members.Where(e => e.email == model.Email).First();
+                var hashedPassword = login.password;
 
                 // Verification
-                if (loginInfo != null && loginInfo.Count() > 0)
+                if (login != null && Crypto.VerifyHashedPassword(hashedPassword, model.Password))
                 {
-                    if (loginInfo.First().isActive == 1)
+                    if (login.isActive == 1)
                     {
                         try
                         {
                             // Setting  
                             var claims = new List<Claim>
                             {
-                                new Claim(ClaimTypes.Name, loginInfo.First().email),
-                                new Claim(ClaimTypes.Role, loginInfo.First().isAdmin.ToString())
+                                new Claim(ClaimTypes.Name, login.email),
+                                new Claim(ClaimTypes.Role, login.isAdmin.ToString())
                             };
                             var claimIdenties = new ClaimsIdentity(claims, DefaultAuthenticationTypes.ApplicationCookie);
                             var authenticationManager = Request.GetOwinContext().Authentication;
@@ -74,7 +76,7 @@ namespace La_Game.Controllers
                             authenticationManager.SignIn(new AuthenticationProperties() { IsPersistent = false }, claimIdenties);
 
                             // Redirect to Dashboard  
-                            return RedirectToAction("Dashboard", "Home");
+                            return RedirectToAction("Index", "Dashboard");
                         }
                         catch (Exception ex)
                         {
@@ -158,14 +160,15 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // Get member from database
+                // Get member from database and retrieve the hashed password
                 Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
+                var hashedPassword = member.password;
 
-                // Make sure the right password was entered
-                if (member.password == model.OldPassword)
+                // Verify the password
+                if (Crypto.VerifyHashedPassword(hashedPassword, model.OldPassword))
                 {
-                    // Edit the password
-                    member.password = model.NewPassword; // Normal text for now
+                    // Hash the new password and save it to the database
+                    member.password = Crypto.HashPassword(model.NewPassword);
                     db.Entry(member).State = EntityState.Modified;
                     db.SaveChanges();
 
@@ -181,5 +184,26 @@ namespace La_Game.Controllers
             return View(model);
         }
         #endregion
+
+        /// <summary>  
+        /// GET: /Authentication/Forbidden 
+        /// Redirect to page when member is not authorized to perform the action.
+        /// </summary>  
+        public ActionResult Forbidden()
+        {
+            return View();
+        }
+
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
+        }
     }
 }

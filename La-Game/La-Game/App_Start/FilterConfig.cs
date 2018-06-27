@@ -18,7 +18,7 @@ namespace La_Game
 }
 
 /// <summary>
-/// Custom authorization attribute that checks if the user is has admin rights.
+/// Custom authorization attribute that checks if the user has admin rights.
 /// </summary>
 public class AuthorizeAdmin : AuthorizeAttribute
 {
@@ -38,7 +38,7 @@ public class AuthorizeAdmin : AuthorizeAttribute
         // Check if the adminlist contains the current user
         if (!adminList.Contains(currentUser))
         {
-            context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Authentication", action = "AccountDetails" }));
+            context.Result = new RedirectToRouteResult(new RouteValueDictionary(new { controller = "Authentication", action = "Forbidden" }));
         }
     }
 }
