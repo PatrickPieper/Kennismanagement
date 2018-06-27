@@ -7,6 +7,9 @@
     var results = ViewBag.results;
     var attempts = ViewBag.attempts;
     var attemptCount = ViewBag.attemptCount;
+    var questions = ViewBag.questions;
+    var numOfQuestions = ViewBag.numOfQuestions;
+    int count = 0;
 }
 
 <h2>@qlist</h2>
@@ -23,23 +26,32 @@
         }
         </thead>
         <tbody>
-            @foreach (var result in results)
+            @foreach (var question in questions)
             {
                 <tr>
-                    <td> </td>
+                    <td>@Html.Raw(question.questionText)</td>
                     @for (int i = 1; i <= attemptCount; i++)
                     {
-                        if (result.ContainsKey(i))
+                        bool answer = false;
+
+                        foreach (var result in results)
                         {
-                            var value = result[i];
-                            <td>@Html.Raw(value.answerText)</td>
-                        }
-                        else
+                            if (result.ContainsKey(i))
+                            {
+                                var resultQuestion = result[i];
+                                if (resultQuestion.idQuestion == question.idQuestion)
+                                {
+                                    answer = true;
+                                    <td>@Html.Raw(resultQuestion.answerText)</td>
+                                }
+
+                            }
+                        }   
+                        if (answer == false)
                         {
-                            <td>-</td>
+                            <td> - </td>
                         }
                     }
-
                 </tr>
             }
         </tbody>
@@ -48,20 +60,13 @@
     <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
 <script src="~/Scripts/Chart.js"></script>
-<script src="~/Scripts/Common.js"></script>
 <script>
     var labels = @Html.Raw(Json.Encode(ViewBag.attempts));
     var max = @Html.Raw(Json.Encode(ViewBag.numOfQuestions));
     var results = @Html.Raw(Json.Encode(ViewBag.correctAnswers));
-    var colors = [];
-    var i = 0;
+    var color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
 
-        while (i < labels.length)
-        {
-            colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
-            i++
-        }
-        bar();
+     bar();
 
     function showBar() {
 
@@ -82,7 +87,7 @@
                 datasets: [
                     {
                         label: "Correct answers",
-                        backgroundColor: colors,
+                        backgroundColor: color,
                         data: results,
                     }
                 ]

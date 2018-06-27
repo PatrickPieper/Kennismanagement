@@ -5,71 +5,71 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @Styles.Render("~/Content/dataTables")
+<div class="container">
+    <h2>Participant Overview</h2>
 
-<h2>Participant Overview</h2>
-
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Participants") + "'");">
-        <span class="glyphicon glyphicon-plus"></span> Create New
-    </button>
-</p>
-<table id="participants" class="table table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>
-                Firstname
-            </th>
-            <th>
-                Lastname
-            </th>
-            <th>
-                Date of Birth
-            </th>
-            <th>
-                Studentcode
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model)
-        {
-            var link = Url.Action("Details", "Participants", new { id = item.idParticipant });
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Participants") + "'");">
+            <span class="glyphicon glyphicon-plus"></span> Create New
+        </button>
+    </p>
+    <table id="participants" class="table table table-striped table-hover table-responsive">
+        <thead>
             <tr>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.firstName)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.lastName)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.birthDate)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.studentCode)
-                </td>
-                <td>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + Url.Action("Results","Participants", new { id = item.idParticipant }) +"'");">
-                        <span class="glyphicon glyphicon-list"></span> Results
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = item.idParticipant }) + "'");">
-                        <span class="glyphicon glyphicon-wrench"></span> Edit
-                    </button>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Participants", new { id = item.idParticipant }) + "'");">
-                        <span class="glyphicon glyphicon-remove"></span> Remove
-                    </button>
-                </td>
+                <th>
+                    Firstname
+                </th>
+                <th>
+                    Lastname
+                </th>
+                <th>
+                    Date of Birth
+                </th>
+                <th>
+                    Studentcode
+                </th>
+                <th></th>
             </tr>
-        }
-    </tbody>
-</table>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
-    </button>
-</p>
+        </thead>
 
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var link = Url.Action("Details", "Participants", new { id = item.idParticipant });
+                <tr>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.firstName)
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.lastName)
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.birthDate)
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.studentCode)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + Url.Action("Results","Participants", new { id = item.idParticipant }) +"'");">
+                            <span class="glyphicon glyphicon-list"></span> Results
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = item.idParticipant }) + "'");">
+                            <span class="glyphicon glyphicon-wrench"></span> Edit
+                        </button>
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Participants", new { id = item.idParticipant }) + "'");">
+                            <span class="glyphicon glyphicon-remove"></span> Remove
+                        </button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
+        </button>
+    </p>
+</div>
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
 

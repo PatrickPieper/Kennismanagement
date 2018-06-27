@@ -5,18 +5,22 @@
     ViewBag.Title = "Index";
 }
 @Styles.Render("~/Content/dataTables")
+<div class="container">
+    <h2>
+        Languages
 
-<h2>
-    Languages
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Languages") + "'");">
-        <span class="glyphicon glyphicon-plus"></span> Create New
-    </button>
-</h2>
-
-@if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
-{
-    using (Html.BeginForm("Index", "Languages", FormMethod.Get))
+    </h2>
+    <hr />
+    <div class="row col-md-12">
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Languages") + "'");">
+            <span class="glyphicon glyphicon-plus"></span> Create New
+        </button>
+    </div>
+    @if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
     {
+        using (Html.BeginForm("Index", "Languages", FormMethod.Get))
+        {
+    <div class="row col-md-12 top-buffer">
         <div class="form-inline">
             <select name="filter" class="form-control input-sm">
                 <option value="active">Show active</option>
@@ -25,56 +29,57 @@
             </select>
             <button type="submit" value="filter" class="btn btn-default btn-sm"> Filter </button>
         </div>
-    }
-}
-
-<table id="language" class="table table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>
-                Language
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model)
-        {
-            var link = Url.Action("Details", "Languages", new { id = item.idLanguage });
-            <tr>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.languageName)
-                </td>
-                <td>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Languages", new { id = item.idLanguage }) + "'");">
-                        <span class="glyphicon glyphicon-wrench"></span> Edit
-                    </button>
-
-                    @if (item.isHidden == 1)
-                    {
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Languages", new { idLanguage = item.idLanguage }) + "'");">
-                            <span class="glyphicon glyphicon-plus"></span> Activate
-                        </button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Languages", new { idLanguage = item.idLanguage }) + "'");">
-                            <span class="glyphicon glyphicon-remove"></span> Remove
-                        </button>
-                    }
-                </td>
-            </tr>
+    </div>
         }
-    </tbody>
+    }
 
-</table>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
-    </button>
-</p>
+    <table id="language" class="table table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>
+                    Language
+                </th>
+                <th></th>
+            </tr>
+        </thead>
 
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var link = Url.Action("Details", "Languages", new { id = item.idLanguage });
+                <tr>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.languageName)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Languages", new { id = item.idLanguage }) + "'");">
+                            <span class="glyphicon glyphicon-wrench"></span> Edit
+                        </button>
+
+                        @if (item.isHidden == 1)
+                        {
+                            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Languages", new { idLanguage = item.idLanguage }) + "'");">
+                                <span class="glyphicon glyphicon-plus"></span> Activate
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Languages", new { idLanguage = item.idLanguage }) + "'");">
+                                <span class="glyphicon glyphicon-remove"></span> Remove
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+    <p>
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
+        </button>
+    </p>
+</div>
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
 

@@ -217,10 +217,17 @@ namespace La_Game.Controllers
             int numOfQuestions = db.Database.SqlQuery<int>(getNumOfQuestions).Single();
             ViewBag.numOfQuestions = numOfQuestions;
 
+            string getQuestions = "SELECT * FROM Question JOIN QuestionList_Question Q2 on Question.idQuestion = Q2.Question_idQuestion WHERE Q2.QuestionList_idQuestionList = " + qlist.idQuestionList;
+            List<Question> questionslist = db.Database.SqlQuery<Question>(getQuestions).ToList();
+            Dictionary<int, Question> list = new Dictionary<int, Question>();
+            ViewBag.questions = questionslist;
+
+
             List <QuestionListResult> results = new List<QuestionListResult>();
             StringBuilder sqlQueryString = new StringBuilder();
-
-            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt from QuestionResult as qr" +
+            int i = 1;
+            
+            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt, datediff(s, qr.startTime, qr.endTime) as totalTime from QuestionResult as qr" +
                 " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
                 " join Question as q on q.idQuestion = ao.Question_idQuestion" +
                 " where qr.QuestionList_idQuestionList = " +  questionlistId +
@@ -241,7 +248,14 @@ namespace La_Game.Controllers
 
 
             ViewBag.attempts = attempts;
-            ViewBag.attemptCount = attempts.Last();
+            if (!attempts.Count().Equals(0))
+            {
+                ViewBag.attemptCount = attempts.Last();
+            } else
+            {
+                ViewBag.attemptCount = 0;
+            }
+            
             foreach(var question in questions)
             {
                 List<QuestionListResult> questionListResults = results.Where(qr => qr.idQuestion.Equals(question)).ToList();
