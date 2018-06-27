@@ -6,7 +6,7 @@
 }
 @Styles.Render("~/Content/dataTables")
 
-<div>
+<div class="container">
     <h2>Questionlist Details</h2>
     <hr />
     <dl class="dl-horizontal">
@@ -73,13 +73,13 @@
             }
         </tbody>
     </table>
-</div>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to list
-    </button>
-</p>
 
+    <div class="row col-md-12">
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back to list
+        </button>
+    </div>
+</div>
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
 

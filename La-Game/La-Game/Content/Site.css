@@ -40,3 +40,11 @@ p {
     background-color:aqua;
     
 }
+
+.top-buffer {
+    margin-top: 2%;
+}
+
+.navbar .navbar-inverse {
+    background-color: #91BC06 !important;
+}
