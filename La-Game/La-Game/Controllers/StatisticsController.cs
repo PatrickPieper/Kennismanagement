@@ -282,6 +282,10 @@ namespace La_Game.Controllers
         }
 
         #endregion JsonResults
+
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)
