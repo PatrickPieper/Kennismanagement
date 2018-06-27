@@ -223,6 +223,7 @@
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CompareLessonResult.cs" />
+    <Compile Include="Models\ParticipantLessonWrongCorrect.cs" />
     <Compile Include="Models\QuestionListInfoModel.cs" />
     <Compile Include="Models\QuestionListResult.cs" />
     <Compile Include="Models\QuestionListStatisticsModel.cs" />
@@ -659,6 +660,7 @@
     <Content Include="Views\Members\Edit.cshtml" />
     <Content Include="Views\Members\Index.cshtml" />
     <Content Include="Views\Members\Register.cshtml" />
+    <Content Include="Views\Statistics\EffectivenessLesson.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

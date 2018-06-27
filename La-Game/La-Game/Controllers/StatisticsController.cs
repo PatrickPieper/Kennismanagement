@@ -220,7 +220,7 @@ namespace La_Game.Controllers
                 _dataSet.Add(new Datasets()
                 {
                     label = "Number of Wrong Answers",
-                    data = questionData.ToArray(),
+                    data = questionData.Select(Convert.ToDouble).ToArray(),
                     backgroundColor = barColors[0],
                     borderColor = barColors[0],
                     hoverBackgroundColor = barColors[0],
@@ -268,7 +268,7 @@ namespace La_Game.Controllers
             _dataSet.Add(new Datasets()
             {
                 label = "Correct Answers",
-                data = new int[] { queryResult.correctCount },
+                data = new double[] { queryResult.correctCount },
                 backgroundColor = ColorTranslator.ToHtml(Color.Green),
                 borderColor = ColorTranslator.ToHtml(Color.Green),
                 hoverBackgroundColor = ColorTranslator.ToHtml(Color.Green),
@@ -277,7 +277,7 @@ namespace La_Game.Controllers
             _dataSet.Add(new Datasets()
             {
                 label = "Wrong Answers",
-                data = new int[] { queryResult.wrongCount },
+                data = new double[] { queryResult.wrongCount },
                 backgroundColor = ColorTranslator.ToHtml(Color.Red),
                 borderColor = ColorTranslator.ToHtml(Color.Red),
                 hoverBackgroundColor = ColorTranslator.ToHtml(Color.Red),
@@ -291,55 +291,65 @@ namespace La_Game.Controllers
             var random = new Random();
             //Query to select questions that were answered wrongly the most, with their amount
             StringBuilder sqlQueryString = new StringBuilder();
-            sqlQueryString.Append("select q.idQuestion, q.questionText,count(*) as 'wrongCount' from Question as q " +
-                                "join AnswerOption as ao on q.idQuestion = ao.Question_idQuestion " +
-                                "join QuestionResult as qr on ao.idAnswer = qr.AnswerOption_idAnswer " +
-                                "left join QuestionList_Question as qlq on qlq.Question_idQuestion = q.idQuestion " +
-                                "left join QuestionList as ql on qlq.QuestionList_idQuestionList = ql.idQuestionList " +
-                                "left join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList " +
-                                "left join Lesson as le on lq.Lesson_idLesson = le.idLesson " +
-                                "left join[Language] as la on le.Language_idLanguage = la.idLanguage " +
-                                "where ao.correctAnswer = 0 ");
+            sqlQueryString.Append("select p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount' from QuestionResult as qr" +
+                                " left join AnswerOption as cao on qr.AnswerOption_idAnswer = cao.idAnswer and cao.correctAnswer = 1" +
+                                " left join AnswerOption as wao on qr.AnswerOption_idAnswer = wao.idAnswer and wao.correctAnswer = 0" +
+                                " join Participant as p on p.idParticipant = qr.Participant_idParticipant" +
+                                " join QuestionList as ql on qr.QuestionList_idQuestionList = ql.idQuestionList" +
+                                " join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList");
             //Append the filter values to the query, if set
             if (idLesson != null && idLesson != -1)
             {
-                sqlQueryString.Append(" where le.idLesson = " + idLesson);
+                sqlQueryString.Append(" where lq.Lesson_idLesson = " + idLesson);
             }
-            sqlQueryString.Append(" group by q.idQuestion, q.questionText");
-            var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQueryString.ToString()).OrderByDescending(o => o.wrongCount).ToList();
+            sqlQueryString.Append(" group by p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson");
+            var queryResult = db.Database.SqlQuery<ParticipantLessonWrongCorrect>(sqlQueryString.ToString());
 
-            //Turn query result into two separate list for use as data/labels for chart.js
-            List<string> questionTexts = new List<string>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
+            if(queryResult.Count() == 0)
             {
-                questionTexts.Add(entry.idQuestion + ":" + entry.questionText);
-            }
-            List<int> questionData = new List<int>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
-            {
-                questionData.Add(entry.wrongCount);
-            }
-            //For every result, generate a random bar color
-            List<string> barColors = new List<string>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
-            {
-                barColors.Add(String.Format("#{0:X6}", random.Next(0x1000000)));
+                return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            //Create new chart and dataset
+            int lessonCount = queryResult.Select(o => o.Lesson_idLesson).Distinct().Count();
+            int[] participantIDs = queryResult.Select(o => o.IdParticipant).Distinct().ToArray();
+
+            List<ParticipantLessonWrongCorrect> lstParticipantResults = queryResult.ToList();
+
+            foreach (ParticipantLessonWrongCorrect result in lstParticipantResults)
+            {
+                result.UpdateAverage();
+            }
+            Dictionary<int, List<ParticipantLessonWrongCorrect>> dictParticipantResults = new Dictionary<int, List<ParticipantLessonWrongCorrect>>();
+
+            foreach(int participantID in participantIDs)
+            {
+                dictParticipantResults.Add(participantID, lstParticipantResults.Where(p => p.IdParticipant == participantID).ToList());
+            }
+
+            List<string> lstLabels = new List<string>();
+            for(int x = 1; x <= lessonCount; x++)
+            {
+                lstLabels.Add("Lesson " + x);
+            }
+
             Chart _chart = new Chart();
-            _chart.labels = questionTexts.ToArray();
+            _chart.labels = lstLabels.ToArray();
             _chart.datasets = new List<Datasets>();
             List<Datasets> _dataSet = new List<Datasets>();
-            _dataSet.Add(new Datasets()
+            foreach(var kvp in dictParticipantResults)
             {
-                label = "Number of Wrong Answers",
-                data = questionData.ToArray(),
-                backgroundColor = barColors[0],
-                borderColor = barColors[0],
-                hoverBackgroundColor = barColors[0],
-                borderWidth = "1"
-            });
+                String randomColor = String.Format("#{0:X6}", random.Next(0x1000000));
+                _dataSet.Add(new Datasets()
+                {
+                    label = kvp.Value[0].FirstName + " " + kvp.Value[0].LastName,
+                    data = kvp.Value.Select(o => o.Average).ToArray(),
+                    backgroundColor = randomColor,
+                    borderColor = randomColor,
+                    hoverBackgroundColor = randomColor,
+                    borderWidth = "2"
+                });
+            }
+            
             _chart.datasets = _dataSet;
             return Json(_chart, JsonRequestBehavior.AllowGet);
         }

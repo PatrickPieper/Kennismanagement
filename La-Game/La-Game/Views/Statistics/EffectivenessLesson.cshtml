@@ -8,9 +8,8 @@
     <div class="col-lg-12">
         <div class="row">
             <div class="form-group">
-                <h4>Select Lesson</h4>
-                @{Html.RenderAction("CompareLessonSelection", "Statistics", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID });}
-                <canvas id="barChart" width="400" height="150"></canvas>
+                <h4>Percentage correct per Lesson</h4>
+                <canvas id="lineChart" width="400" height="150"></canvas>
             </div>
         </div>
     </div>
@@ -24,14 +23,15 @@
     <script src="~/Scripts/Chart.js"></script>
     <script src="~/Scripts/Common.js"></script>
     <script>
-        var myBarChart;
+        var myLineChart;
         createChart();
+        updateChart();
 
         function createChart()
         {
-            var c = document.getElementById("barChart");
+            var c = document.getElementById("lineChart");
             var ctx = c.getContext("2d");
-            myBarChart = new Chart(ctx, {
+            myLineChart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: null,
@@ -47,7 +47,7 @@
                         intersect: true
                     },
                     scales: {
-                        yAxes: [{
+                        xAxes: [{
                             ticks: {
                                 beginAtZero: true,
                                 suggestedMax: 10
@@ -57,7 +57,18 @@
                 }
             });
         }
+        function updateChart()
+        {
+            var tData = $.getValues('/Statistics/LineChartDataEffectivenessLesson');
+            if (tData !== null) {
+                myLineChart.data = tData;
+            }
+            else {
+                myLineChart.data.datasets = [];
+                myLineChart.data.labels = [];
+            }
+            myLineChart.update();
+        }
     </script>
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/Scripts/lessonselectionrefresh.js")
 }
