@@ -9,6 +9,9 @@ using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Questionlist Controller
+    /// </summary>
     public class QuestionListsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();

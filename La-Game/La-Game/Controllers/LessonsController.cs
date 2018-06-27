@@ -8,6 +8,9 @@ using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Lesson Controller
+    /// </summary>
     public class LessonsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -303,7 +306,7 @@ namespace La_Game.Controllers
             List<QuestionList> allLists = (from q in db.QuestionLists select q).ToList();
 
             // Get all the lists that are already in the lesson
-            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + "); ";
+            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + ");";
             List<QuestionList> currentLists = db.Database.SqlQuery<QuestionList>(selectQuery).ToList();
 
             // Compare the two lists and remove all the questions that are already in the list
@@ -314,7 +317,7 @@ namespace La_Game.Controllers
 
             // Set the lessonId and return the PartialView
             ViewBag.idLesson = idLesson;
-            return PartialView("_AddQuestionListTable", allLists);
+            return PartialView("_AddQuestionListTable", allLists.Where(s => s.isHidden != 1));
         }
 
         /// <summary>

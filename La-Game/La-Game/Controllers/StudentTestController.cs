@@ -8,6 +8,9 @@ using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Studenttest Controller.
+    /// </summary>
     public class StudentTestController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();

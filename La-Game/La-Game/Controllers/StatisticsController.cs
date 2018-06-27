@@ -10,6 +10,9 @@ using System.Web.Mvc;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Statistics Controller
+    /// </summary>
     public class StatisticsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -76,6 +79,7 @@ namespace La_Game.Controllers
             
             return View();
         }
+
         #region Partial Views
         /// <summary>
         /// GET: CommonWrongAnswerFilter
@@ -155,6 +159,7 @@ namespace La_Game.Controllers
             return PartialView("_CompareLessonSelection");
         }
         #endregion
+
         #region Json Results
         /// <summary>
         /// Method to create the barchart data for the common wrong answers page
