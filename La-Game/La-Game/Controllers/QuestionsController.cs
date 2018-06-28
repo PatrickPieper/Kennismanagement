@@ -146,7 +146,6 @@ namespace La_Game.Controllers
 
                         // Add the anwseroption to the database and increase the count
                         db.AnswerOptions.Add(option);
-                        db.SaveChanges();
                         count++;
                     }
 

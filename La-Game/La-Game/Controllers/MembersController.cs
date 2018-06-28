@@ -73,6 +73,8 @@ namespace La_Game.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register([Bind(Include = "email,password,firstname,lastname,isAdmin")] Member member)
         {
+            var test = member.isAdmin;
+
             // Check if the data is valid
             if (ModelState.IsValid)
             {

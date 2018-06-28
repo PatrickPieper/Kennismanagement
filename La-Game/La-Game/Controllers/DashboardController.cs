@@ -33,8 +33,8 @@ namespace La_Game.Controllers
         public PartialViewResult GetLanguageOverview(int? memberId)
         {
             // Get all the languages the member is assigned to
-            String selectQuery = "SELECT * FROM Language WHERE isHidden != 1 AND idLanguage IN(SELECT Language_idLanguage FROM Language_Member WHERE Member_idMember = " + memberId + ");";
-            IEnumerable<Language> data = db.Database.SqlQuery<Language>(selectQuery);
+            String selectQuery = "SELECT * FROM Language WHERE idLanguage IN(SELECT Language_idLanguage FROM Language_Member WHERE Member_idMember = " + memberId + ");";
+            IEnumerable<Language> data = db.Database.SqlQuery<Language>(selectQuery).Where(l => l.isHidden != 1);
 
             // Return the partialview containing the language table
             return PartialView("_LanguageOverview", data.ToList());

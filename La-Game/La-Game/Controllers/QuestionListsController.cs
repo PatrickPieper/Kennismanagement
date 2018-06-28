@@ -499,7 +499,7 @@ namespace La_Game.Controllers
         {
             // Get the lists from the database
             String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + ");";
-            IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
+            IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery).Where(q => q.isHidden != 1);
 
             // Set the lessonId and return the PartialView
             ViewBag.lessonID = idLesson;

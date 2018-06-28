@@ -620,8 +620,6 @@
     <Content Include="Views\Languages\Edit.cshtml" />
     <Content Include="Views\Languages\Index.cshtml" />
     <Content Include="Views\Languages\_AddLanguageMembersTable.cshtml" />
-    <Content Include="Views\Blobs\CreateBlobContainer.cshtml" />
-    <Content Include="Views\Blobs\ListBlobs.cshtml" />
     <Content Include="Views\Participants\Create.cshtml" />
     <Content Include="Views\Participants\Delete.cshtml" />
     <Content Include="Views\Participants\Details.cshtml" />
