@@ -43,8 +43,11 @@
                     <td onclick="Redirect('@link')">
                         @Html.DisplayFor(modelItem => item.lastName)
                     </td>
-                    <td onclick="Redirect('@link')">
-                        @Html.DisplayFor(modelItem => item.birthDate)
+                    <td onclick="Redirect('@link')">   
+                        @{
+                            String date = item.birthDate.ToShortDateString();
+                        }
+                        @Html.DisplayFor(modelItem => date)                  
                     </td>
                     <td onclick="Redirect('@link')">
                         @Html.DisplayFor(modelItem => item.studentCode)
