@@ -91,13 +91,13 @@ $("#fileImage").change(function () {
 document.addEventListener("DOMContentLoaded", function (event) {
     document.querySelectorAll('img').forEach(function (img) {
         img.onerror = function () { this.style.display = 'none'; };
-    }),
+    });
 });
 
 // If there is no audio uploaded hide the player view
 document.addEventListener("DOMContentLoaded", function (event) {
     document.querySelectorAll('audio').forEach(function (audio) {
         audio.onerror = function () { this.style.display = 'none'; };
-    }),
+    });
 });
 

@@ -21,17 +21,17 @@
 
 
                     $(this).css({
-                        "border": "1px solid red",
+                        "border": "1px solid red"
                     });
                 }
                 else {
                     $(this).css({
-                        "border": "",
+                        "border": ""
                     });
                 }
             });
 
-            check()
+            check();
         }
 
         else if (selected.val() === "likert") {
@@ -56,21 +56,24 @@ function check() {
     var count = 0;
     selects = document.getElementsByName("correctAnswer");
     alertbox = $('#alertBox');
-    for (i = 0; i < selects.length; i++) {
-        if (selects[i].value === 1) {
+    for (i = 0; i < selects.length; i++)
+    {
+        if (selects[i].value === 1)
+        {
             count++;
         }
-        if (count < 1) {
+        if (count < 1)
+        {
             alertbox.addClass("alert-danger");
             alertbox.html("<p>You have not chosen a correct answer!</p>");
             alertbox.show();
             window.scrollTo(0, 0);
             selects[i].value = 0;
-            event.preventDefault(),
+            event.preventDefault();
         }
         else if (count > 1) {
             alertbox.hide();
         }
     }
 
-};
+}
