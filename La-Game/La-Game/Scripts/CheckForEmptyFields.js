@@ -58,7 +58,7 @@ function check() {
     alertbox = $('#alertBox');
     for (i = 0; i < selects.length; i++)
     {
-        if (selects[i].value === 1)
+        if (selects[i].value == 1)
         {
             count++;
         }
