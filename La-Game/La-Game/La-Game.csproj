@@ -50,8 +50,8 @@
     <Reference Include="Microsoft.WindowsAzure.Configuration, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.WindowsAzure.ConfigurationManager.3.2.3\lib\net40\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\WindowsAzure.Storage.9.2.0\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=9.1.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAzure.Storage.9.1.1\lib\net45\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -203,6 +203,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AuthenticationController.cs" />
+    <Compile Include="Controllers\AnswerOptionsController.cs" />
     <Compile Include="Controllers\BlobsController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\LanguagesController.cs" />
@@ -210,6 +211,7 @@
     <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Controllers\ParticipantsController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
+    <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
@@ -221,6 +223,7 @@
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CompareLessonResult.cs" />
+    <Compile Include="Models\ParticipantLessonWrongCorrect.cs" />
     <Compile Include="Models\QuestionListInfoModel.cs" />
     <Compile Include="Models\QuestionListResult.cs" />
     <Compile Include="Models\QuestionListStatisticsModel.cs" />
@@ -566,6 +569,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\effectivenesslessonselect.js" />
     <Content Include="Scripts\lessonselectionrefresh.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\studenttest.js" />
@@ -608,6 +612,9 @@
     <Content Include="Views\Lessons\Index.cshtml" />
     <Content Include="Views\Shared\_AddQuestionListLessonTable.cshtml" />
     <Content Include="Views\Lessons\ParticipantLessonOverview.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Lessons\QuestionResultParticipantOverview.cshtml" />
+    <Content Include="Views\Dashboard\_LanguageOverview.cshtml" />
     <Content Include="Views\Languages\Create.cshtml" />
     <Content Include="Views\Languages\Delete.cshtml" />
     <Content Include="Views\Languages\Details.cshtml" />
@@ -622,6 +629,11 @@
     <Content Include="Views\Participants\Edit.cshtml" />
     <Content Include="Views\Participants\Index.cshtml" />
     <Content Include="Views\Participants\Results.cshtml" />
+    <Content Include="Views\QuestionResults\Create.cshtml" />
+    <Content Include="Views\QuestionResults\Delete.cshtml" />
+    <Content Include="Views\QuestionResults\Details.cshtml" />
+    <Content Include="Views\QuestionResults\Edit.cshtml" />
+    <Content Include="Views\QuestionResults\Index.cshtml" />
     <Content Include="Views\Shared\_QuestionPartial.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Statistics\QuestionStatistics.cshtml" />
@@ -639,17 +651,18 @@
     <Content Include="Views\Statistics\_CompareLessonSelection.cshtml" />
     <Content Include="Views\Statistics\CompareLessons.cshtml" />
     <Content Include="Views\Statistics\LessonStatistics.cshtml" />
+    <Content Include="Views\Statistics\QuestionListChoice.cshtml" />
     <Content Include="Views\Statistics\QuestionListStatistics.cshtml" />
+    <Content Include="Views\Shared\Forbidden.cshtml" />
+    <Content Include="Views\Languages\ManageMemberList.cshtml" />
+    <Content Include="Views\Languages\_GetUnlistedMembers.cshtml" />
     <Content Include="Views\Members\Activation.cshtml" />
     <Content Include="Views\Members\Details.cshtml" />
     <Content Include="Views\Members\Edit.cshtml" />
     <Content Include="Views\Members\Index.cshtml" />
     <Content Include="Views\Members\Register.cshtml" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\Dashboard\_LanguageOverview.cshtml" />
-    <Content Include="Views\Languages\_GetUnlistedMembers.cshtml" />
-    <Content Include="Views\Languages\ManageMemberList.cshtml" />
-    <Content Include="Views\Shared\Forbidden.cshtml" />
+    <Content Include="Views\Statistics\EffectivenessLesson.cshtml" />
+    <Content Include="Views\Statistics\_EffectivenessLessonSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
