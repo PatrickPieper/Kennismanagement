@@ -159,7 +159,7 @@ namespace La_Game.Controllers
         /// <summary>
         /// GET: EffectivenessLessonSelection
         /// </summary>
-        /// <returns>Partial view for the lesson comparison selection</returns>
+        /// <returns>Partial view for selecting language</returns>
         public PartialViewResult EffectivenessLessonSelection()
         {
             List<Language> lst_Language = db.Languages.ToList();
