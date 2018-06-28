@@ -5,18 +5,25 @@
         var selected = $('input[name=answerType]:checked');
         if (selected.val() === "multiplechoice") {
 
+
+            alertbox = $('#alertBox');
+            alertbox.addClass("alert-danger");
+            alertbox.empty();
+            alertbox.html("<p>Not all fields are filled in!</p>");
+            alertbox.show();
+
             $('input[type="text"]').each(function () {
                 if ($.trim($(this).val()) == '') {
                     isValid = false;
                     $(this).css({
                         "border": "1px solid red",
-                        "background": "#FFCECE"
+                        
                     });
                 }
                 else {
                     $(this).css({
                         "border": "",
-                        "background": ""
+                     
                     });
                 }
             });
@@ -25,27 +32,27 @@
         }
 
         else if (selected.val() ==="likert") {
-            $('input[type="text"]').each(function () {
-                if ($.trim($(this).val()) == '') {
-                    isValid = false;
-                    $(this).css({
-                        "border": "1px solid red",
-                        "background": "#FFCECE"
-                    });
-                }
-                else {
-                    $(this).css({
-                        "border": "",
-                        "background": ""
-                    });
-                }
-            });
+            if (!document.getElementById("questionText").value)
+            {
+                isValid = false;
+                $("#questionText").css("border", "1px solid red");
+                alertbox = $('#alertBox');
+                alertbox.addClass("alert-danger");
+                alertbox.empty();
+                alertbox.html("<p>You forgot to fill in a Question!</p>");
+                alertbox.show();
+                
+            }
         }
 
         if (isValid == false)
             e.preventDefault();
     });
 });
+function removeWarning() {
+    document.getElementById(this.id + "_error").innerHTML = "";
+}
+document.getElementById("questionText").onkeyup = removeWarning;
 
 
 function check() {
