@@ -9,23 +9,24 @@ namespace La_Game.Models
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Lesson_idLesson { get; set; }
+        public string LessonName { get; set; }
         public int CorrectCount { get; set; }
         public int WrongCount { get; set; }
-        public double Average { get; set; }
+        public double CorrectPercentage { get; set; }
 
-        public void UpdateAverage()
+        public void UpdateCorrectPercentage()
         {
             if(WrongCount == 0 && CorrectCount != 0)
             {
-                Average = 100;
+                CorrectPercentage = 100;
                 return;
             }
             if(WrongCount == 0 && CorrectCount == 0)
             {
-                Average = 0;
+                CorrectPercentage = 0;
                 return;
             }
-            Average = Math.Round((double)CorrectCount / ((double)CorrectCount + (double)WrongCount) * 100.0,2);
+            CorrectPercentage = Math.Round((double)CorrectCount / ((double)CorrectCount + (double)WrongCount) * 100.0,2);
         }
     }
 }

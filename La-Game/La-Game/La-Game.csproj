@@ -569,6 +569,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\effectivenesslessonselect.js" />
     <Content Include="Scripts\lessonselectionrefresh.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\studenttest.js" />
@@ -661,6 +662,7 @@
     <Content Include="Views\Members\Index.cshtml" />
     <Content Include="Views\Members\Register.cshtml" />
     <Content Include="Views\Statistics\EffectivenessLesson.cshtml" />
+    <Content Include="Views\Statistics\_EffectivenessLessonSelection.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

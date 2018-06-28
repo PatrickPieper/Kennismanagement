@@ -9,6 +9,7 @@
         <div class="row">
             <div class="form-group">
                 <h4>Percentage correct per Lesson</h4>
+                @{Html.RenderAction("EffectivenessLessonSelection", "Statistics", new { });}
                 <canvas id="lineChart" width="400" height="150"></canvas>
             </div>
         </div>
@@ -27,8 +28,7 @@
         createChart();
         updateChart();
 
-        function createChart()
-        {
+        function createChart() {
             var c = document.getElementById("lineChart");
             var ctx = c.getContext("2d");
             myLineChart = new Chart(ctx, {
@@ -57,10 +57,20 @@
                 }
             });
         }
-        function updateChart()
-        {
-            var tData = $.getValues('/Statistics/LineChartDataEffectivenessLesson');
+        function updateChart(idLanguage) {
+            var tData = $.getValues('/Statistics/LineChartDataEffectivenessLesson?idLanguage=' + idLanguage);
             if (tData !== null) {
+                //Loop through the datasets to change the 0.0001 placeholder to NaN, circumvents NaN not being valid JSON
+                for (x = 0; x < tData.datasets.length; x++)
+                {
+                    for (y = 0; y < tData.datasets[x].data.length; y++)
+                    {
+                        if (tData.datasets[x].data[y] == 0.0001)
+                        {
+                            tData.datasets[x].data[y] = NaN;
+                        }
+                    }
+                }
                 myLineChart.data = tData;
             }
             else {
@@ -71,4 +81,5 @@
         }
     </script>
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/effectivenesslessonselect.js")
 }

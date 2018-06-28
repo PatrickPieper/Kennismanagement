@@ -156,6 +156,19 @@ namespace La_Game.Controllers
 
             return PartialView("_CompareLessonSelection");
         }
+        /// <summary>
+        /// GET: EffectivenessLessonSelection
+        /// </summary>
+        /// <returns>Partial view for the lesson comparison selection</returns>
+        public PartialViewResult EffectivenessLessonSelection()
+        {
+            List<Language> lst_Language = db.Languages.ToList();
+           
+            //Create the selectlists for the dropdowns
+            ViewBag.lst_Languages = new SelectList(lst_Language, "idLanguage", "languageName");
+
+            return PartialView("_EffectivenessLessonSelection");
+        }
         #endregion
         #region Json Results
         /// <summary>
@@ -286,63 +299,94 @@ namespace La_Game.Controllers
 
             return Json(_dataSet, JsonRequestBehavior.AllowGet);
         }
-        public JsonResult LineChartDataEffectivenessLesson(int? idLesson)
+        public JsonResult LineChartDataEffectivenessLesson(int? idLanguage)
         {
             var random = new Random();
-            //Query to select questions that were answered wrongly the most, with their amount
+            //Query to select questionresult data together with lesson and participant data
             StringBuilder sqlQueryString = new StringBuilder();
-            sqlQueryString.Append("select p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount' from QuestionResult as qr" +
+            sqlQueryString.Append("select p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount', le.lessonName from QuestionResult as qr" +
                                 " left join AnswerOption as cao on qr.AnswerOption_idAnswer = cao.idAnswer and cao.correctAnswer = 1" +
                                 " left join AnswerOption as wao on qr.AnswerOption_idAnswer = wao.idAnswer and wao.correctAnswer = 0" +
                                 " join Participant as p on p.idParticipant = qr.Participant_idParticipant" +
                                 " join QuestionList as ql on qr.QuestionList_idQuestionList = ql.idQuestionList" +
-                                " join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList");
-            //Append the filter values to the query, if set
-            if (idLesson != null && idLesson != -1)
+                                " join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList" + 
+                                " join Lesson as le on lq.Lesson_idLesson = le.idLesson");
+            //Use the currently selected language to narrow the results
+            if (idLanguage != null && idLanguage != -1)
             {
-                sqlQueryString.Append(" where lq.Lesson_idLesson = " + idLesson);
+                sqlQueryString.Append(" where le.Language_idLanguage = " + idLanguage);
             }
-            sqlQueryString.Append(" group by p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson");
+            //If not set, return empty JSON
+            else
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            sqlQueryString.Append(" group by p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson, le.lessonName");
             var queryResult = db.Database.SqlQuery<ParticipantLessonWrongCorrect>(sqlQueryString.ToString());
 
+            //If the query has no results, send empty JSON
             if(queryResult.Count() == 0)
             {
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            int lessonCount = queryResult.Select(o => o.Lesson_idLesson).Distinct().Count();
+            //Store both the unique lessonIDs and participantIDs for later use
+            int[] lessonIDs = queryResult.Select(o => o.Lesson_idLesson).Distinct().ToArray();
             int[] participantIDs = queryResult.Select(o => o.IdParticipant).Distinct().ToArray();
 
+            //Convert the queryresult to list, then loop through it to calculate the correct % for each result
             List<ParticipantLessonWrongCorrect> lstParticipantResults = queryResult.ToList();
-
             foreach (ParticipantLessonWrongCorrect result in lstParticipantResults)
             {
-                result.UpdateAverage();
+                result.UpdateCorrectPercentage();
             }
+            //Group the results by participant, using participant ID as key
             Dictionary<int, List<ParticipantLessonWrongCorrect>> dictParticipantResults = new Dictionary<int, List<ParticipantLessonWrongCorrect>>();
-
             foreach(int participantID in participantIDs)
             {
                 dictParticipantResults.Add(participantID, lstParticipantResults.Where(p => p.IdParticipant == participantID).ToList());
             }
-
+            //Create a list of labels using the lesson IDs
             List<string> lstLabels = new List<string>();
-            for(int x = 1; x <= lessonCount; x++)
+            foreach(int idLesson in lessonIDs)
             {
-                lstLabels.Add("Lesson " + x);
+                lstLabels.Add(lstParticipantResults.Where(o => o.Lesson_idLesson == idLesson).Distinct().First().LessonName);
             }
-
+            
             Chart _chart = new Chart();
             _chart.labels = lstLabels.ToArray();
             _chart.datasets = new List<Datasets>();
             List<Datasets> _dataSet = new List<Datasets>();
+            //Add a dataset for each participant
             foreach(var kvp in dictParticipantResults)
             {
                 String randomColor = String.Format("#{0:X6}", random.Next(0x1000000));
+                List<double> lstData = new List<double>();
+                //Loop through the results to see if the participant has results for the provided lessonID, if not, add a placeholder 0.0001 (NaN not supported in JSON)
+                foreach(int idLesson in lessonIDs)
+                {
+                    bool idFound = false;
+                    foreach(ParticipantLessonWrongCorrect result in kvp.Value)
+                    {
+                        if(idLesson == result.Lesson_idLesson)
+                        {
+                            idFound = true;
+                        }
+                    }
+                    if(idFound)
+                    {
+                        lstData.Add(kvp.Value.Where(o => o.Lesson_idLesson == idLesson).First().CorrectPercentage);
+                    }
+                    else
+                    {
+                        lstData.Add(0.0001);
+                    }
+                }
+
                 _dataSet.Add(new Datasets()
                 {
                     label = kvp.Value[0].FirstName + " " + kvp.Value[0].LastName,
-                    data = kvp.Value.Select(o => o.Average).ToArray(),
+                    data = lstData.ToArray(),
                     backgroundColor = randomColor,
                     borderColor = randomColor,
                     hoverBackgroundColor = randomColor,
