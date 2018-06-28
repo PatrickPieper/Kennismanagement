@@ -8,7 +8,7 @@
             $('input[type="text"]').each(function ()
             
             {
-                if ($.trim($(this).val()) == '') {
+                if ($.trim($(this).val()) === '') {
                     isValid = false;
 
 
@@ -45,7 +45,7 @@
             }
         }
 
-        if (isValid == false)
+        if (isValid === false)
             e.preventDefault();
     });
 });
@@ -57,7 +57,7 @@ function check() {
     selects = document.getElementsByName("correctAnswer");
     alertbox = $('#alertBox');
     for (i = 0; i < selects.length; i++) {
-        if (selects[i].value == 1) {
+        if (selects[i].value === 1) {
             count++;
         }
         if (count < 1) {
@@ -66,7 +66,7 @@ function check() {
             alertbox.show();
             window.scrollTo(0, 0);
             selects[i].value = 0;
-            event.preventDefault()
+            event.preventDefault(),
         }
         else if (count > 1) {
             alertbox.hide();
