@@ -3,14 +3,25 @@
 }
 
 <h2> Lesson Statistics </h2>
-
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("CompareLessons", "Statistics") + "'");">
-        <span class="glyphicon glyphicon-stats"></span> Compare Lessons
-    </button>
-</p>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Statistics") + "'");">
-        <span class="glyphicon glyphicon-menu-left"></span> Back to Statistics
-    </button>
-</p>
+<hr />
+<div class="container">
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("CompareLessons", "Statistics") + "'");">
+                        <span class="glyphicon glyphicon-stats"></span> Compare Lessons
+                    </button>
+                </div>
+            </div>
+            <div class="row top-buffer">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Statistics") + "'");">
+                        <span class="glyphicon glyphicon-menu-left"></span> Back to Statistics
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>

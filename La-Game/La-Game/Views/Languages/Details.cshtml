@@ -10,29 +10,35 @@
     <div class="row">
         <div>
             <h2>Language Details</h2>
-            <div>
-                <hr />
-                <dl class="dl-horizontal">
-                    <dt>
-                        Language
-                    </dt>
+            <hr />
+            <div class="row">
+                <div class="col-md-6 col-md-offset-3">
+                    <dl class="dl-horizontal">
+                        <dt>
+                            Language
+                        </dt>
 
-                    <dd>
-                        @Html.DisplayFor(model => model.languageName)
-                    </dd>
-                </dl>
+                        <dd>
+                            @Html.DisplayFor(model => model.languageName)
+                        </dd>
+                    </dl>
+                </div>
             </div>
-            <h3>
-                Active Members
-                @if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
-                {
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("ManageMemberList", "Languages", new { idLanguage = Model.idLanguage }) + "'");">
-                        <span class="glyphicon glyphicon-list"></span> Manage Members
-                    </button>
-                }
-            </h3>
-            <div class="table-responsive col-md-6">
-                @{Html.RenderAction("GetLanguageMembers", "Languages");}
+            <div class="row">
+                <div class="col-md-8 col-md-offset-2">
+                    <h3>
+                        Active Members
+                        @if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
+                        {
+                            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("ManageMemberList", "Languages", new { idLanguage = Model.idLanguage }) + "'");">
+                                <span class="glyphicon glyphicon-list"></span> Manage Members
+                            </button>
+                        }
+                    </h3>
+                    <div>
+                        @{Html.RenderAction("GetLanguageMembers", "Languages");}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

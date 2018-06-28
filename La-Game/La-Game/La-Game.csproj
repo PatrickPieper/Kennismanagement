@@ -226,6 +226,7 @@
     <Compile Include="Models\QuestionListInfoModel.cs" />
     <Compile Include="Models\QuestionListResult.cs" />
     <Compile Include="Models\QuestionListStatisticsModel.cs" />
+    <Compile Include="Models\QuestionListsummary.cs" />
     <Compile Include="Models\TestQuestionData.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
@@ -662,6 +663,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\AnswerOptions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

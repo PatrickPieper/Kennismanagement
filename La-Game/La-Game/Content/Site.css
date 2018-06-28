@@ -51,53 +51,22 @@ p {
     background-color: #91BC06;
 }
 
-a.navbar-brand {
-    color: white;
+.navbar li a {
+    color: #000000 !important;
 }
 
-    a.navbar-brand:active {
-        color: white;
-    }
-
-    a.navbar-brand:link {
-        color: white;
-    }
-
-    a.navbar-brand:visited {
-        color: white;
-    }
-
-a#loginLink {
-    color: white;
-}
-
-    a#loginLink:active {
-        color: white;
-    }
-
-    a#loginLink:link {
-        color: white;
-    }
-
-    a#loginLink:visited {
-        color: white;
-    }
-
-
-.navbar-nav li a {
-    color: white;
+.navbar li a:hover{
+    color: dimgray !important;
 }
 
 .navbar-inverse {
-    border-color: white;
+    border-color: #91BC06;
 }
-
-    .navbar-inverse .navbar-nav > li > a {
-        color: white;
-    }
-
 .jumbotron {
-    background-color: #d1dde4;
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important;
 }
 
     .jumbotron h1 {
@@ -106,8 +75,8 @@ a#loginLink {
     }
 
     .jumbotron p {
-        color: white;
-        text-shadow: 1px 1px 1px #000;
+        color: #000;
+        
     }
 
 .navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
@@ -124,4 +93,12 @@ a#loginLink {
 
 .navbar-brand {
     padding-top: 0;
+}
+
+.top-buffer {
+    margin-top: 2%;
+}
+
+.panel-heading {
+    background-color: #eee;
 }

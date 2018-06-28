@@ -6,11 +6,11 @@
 }
 @Styles.Render("~/Content/dataTables")
 <div class="container">
-    <h2>Participant Overview</h2>
+    <h2>Participant overview</h2>
 
     <p>
         <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Participants") + "'");">
-            <span class="glyphicon glyphicon-plus"></span> Create New
+            <span class="glyphicon glyphicon-plus"></span> Create new
         </button>
     </p>
     <table id="participants" class="table table table-striped table-hover table-responsive">
