@@ -5,13 +5,15 @@ var answerType = $('input[name=answerType]');
 answerType.change(function () {
     var selected = $('input[name=answerType]:checked');
     if (selected.val() === "multiplechoice") {
-        document.getElementById("Option").style.display = 'inline';
-        document.getElementById("AddAnswer").style.display = 'inline';
-        document.getElementById("test").style.display = 'none';
+        $("#Option").css("display", "inline");
+        $("#AddAnswer").css("display", "inline");
+        $("#test").css("display", "none");
+        $("#HP").attr("required", false);
     } else if (selected.val() === "likert") {
-        document.getElementById("test").style.display = 'inline';
-        document.getElementById("Option").style.display = 'none';
-        document.getElementById("AddAnswer").style.display = 'none';
+        $("#test").css("display","inline");
+        $("#Option").css("display", "none");
+        $("#AddAnswer").css("display", "none");
+        $("#HP").attr("required", true);
     }
 }
 );

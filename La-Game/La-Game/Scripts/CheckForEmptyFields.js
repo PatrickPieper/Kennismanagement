@@ -1,24 +1,47 @@
-﻿$(document).ready(function () {
+﻿﻿$(document).ready(function () {
     $('#btnSubmit').click(function (e) {
         var isValid = true;
         var answerType = $('input[name=answerType]');
         var selected = $('input[name=answerType]:checked');
         if (selected.val() === "multiplechoice") {
 
+            $('input[type="text"]').each(function ()
+            
+            {
+                if ($.trim($(this).val()) == '') {
+                    isValid = false;
 
+
+                    alertbox = $('#alertBox');
+                    alertbox.addClass("alert-danger");
+                    alertbox.empty();
+                    alertbox.html("<p>Not all fields are filled in!</p>");
+                    alertbox.show();
+                    alertbox.hide(5000);
+
+
+                    $(this).css({
+                        "border": "1px solid red",
+                    });
+                }
+                else {
+                    $(this).css({
+                        "border": "",
+                    });
+                }
+            });
+
+            check()
         }
 
-        else if (selected.val() ==="likert") {
-            if (!document.getElementById("questionText").value)
-            {
+        else if (selected.val() === "likert") {
+            if (!document.getElementById("questionText").value) {
                 isValid = false;
                 $("#questionText").css("border", "1px solid red");
                 alertbox = $('#alertBox');
                 alertbox.addClass("alert-danger");
                 alertbox.empty();
-                alertbox.html("<p>You forgot to fill in a Question!</p>");
-                alertbox.show();
-                
+                alertbox.html("<p>You forgot to fill in a Question!</p>"); alertbox.show();
             }
         }
 
@@ -26,10 +49,7 @@
             e.preventDefault();
     });
 });
-function removeWarning() {
-    document.getElementById(this.id + "_error").innerHTML = "";
-}
-document.getElementById("questionText").onkeyup = removeWarning;
+
 
 
 function check() {
