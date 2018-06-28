@@ -61,7 +61,7 @@
             <div class="form-horizontal">
                 <div id="test" style="display:none" class="col-sm-12">
                     <hr />
-                    <input type="radio" name="likertOption" value="1" required> Thumbs<br>
+                    <input type="radio" name="likertOption" value="1"> Thumbs<br>
                     <input type="radio" name="likertOption" value="2"> Smileys<br>
                     <input type="radio" name="likertOption" value="3"> Numbers
                 </div>
@@ -74,7 +74,7 @@
                     @Html.Partial("_QuestionPartial")
                     @Html.Partial("_QuestionPartial")
                 </div>
-                <a class="btn btn-success" id="AddAnswer" style="display:none" data-url='@Url.Action("AddAnswerOption", "AnswerOptions")'><i class="fas fa-plus"> Add answer</i></a>
+                <a class="btn btn-success" id="AddAnswer" style="display:none" data-url='@Url.Action("AddAnswerOption", "Questions")'><i class="fas fa-plus"> Add answer</i></a>
             </div>
         </div>
         <div class="form-group">
@@ -95,5 +95,4 @@
     @Scripts.Render("~/Scripts/answer.js")
     @Scripts.Render("~/Scripts/correctAnswer.js")
     @Scripts.Render("~/Scripts/CheckForEmptyFields.js")
-
 }

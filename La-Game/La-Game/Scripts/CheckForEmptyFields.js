@@ -6,29 +6,6 @@
         if (selected.val() === "multiplechoice") {
 
 
-            alertbox = $('#alertBox');
-            alertbox.addClass("alert-danger");
-            alertbox.empty();
-            alertbox.html("<p>Not all fields are filled in!</p>");
-            alertbox.show();
-
-            $('input[type="text"]').each(function () {
-                if ($.trim($(this).val()) == '') {
-                    isValid = false;
-                    $(this).css({
-                        "border": "1px solid red",
-                        
-                    });
-                }
-                else {
-                    $(this).css({
-                        "border": "",
-                     
-                    });
-                }
-            });
-
-            check()
         }
 
         else if (selected.val() ==="likert") {
