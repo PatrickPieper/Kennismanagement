@@ -8,6 +8,9 @@ using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Lesson Controller
+    /// </summary>
     public class LessonsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -235,34 +238,11 @@ namespace La_Game.Controllers
 
             // Get list of participants that have results for this questionlist+lesson combination
             String selectQuery = "SELECT DISTINCT p.* FROM Participant AS p JOIN QuestionResult AS qr on qr.Participant_idParticipant = p.idParticipant WHERE qr.QuestionList_idQuestionList = " + questionListID + " AND qr.QuestionList_idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + lessonID + ") ";
-
             IEnumerable<Participant> data = db.Database.SqlQuery<Participant>(selectQuery);
 
             // Return the overview containing the data
-            ViewBag.questionListID = questionListID;
-            ViewBag.lessonID = lessonID;
-            return View(data);
-        }
-
-        /// <summary>
-        /// GET: Lessons/QuestionResultParticipantOverview/[questionListID]?lessonID=[lessonID]
-        /// Get a list of all participants that have done the questionlist. 
-        /// </summary>
-        /// <param name="questionListID"> Id of the questionlist. </param>
-        /// <param name="lessonID"> Id of the lesson. </param>
-        public ActionResult QuestionResultParticipantOverview(int? questionListID, int? lessonID)
-        {
-            // Check if id was given
-            if (questionListID == null || lessonID == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-
-            // Get list of questionresults for this questionlist+lesson combination
-            String selectQuery = "SELECT qr.* FROM QuestionResult AS qr JOIN Participant AS p on qr.Participant_idParticipant = p.idParticipant WHERE qr.QuestionList_idQuestionList = " + questionListID + " AND qr.QuestionList_idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + lessonID + ") ";
-            IEnumerable<QuestionResult> data = db.Database.SqlQuery<QuestionResult>(selectQuery);
-
-            // Return the overview containing the data
+            ViewBag.questionList = db.QuestionLists.Find(questionListID);
+            ViewBag.lesson = db.Lessons.Find(lessonID);
             return View(data);
         }
 
@@ -303,7 +283,7 @@ namespace La_Game.Controllers
             List<QuestionList> allLists = (from q in db.QuestionLists select q).ToList();
 
             // Get all the lists that are already in the lesson
-            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + "); ";
+            String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + ");";
             List<QuestionList> currentLists = db.Database.SqlQuery<QuestionList>(selectQuery).ToList();
 
             // Compare the two lists and remove all the questions that are already in the list
@@ -314,7 +294,7 @@ namespace La_Game.Controllers
 
             // Set the lessonId and return the PartialView
             ViewBag.idLesson = idLesson;
-            return PartialView("_AddQuestionListTable", allLists);
+            return PartialView("_AddQuestionListTable", allLists.Where(s => s.isHidden != 1));
         }
 
         /// <summary>

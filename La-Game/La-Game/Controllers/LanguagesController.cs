@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Web.Mvc;
 using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Language Controller.
+    /// </summary>
     public class LanguagesController : Controller
     {
+        // Database context
         private LaGameDBContext db = new LaGameDBContext();
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace La_Game.Controllers
             // Return view containing the language list
             return View(languages.ToList());
         }
-
+        
         /// <summary>
         /// GET: Languages/Details/[id]
         /// Get the details of a language and show it on a seperate page.
@@ -216,7 +219,8 @@ namespace La_Game.Controllers
             // Redirect to index
             return RedirectToAction("Index");
         }
-
+        
+        #region Member Management
         /// <summary>
         /// GET: Languages/GetLanguageMembers/[id]
         /// Get the list of members that belong to the language.
@@ -336,6 +340,7 @@ namespace La_Game.Controllers
             // Redirect back to the list to reload the data
             return RedirectToAction("ManageMemberList", new { idLanguage = collection.Get("Language_idLanguage") });
         }
+        #endregion
 
         /// <summary>
         /// Dispose of the database connection.

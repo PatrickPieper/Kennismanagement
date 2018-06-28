@@ -3,43 +3,89 @@
 @{
     ViewBag.Title = "Participant Overview";
 }
+@Styles.Render("~/Content/dataTables")
 
-<h2> Overview Participants in Lesson - @ViewBag.Language</h2>
+<div class="container">
+    <h2>
+        Overview Participants
+    </h2>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Lesson
+        </dt>
 
-<table class="table">
-    <tr>
-        <th>
-            First Name
-        </th>
-        <th>
-            Last Name
-        </th>
-        <th>
-            Birth Date
-        </th>
-        <th></th>
-    </tr>
+        <dd>
+            @ViewBag.lesson.lessonName
+        </dd>
 
-@foreach (var item in Model)
-{
-    var link = Url.Action("QuestionResultParticipantOverview", "Lessons", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID });
-    <tr>
-        <td onclick="Redirect('@link')">
-            @Html.DisplayFor(modelItem => item.firstName)
-        </td>
-        <td onclick="Redirect('@link')">
-            @Html.DisplayFor(modelItem => item.lastName)
-        </td>
-        <td onclick="Redirect('@link')">
-            @{var birthDate = item.birthDate.ToString("dd-MM-yyyy");}
-            @Html.DisplayFor(modelItem => birthDate)
-        </td>
-        <td>
-            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionResultParticipantOverview", "Lessons", new { questionListID = ViewBag.questionListID, lessonID = ViewBag.lessonID }) + "'");">
-                <span class="glyphicon glyphicon-list-alt"></span> Results
-            </button>
-        </td>
-    </tr>
+        <dt>
+            Questionlist
+        </dt>
+
+        <dd>
+            @ViewBag.questionList.questionListName
+        </dd>
+    </dl>
+    <div class="row col-md-12 top-buffer">
+        <table id="overview" class="table table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        First Name
+                    </th>
+                    <th>
+                        Last Name
+                    </th>
+                    <th>
+                        Birth Date
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.firstName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.lastName)
+                        </td>
+                        <td>
+                            @{var birthDate = item.birthDate.ToString("dd-MM-yyyy");}
+                            @Html.DisplayFor(modelItem => birthDate)
+                        </td>
+                        <td>
+                            @Html.RouteLink("Results", "ParticipantResultQuestionList", new { participantId = item.idParticipant, questionlistId = @ViewBag.questionlist.idQuestionList }, new { @class = "btn btn-default" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row col-md-12">
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "Lessons", new { idLesson = ViewBag.lesson.idLesson }) + "'");">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back to lesson
+        </button>
+    </div>
+</div>
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#overview').DataTable(
+                {
+                    "pagingType": "simple",
+                    "columnDefs": [
+                        { targets: 3, orderable: false }
+                    ]
+                }
+            );
+        });
+    </script>
 }
-
-</table>

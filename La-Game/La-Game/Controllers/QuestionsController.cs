@@ -10,6 +10,9 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Question Controller
+    /// </summary>
     public class QuestionsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -19,7 +22,6 @@ namespace La_Game.Controllers
         private Stream imageStream;
         private string containerName;
         BlobsController blobsController = new BlobsController();
-        AnswerOptionsController answerOptionsController = new AnswerOptionsController();
         private string fileUpdateName;
         private byte likert;
         
@@ -75,10 +77,7 @@ namespace La_Game.Controllers
         }
 
         // POST: Questions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase FileImage, HttpPostedFileBase FileAudio)
         {
             var max = 1;
@@ -144,21 +143,23 @@ namespace La_Game.Controllers
                         option.answerText = text;
                         option.correctAnswer = 1;
                         option.Question_idQuestion = max;
-                        answerOptionsController.Create(option);
+
+                        // Add the anwseroption to the database and increase the count
+                        db.AnswerOptions.Add(option);
+                        db.SaveChanges();
                         count++;
                     }
 
                 }
+
                 // If multiple choice is selected put the anwsers in a array and write it to the database.
-                
                 else if (answerType == "multiplechoice")
                 {
                     string text = Request.Form["answerText"];
                     string[] answers = text.Split(',');
                     string correct = Request.Form["correctAnswer"];
                     string[] bools = correct.Split(',');
-
-
+                    
                     int count = 0;
 
                     while (count <= answers.Length - 1)
@@ -175,8 +176,10 @@ namespace La_Game.Controllers
                         {
                             answerOption.correctAnswer = 0;
                         }
-
-                        answerOptionsController.Create(answerOption);
+                    
+                        // Add the anwseroption to the database and increase the count
+                        db.AnswerOptions.Add(answerOption);
+                        db.SaveChanges();
                         count++;
                     }
                 }
@@ -330,6 +333,14 @@ namespace La_Game.Controllers
 
             // Redirect to index
             return RedirectToAction("Index");
+        }
+
+        /// <summary>
+        /// Add new answeroption partialview
+        /// </summary>
+        public ActionResult AddAnswerOption()
+        {
+            return PartialView("_QuestionPartial");
         }
 
         /// <summary>

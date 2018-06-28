@@ -10,6 +10,9 @@ using System.Web.Mvc;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Statistics Controller
+    /// </summary>
     public class StatisticsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -35,6 +38,11 @@ namespace La_Game.Controllers
         }
         // GET: CompareLessons
         public ActionResult CompareLessons()
+        {
+            return View();
+        }
+        // GET: EffectivenessLesson
+        public ActionResult EffectivenessLesson()
         {
             return View();
         }
@@ -76,6 +84,7 @@ namespace La_Game.Controllers
             
             return View();
         }
+
         #region Partial Views
         /// <summary>
         /// GET: CommonWrongAnswerFilter
@@ -110,7 +119,6 @@ namespace La_Game.Controllers
                 {
                     questionListQueryString.Append(" JOIN Lesson_QuestionList AS lq on ql.idQuestionList = lq.QuestionList_idQuestionList");
                     questionListQueryString.Append(" WHERE lq.Lesson_idLesson = " + idLesson);
-
                 }
                 lst_QuestionList = db.Database.SqlQuery<QuestionList>(questionListQueryString.ToString()).ToList();
             }
@@ -154,7 +162,21 @@ namespace La_Game.Controllers
 
             return PartialView("_CompareLessonSelection");
         }
+        /// <summary>
+        /// GET: EffectivenessLessonSelection
+        /// </summary>
+        /// <returns>Partial view for selecting language</returns>
+        public PartialViewResult EffectivenessLessonSelection()
+        {
+            List<Language> lst_Language = db.Languages.ToList();
+           
+            //Create the selectlists for the dropdowns
+            ViewBag.lst_Languages = new SelectList(lst_Language, "idLanguage", "languageName");
+
+            return PartialView("_EffectivenessLessonSelection");
+        }
         #endregion
+
         #region Json Results
         /// <summary>
         /// Method to create the barchart data for the common wrong answers page
@@ -190,40 +212,47 @@ namespace La_Game.Controllers
             sqlQueryString.Append(" group by q.idQuestion, q.questionText");
             var queryResult = db.Database.SqlQuery<CommonWrongQuestionResult>(sqlQueryString.ToString()).OrderByDescending(o => o.wrongCount).ToList();
 
-            //Turn query result into two separate list for use as data/labels for chart.js
-            List<string> questionTexts = new List<string>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
+            if (queryResult.Count != 0)
             {
-                questionTexts.Add(entry.idQuestion + ":" + entry.questionText);
-            }
-            List<int> questionData = new List<int>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
-            {
-                questionData.Add(entry.wrongCount);
-            }
-            //For every result, generate a random bar color
-            List<string> barColors = new List<string>();
-            foreach (CommonWrongQuestionResult entry in queryResult)
-            {
-                barColors.Add(String.Format("#{0:X6}", random.Next(0x1000000)));
-            }
+                //Turn query result into two separate list for use as data/labels for chart.js
+                List<string> questionTexts = new List<string>();
+                foreach (CommonWrongQuestionResult entry in queryResult)
+                {
+                    questionTexts.Add(entry.idQuestion + ":" + entry.questionText);
+                }
+                List<int> questionData = new List<int>();
+                foreach (CommonWrongQuestionResult entry in queryResult)
+                {
+                    questionData.Add(entry.wrongCount);
+                }
+                //For every result, generate a random bar color
+                List<string> barColors = new List<string>();
+                foreach (CommonWrongQuestionResult entry in queryResult)
+                {
+                    barColors.Add(String.Format("#{0:X6}", random.Next(0x1000000)));
+                }
 
-            //Create new chart and dataset
-            Chart _chart = new Chart();
-            _chart.labels = questionTexts.ToArray();
-            _chart.datasets = new List<Datasets>();
-            List<Datasets> _dataSet = new List<Datasets>();
-            _dataSet.Add(new Datasets()
+                //Create new chart and dataset
+                Chart _chart = new Chart();
+                _chart.labels = questionTexts.ToArray();
+                _chart.datasets = new List<Datasets>();
+                List<Datasets> _dataSet = new List<Datasets>();
+                _dataSet.Add(new Datasets()
+                {
+                    label = "Number of Wrong Answers",
+                    data = questionData.Select(Convert.ToDouble).ToArray(),
+                    backgroundColor = barColors[0],
+                    borderColor = barColors[0],
+                    hoverBackgroundColor = barColors[0],
+                    borderWidth = "1"
+                });
+                _chart.datasets = _dataSet;
+                return Json(_chart, JsonRequestBehavior.AllowGet);
+            }
+            else
             {
-                label = "Number of Wrong Answers",
-                data = questionData.ToArray(),
-                backgroundColor = barColors[0],
-                borderColor = barColors[0],
-                hoverBackgroundColor = barColors[0],
-                borderWidth = "1"
-            });
-            _chart.datasets = _dataSet;
-            return Json(_chart, JsonRequestBehavior.AllowGet);
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
         }
         /// <summary>
         /// Method to get bar chart data as JsonResult from database
@@ -252,42 +281,130 @@ namespace La_Game.Controllers
                 sqlQueryString.Append(" and le.idLesson = " + idLesson);
             }
             sqlQueryString.Append(" group by le.idLesson");
-            var queryResult = db.Database.SqlQuery<CompareLessonResult>(sqlQueryString.ToString());
+            var queryResult = db.Database.SqlQuery<CompareLessonResult>(sqlQueryString.ToString()).First();
 
-            if (queryResult.Count()!= 0)
+            //Create two datasets, one for correct, one for wrong answers
+            List<Datasets> _dataSet = new List<Datasets>();
+            _dataSet.Add(new Datasets()
             {
-                var firstQueryResult = queryResult.First();
-                List<Datasets> _dataSet = new List<Datasets>();
-                //Create two datasets, one for correct, one for wrong answers
-                _dataSet.Add(new Datasets()
-                {
-                    label = "Correct Answers",
-                    data = new int[] { firstQueryResult.correctCount },
-                    backgroundColor = ColorTranslator.ToHtml(Color.Green),
-                    borderColor = ColorTranslator.ToHtml(Color.Green),
-                    hoverBackgroundColor = ColorTranslator.ToHtml(Color.Green),
-                    borderWidth = "1"
-                });
-                _dataSet.Add(new Datasets()
-                {
-                    label = "Wrong Answers",
-                    data = new int[] { firstQueryResult.wrongCount },
-                    backgroundColor = ColorTranslator.ToHtml(Color.Red),
-                    borderColor = ColorTranslator.ToHtml(Color.Red),
-                    hoverBackgroundColor = ColorTranslator.ToHtml(Color.Red),
-                    borderWidth = "1"
-                });
-                return Json(_dataSet, JsonRequestBehavior.AllowGet);
+                label = "Correct Answers",
+                data = new double[] { queryResult.correctCount },
+                backgroundColor = ColorTranslator.ToHtml(Color.Green),
+                borderColor = ColorTranslator.ToHtml(Color.Green),
+                hoverBackgroundColor = ColorTranslator.ToHtml(Color.Green),
+                borderWidth = "1"
+            });
+            _dataSet.Add(new Datasets()
+            {
+                label = "Wrong Answers",
+                data = new double[] { queryResult.wrongCount },
+                backgroundColor = ColorTranslator.ToHtml(Color.Red),
+                borderColor = ColorTranslator.ToHtml(Color.Red),
+                hoverBackgroundColor = ColorTranslator.ToHtml(Color.Red),
+                borderWidth = "1"
+            });
+
+            return Json(_dataSet, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult LineChartDataEffectivenessLesson(int? idLanguage)
+        {
+            var random = new Random();
+            //Query to select questionresult data together with lesson and participant data
+            StringBuilder sqlQueryString = new StringBuilder();
+            sqlQueryString.Append("select p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount', le.lessonName from QuestionResult as qr" +
+                                " left join AnswerOption as cao on qr.AnswerOption_idAnswer = cao.idAnswer and cao.correctAnswer = 1" +
+                                " left join AnswerOption as wao on qr.AnswerOption_idAnswer = wao.idAnswer and wao.correctAnswer = 0" +
+                                " join Participant as p on p.idParticipant = qr.Participant_idParticipant" +
+                                " join QuestionList as ql on qr.QuestionList_idQuestionList = ql.idQuestionList" +
+                                " join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList" + 
+                                " join Lesson as le on lq.Lesson_idLesson = le.idLesson");
+            //Use the currently selected language to narrow the results
+            if (idLanguage != null && idLanguage != -1)
+            {
+                sqlQueryString.Append(" where le.Language_idLanguage = " + idLanguage);
+            }
+            //If not set, return empty JSON
+            else
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
+            sqlQueryString.Append(" group by p.idParticipant, p.firstName, p.lastName, lq.Lesson_idLesson, le.lessonName");
+            var queryResult = db.Database.SqlQuery<ParticipantLessonWrongCorrect>(sqlQueryString.ToString());
+
+            //If the query has no results, send empty JSON
+            if(queryResult.Count() == 0)
+            {
+                return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            return Json(null, JsonRequestBehavior.AllowGet);
+            //Store both the unique lessonIDs and participantIDs for later use
+            int[] lessonIDs = queryResult.Select(o => o.Lesson_idLesson).Distinct().ToArray();
+            int[] participantIDs = queryResult.Select(o => o.IdParticipant).Distinct().ToArray();
+
+            //Convert the queryresult to list, then loop through it to calculate the correct % for each result
+            List<ParticipantLessonWrongCorrect> lstParticipantResults = queryResult.ToList();
+            foreach (ParticipantLessonWrongCorrect result in lstParticipantResults)
+            {
+                result.UpdateCorrectPercentage();
+            }
+            //Group the results by participant, using participant ID as key
+            Dictionary<int, List<ParticipantLessonWrongCorrect>> dictParticipantResults = new Dictionary<int, List<ParticipantLessonWrongCorrect>>();
+            foreach(int participantID in participantIDs)
+            {
+                dictParticipantResults.Add(participantID, lstParticipantResults.Where(p => p.IdParticipant == participantID).ToList());
+            }
+            //Create a list of labels using the lesson IDs
+            List<string> lstLabels = new List<string>();
+            foreach(int idLesson in lessonIDs)
+            {
+                lstLabels.Add(lstParticipantResults.Where(o => o.Lesson_idLesson == idLesson).Distinct().First().LessonName);
+            }
+            
+            Chart _chart = new Chart();
+            _chart.labels = lstLabels.ToArray();
+            _chart.datasets = new List<Datasets>();
+            List<Datasets> _dataSet = new List<Datasets>();
+            //Add a dataset for each participant
+            foreach(var kvp in dictParticipantResults)
+            {
+                String randomColor = String.Format("#{0:X6}", random.Next(0x1000000));
+                List<double> lstData = new List<double>();
+                //Loop through the results to see if the participant has results for the provided lessonID, if not, add a placeholder 0.0001 (NaN not supported in JSON)
+                foreach(int idLesson in lessonIDs)
+                {
+                    bool idFound = false;
+                    foreach(ParticipantLessonWrongCorrect result in kvp.Value)
+                    {
+                        if(idLesson == result.Lesson_idLesson)
+                        {
+                            idFound = true;
+                        }
+                    }
+                    if(idFound)
+                    {
+                        lstData.Add(kvp.Value.Where(o => o.Lesson_idLesson == idLesson).First().CorrectPercentage);
+                    }
+                    else
+                    {
+                        lstData.Add(0.0001);
+                    }
+                }
+
+                _dataSet.Add(new Datasets()
+                {
+                    label = kvp.Value[0].FirstName + " " + kvp.Value[0].LastName,
+                    data = lstData.ToArray(),
+                    backgroundColor = randomColor,
+                    borderColor = randomColor,
+                    hoverBackgroundColor = randomColor,
+                    borderWidth = "2"
+                });
+            }
+            
+            _chart.datasets = _dataSet;
+            return Json(_chart, JsonRequestBehavior.AllowGet);
         }
-
         #endregion JsonResults
-
-        /// <summary>
-        /// Dispose of the database connection.
-        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -10,6 +10,9 @@ using System.Web.Helpers;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Member Controller
+    /// </summary>
     [AuthorizeAdmin]
     public class MembersController : Controller
     {
@@ -75,9 +78,10 @@ namespace La_Game.Controllers
             {
                 try
                 {
-                    // Hash the password
+                    // Hash the password and activate the member
                     member.password = Crypto.HashPassword(member.password);
-                    
+                    member.isActive = 1;
+
                     // If everything is valid, add it to the database
                     db.Members.Add(member);
                     db.SaveChanges();

@@ -11,6 +11,9 @@ using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Participant Controller
+    /// </summary>
     public class ParticipantsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
