@@ -52,7 +52,7 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // Check the email that was entered and get the hashed password
+                // Check the email that was entered
                 var login = db.Members.Where(e => e.email == model.Email).FirstOrDefault();
 
                 // Verification
@@ -162,10 +162,10 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // Get member from database and retrieve the hashed password
+                // Get member from database
                 Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
 
-                // Verify the password
+                // Verification  
                 if (Crypto.VerifyHashedPassword(member.password, model.OldPassword))
                 {
                     // Hash the new password and save it to the database
@@ -184,7 +184,7 @@ namespace La_Game.Controllers
             // If not valid, stay on the page
             return View(model);
         }
-        
+
         /// <summary>  
         /// GET: /Authentication/Forbidden 
         /// Redirect to page when member is not authorized to perform the action.
@@ -192,7 +192,7 @@ namespace La_Game.Controllers
         public ActionResult Forbidden()
         {
             return View();
-        }        
+        }
         #endregion
 
         /// <summary>

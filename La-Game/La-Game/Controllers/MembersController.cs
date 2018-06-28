@@ -78,7 +78,7 @@ namespace La_Game.Controllers
             {
                 try
                 {
-                    // Hash the password
+                    // Hash the password and activate the member
                     member.password = Crypto.HashPassword(member.password);
                     member.isActive = 1;
 

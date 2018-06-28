@@ -609,7 +609,6 @@
     <Content Include="Views\Lessons\Index.cshtml" />
     <Content Include="Views\Shared\_AddQuestionListLessonTable.cshtml" />
     <Content Include="Views\Lessons\ParticipantLessonOverview.cshtml" />
-    <Content Include="Views\Lessons\QuestionResultParticipantOverview.cshtml" />
     <Content Include="Views\Languages\Create.cshtml" />
     <Content Include="Views\Languages\Delete.cshtml" />
     <Content Include="Views\Languages\Details.cshtml" />
@@ -641,7 +640,6 @@
     <Content Include="Views\Statistics\_CompareLessonSelection.cshtml" />
     <Content Include="Views\Statistics\CompareLessons.cshtml" />
     <Content Include="Views\Statistics\LessonStatistics.cshtml" />
-    <Content Include="Views\Statistics\QuestionListChoice.cshtml" />
     <Content Include="Views\Statistics\QuestionListStatistics.cshtml" />
     <Content Include="Views\Members\Activation.cshtml" />
     <Content Include="Views\Members\Details.cshtml" />
