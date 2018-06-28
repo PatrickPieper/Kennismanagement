@@ -113,6 +113,9 @@ namespace La_Game.Controllers
                 // Get the authenticationManager and sign out    
                 var authenticationManager = Request.GetOwinContext().Authentication;
                 authenticationManager.SignOut();
+
+                // Clear the cookies
+                Request.Cookies.Clear();
             }
             catch (Exception ex)
             {
@@ -161,10 +164,9 @@ namespace La_Game.Controllers
             {
                 // Get member from database and retrieve the hashed password
                 Member member = db.Members.Where(u => u.email == User.Identity.Name).FirstOrDefault();
-                var hashedPassword = member.password;
 
                 // Verify the password
-                if (Crypto.VerifyHashedPassword(hashedPassword, model.OldPassword))
+                if (Crypto.VerifyHashedPassword(member.password, model.OldPassword))
                 {
                     // Hash the new password and save it to the database
                     member.password = Crypto.HashPassword(model.NewPassword);
@@ -182,8 +184,7 @@ namespace La_Game.Controllers
             // If not valid, stay on the page
             return View(model);
         }
-        #endregion
-
+        
         /// <summary>  
         /// GET: /Authentication/Forbidden 
         /// Redirect to page when member is not authorized to perform the action.
@@ -191,7 +192,8 @@ namespace La_Game.Controllers
         public ActionResult Forbidden()
         {
             return View();
-        }
+        }        
+        #endregion
 
         /// <summary>
         /// Dispose of the database connection.

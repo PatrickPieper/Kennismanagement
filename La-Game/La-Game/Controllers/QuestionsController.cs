@@ -10,6 +10,9 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Question Controller
+    /// </summary>
     public class QuestionsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();

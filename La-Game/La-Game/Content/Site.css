@@ -3,6 +3,12 @@
     padding-bottom: 20px;
 }
 
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
 /* Override the default bootstrap behavior where horizontal description lists 
    will truncate terms that are too long to fit in the left column 
 */
@@ -16,12 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
 .table tr:hover td {
     background-color: #f2e8da;
 }
 
-.container-code{
-    padding-top:50px;
+.container-code {
+    padding-top: 50px;
 }
 
 p {
@@ -29,14 +36,92 @@ p {
 }
 
 .input {
-    width : 300px;
+    width: 300px;
     font-size: 20px;
     background-color: aliceblue;
     color: darkblue;
 }
 
-.submit{
+.submit {
     width: 300px;
-    background-color:aqua;
-    
+    background-color: aqua;
+}
+
+.navbar {
+    background-color: #91BC06;
+}
+
+a.navbar-brand {
+    color: white;
+}
+
+    a.navbar-brand:active {
+        color: white;
+    }
+
+    a.navbar-brand:link {
+        color: white;
+    }
+
+    a.navbar-brand:visited {
+        color: white;
+    }
+
+a#loginLink {
+    color: white;
+}
+
+    a#loginLink:active {
+        color: white;
+    }
+
+    a#loginLink:link {
+        color: white;
+    }
+
+    a#loginLink:visited {
+        color: white;
+    }
+
+
+.navbar-nav li a {
+    color: white;
+}
+
+.navbar-inverse {
+    border-color: white;
+}
+
+    .navbar-inverse .navbar-nav > li > a {
+        color: white;
+    }
+
+.jumbotron {
+    background-color: #d1dde4;
+}
+
+    .jumbotron h1 {
+        color: #1D81C3;
+        text-shadow: 0.8px 1px 1px #000;
+    }
+
+    .jumbotron p {
+        color: white;
+        text-shadow: 1px 1px 1px #000;
+    }
+
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+    background-color: #1D81C3;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: white;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: white;
+}
+
+.navbar-brand {
+    padding-top: 0;
 }

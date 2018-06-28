@@ -10,6 +10,9 @@ using System.Web.Mvc;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Statistics Controller
+    /// </summary>
     public class StatisticsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -39,41 +42,44 @@ namespace La_Game.Controllers
             return View();
         }
 
-        public ActionResult QuestionListChoice()
+
+        public ActionResult QuestionListStatistics(int? questionListId, int attempt = 1)
         {
             string sqlString = "SELECT * FROM QuestionList";
-            List<QuestionList> questionLists =  db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
+            List<QuestionList> questionLists = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
             ViewBag.questionLists = questionLists;
-
-            return View();
-        }
-
-        public ActionResult QuestionListStatistics(int questionListId, int attempt = 1)
-        {
-            string sqlString = "select p.firstName, p.lastName, min(qr.startTime) as 'startTime', max(qr.endTime) as 'endTime', sum(datediff(millisecond, qr.startTime,qr.endTime)) as 'totalTime',qr.attempt, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount' from QuestionResult as qr "+
-                                "left join AnswerOption as cao on qr.AnswerOption_idAnswer = cao.idAnswer and cao.correctAnswer = 1 "+
-                                "left join AnswerOption as wao on qr.AnswerOption_idAnswer = wao.idAnswer and wao.correctAnswer = 0 "+
-                                "left join Participant as p on qr.Participant_idParticipant = p.idParticipant "+
-                                "join QuestionList as ql on qr.QuestionList_idQuestionList = ql.idQuestionList "+
-                                "join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList "+
-                                "where ql.idQuestionList = "+questionListId+
-                                " AND attempt = "+attempt+
-                                " group by p.firstName, p.lastName, qr.attempt";
-            List<QuestionListStatisticsModel> questionListStatistics = db.Database.SqlQuery<QuestionListStatisticsModel>(sqlString).ToList();
-            ViewBag.questionListStatistics = questionListStatistics;
             
-            sqlString = "SELECT QuestionList_idQuestionList as idQuestionList," +
-                " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = 28) as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
-                " join QuestionResult on QuestionList.idQuestionList = QuestionResult.QuestionList_idQuestionList" +
-                " where QuestionList.idQuestionList = "+ questionListId +
-                " group by QuestionList_idQuestionList";
-            ViewBag.questionListInfo = db.Database.SqlQuery<QuestionListInfoModel>(sqlString).ToList();
+            if(questionListId == null)
+            {
+                questionListId = db.QuestionLists.SqlQuery(sqlString).First().idQuestionList;
+            }
+                sqlString = "select p.idParticipant, p.firstName, p.lastName, min(qr.startTime) as 'startTime', max(qr.endTime) as 'endTime', sum(datediff(millisecond, qr.startTime,qr.endTime)) as 'totalTime',qr.attempt, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount' from QuestionResult as qr " +
+                                    "left join AnswerOption as cao on qr.AnswerOption_idAnswer = cao.idAnswer and cao.correctAnswer = 1 " +
+                                    "left join AnswerOption as wao on qr.AnswerOption_idAnswer = wao.idAnswer and wao.correctAnswer = 0 " +
+                                    "left join Participant as p on qr.Participant_idParticipant = p.idParticipant " +
+                                    "join QuestionList as ql on qr.QuestionList_idQuestionList = ql.idQuestionList " +
+                                    "join Lesson_QuestionList as lq on ql.idQuestionList = lq.QuestionList_idQuestionList " +
+                                    "where ql.idQuestionList = " + questionListId +
+                                    " AND attempt = " + attempt +
+                                    " group by p.firstName, p.lastName, qr.attempt, p.idParticipant";
+                List<QuestionListStatisticsModel> questionListStatistics = db.Database.SqlQuery<QuestionListStatisticsModel>(sqlString).ToList();
+                ViewBag.questionListStatistics = questionListStatistics;
 
-            sqlString = "Select questionListName FROM QuestionList where idQuestionList="+questionListId;
-            ViewBag.questionListName = db.Database.SqlQuery<string>(sqlString).First();
-            ViewBag.attempt = attempt;
+                sqlString = "SELECT QuestionList_idQuestionList as idQuestionList," +
+                    " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = 28) as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
+                    " join QuestionResult on QuestionList.idQuestionList = QuestionResult.QuestionList_idQuestionList" +
+                    " where QuestionList.idQuestionList = " + questionListId +
+                    " group by QuestionList_idQuestionList";
+                ViewBag.questionListInfo = db.Database.SqlQuery<QuestionListInfoModel>(sqlString).ToList();
+
+                sqlString = "Select questionListName FROM QuestionList where idQuestionList=" + questionListId;
+                ViewBag.questionListName = db.Database.SqlQuery<string>(sqlString).First();
+                ViewBag.attempt = attempt;
+                ViewBag.questionListId = questionListId;
+            
             return View();
         }
+
         #region Partial Views
         /// <summary>
         /// GET: CommonWrongAnswerFilter
@@ -153,6 +159,7 @@ namespace La_Game.Controllers
             return PartialView("_CompareLessonSelection");
         }
         #endregion
+
         #region Json Results
         /// <summary>
         /// Method to create the barchart data for the common wrong answers page

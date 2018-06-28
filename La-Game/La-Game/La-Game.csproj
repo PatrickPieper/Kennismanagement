@@ -211,7 +211,6 @@
     <Compile Include="Controllers\MembersController.cs" />
     <Compile Include="Controllers\ParticipantsController.cs" />
     <Compile Include="Controllers\QuestionListsController.cs" />
-    <Compile Include="Controllers\QuestionResultsController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
@@ -625,11 +624,6 @@
     <Content Include="Views\Participants\Edit.cshtml" />
     <Content Include="Views\Participants\Index.cshtml" />
     <Content Include="Views\Participants\Results.cshtml" />
-    <Content Include="Views\QuestionResults\Create.cshtml" />
-    <Content Include="Views\QuestionResults\Delete.cshtml" />
-    <Content Include="Views\QuestionResults\Details.cshtml" />
-    <Content Include="Views\QuestionResults\Edit.cshtml" />
-    <Content Include="Views\QuestionResults\Index.cshtml" />
     <Content Include="Views\Shared\_QuestionPartial.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Statistics\QuestionStatistics.cshtml" />
