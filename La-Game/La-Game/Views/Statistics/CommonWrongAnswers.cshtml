@@ -70,7 +70,14 @@
         function updateChart(idLanguage, idLesson, idQuestionList)
         {
             var tData = $.getValues('/Statistics/BarChartDataCommonWrongAnswers?idLanguage=' + idLanguage + '&idLesson=' + idLesson + '&idQuestionList=' + idQuestionList);
-            myBarChart.data = tData;
+            if (tData !== null) {
+                myBarChart.data = tData;
+            }
+            else
+            {
+                myBarChart.data.datasets = [];
+                myBarChart.data.labels = [];
+            }
             myBarChart.update();
         }
     </script>

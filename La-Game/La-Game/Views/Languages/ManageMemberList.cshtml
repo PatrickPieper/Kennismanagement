@@ -9,9 +9,6 @@
 <div>
     <h2>
         Manage Members
-        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "Languages", new { id = ViewBag.idLanguage }) + "'");">
-            <span class="glyphicon glyphicon-chevron-left"></span> Back to language
-        </button>
     </h2>
 
     <div class="container">
@@ -59,6 +56,13 @@
             </div>
             <div class="table-responsive col-md-6">
                 @{Html.RenderAction("GetUnlistedMembers", "Languages");}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "Languages", new { id = ViewBag.idLanguage }) + "'");">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Back to language
+                </button>
             </div>
         </div>
     </div>

@@ -145,47 +145,14 @@ namespace La_Game.Controllers
         public ActionResult Results(int id)
         {
             Participant participant = db.Participants.Find(id);
-            List<List<KeyValuePair<String, object>>> questionlists = new List<List<KeyValuePair<String, object>>>();
-            List<int> listIds = this.GetLists(id);
-            foreach (int questionlistId in listIds)
-            {
-                String qListName = db.QuestionLists.Where(q => q.idQuestionList.Equals(questionlistId)).Select(q => q.questionListName).Single();
-                List<KeyValuePair<String, object>> questionList = new List<KeyValuePair<String, object>>();
-                questionList.Add(new KeyValuePair<string, object>("ID", questionlistId));
-                questionList.Add(new KeyValuePair<string, object>("Name", qListName));
-                List<String> questions = new List<String>();
-                List<int> answerIds = GetAnswerIds(participant.idParticipant, questionlistId);
-                List<int> question_ids = GetQuestionIds(questionlistId);
-                int numOfQuestions = question_ids.Count();
-                questionList.Add(new KeyValuePair<string, object>("countQuestions", numOfQuestions));
+            string getQuestionListSummary = "select DISTINCT(ql.idQuestionList) as 'questionListId', ql.questionListDescription, ql.questionListName," +
+        " (SELECT max(qr.attempt) FROM QuestionResult as qr WHERE qr.QuestionList_idQuestionList = ql.idQuestionList and qr.Participant_idParticipant = " + participant.idParticipant + ") as 'HighestAttempt'," +
+        " (SELECT COUNT(*) FROM QuestionList_Question as qlq WHERE qlq.QuestionList_idQuestionList = ql.idQuestionList) as 'QuestionCount' from QuestionList as ql" +
+        " JOIN QuestionResult Result on ql.idQuestionList = Result.QuestionList_idQuestionList AND Result.Participant_idParticipant =" + participant.idParticipant ;
 
-                int correctAnswerCount = 0;
-                List<AnswerOption> answers = new List<AnswerOption>();
-                foreach (var answerid in answerIds)
-                {
-                    short? correct = db.AnswerOptions.Where(a => a.idAnswer.Equals(answerid)).Select(a => a.correctAnswer).Single();
-                    if (correct == 1)
-                    {
-                        correctAnswerCount++;
-                    }
-                }
-
-
-
-                foreach (int question_id in question_ids)
-                {
-                    IEnumerable<AnswerOption> correctAnswer = db.AnswerOptions.Where(ao => ao.Question_idQuestion.Equals(question_id) && ao.correctAnswer == 1);
-                    IEnumerable<String> question = db.Questions.Where(q => q.idQuestion.Equals(question_id)).Select(q => q.questionText);
-                    IEnumerable<Question> list_questions = db.Questions.Where(q => q.idQuestion.Equals(question_id));
-
-                    questions.Add(question.Single().ToString());
-                }
-                questionList.Add(new KeyValuePair<string, object>("correctAnswerCount", correctAnswerCount));
-                questionList.Add(new KeyValuePair<string, object>("Questions", questions));
-                questionlists.Add(questionList);
-            }
-            //ViewBag.answers = answers;
-            ViewBag.questionslist = questionlists;
+            List<QuestionListsummary> questionListsummaries = db.Database.SqlQuery<QuestionListsummary>(getQuestionListSummary).ToList();
+            
+            ViewBag.questionslist = questionListsummaries;
 
 
             return View(participant);
@@ -230,7 +197,7 @@ namespace La_Game.Controllers
             StringBuilder sqlQueryString = new StringBuilder();
             int i = 1;
             
-            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt, datediff(s, qr.startTime, qr.endTime) as totalTime from QuestionResult as qr" +
+            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt, datediff(ms, qr.startTime, qr.endTime) as totalTime from QuestionResult as qr" +
                 " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
                 " join Question as q on q.idQuestion = ao.Question_idQuestion" +
                 " where qr.QuestionList_idQuestionList = " +  questionlistId +

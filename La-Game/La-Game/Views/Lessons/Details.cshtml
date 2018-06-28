@@ -7,7 +7,7 @@
 
 <div class="container">
     <div class="row">
-        <div>
+        <div class="col-md-6 col-md-offset-3">
             <h2>Lesson Details</h2>
             <div>
                 <hr />
@@ -44,16 +44,16 @@
                     <span class="glyphicon glyphicon-list-alt"></span> Manage Questionlists
                 </button>
             </h3>
-            <div class="table-responsive col-md-8">
+            <div>
                 @{Html.RenderAction("GetQuestionListsTableForLesson", "QuestionLists", new { idLesson = Model.idLesson });}
             </div>
         </div>
     </div>
-    <p>
+    <div class="row col-md-offset-3">
         <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Lessons", new { idLanguage = Model.Language_idLanguage }) + "'");">
             <span class="glyphicon glyphicon-chevron-left"></span> Back to list
         </button>
-    </p>
+    </div>
 
 </div>
 

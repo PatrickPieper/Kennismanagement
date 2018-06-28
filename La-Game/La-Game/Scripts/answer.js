@@ -5,13 +5,15 @@ var answerType = $('input[name=answerType]');
 answerType.change(function () {
     var selected = $('input[name=answerType]:checked');
     if (selected.val() === "multiplechoice") {
-        document.getElementById("Option").style.display = 'inline';
-        document.getElementById("AddAnswer").style.display = 'inline';
-        document.getElementById("test").style.display = 'none';
+        $("#Option").css("display", "inline");
+        $("#AddAnswer").css("display", "inline");
+        $("#test").css("display", "none");
+        $("#HP").attr("required", false);
     } else if (selected.val() === "likert") {
-        document.getElementById("test").style.display = 'inline';
-        document.getElementById("Option").style.display = 'none';
-        document.getElementById("AddAnswer").style.display = 'none';
+        $("#test").css("display","inline");
+        $("#Option").css("display", "none");
+        $("#AddAnswer").css("display", "none");
+        $("#HP").attr("required", true);
     }
 }
 );
@@ -77,7 +79,7 @@ function readURL(input) {
         reader.onload = function (e) {
             document.getElementById("impPrev").style.display = 'inline';
             $('#impPrev').attr('src', e.target.result);
-        }
+        },
         reader.readAsDataURL(input.files[0]);
     }
 }
@@ -89,13 +91,13 @@ $("#fileImage").change(function () {
 document.addEventListener("DOMContentLoaded", function (event) {
     document.querySelectorAll('img').forEach(function (img) {
         img.onerror = function () { this.style.display = 'none'; };
-    })
+    });
 });
 
 // If there is no audio uploaded hide the player view
 document.addEventListener("DOMContentLoaded", function (event) {
     document.querySelectorAll('audio').forEach(function (audio) {
         audio.onerror = function () { this.style.display = 'none'; };
-    })
+    });
 });
 

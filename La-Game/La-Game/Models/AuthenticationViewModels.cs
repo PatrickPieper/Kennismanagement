@@ -49,7 +49,7 @@ namespace La_Game.Models
 
         [Required]
         [Display(Name = "Admin Rights")]
-        public bool IsAdmin { get; set; }
+        public byte IsAdmin { get; set; }
     }
 
     /// <summary>

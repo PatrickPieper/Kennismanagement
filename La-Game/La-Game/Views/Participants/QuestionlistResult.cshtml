@@ -12,11 +12,11 @@
     int count = 0;
 }
 
-<h2>@qlist</h2>
+<h2>Answers from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName) for questionlist @qlist</h2>
 <hr />
 
 
-<div class="container-fluid">
+<div class="container">
     <table class="table table-responsive">
         <thead>
         <th></th>
@@ -42,7 +42,7 @@
                                 if (resultQuestion.idQuestion == question.idQuestion)
                                 {
                                     answer = true;
-                                    <td>@Html.Raw(resultQuestion.answerText)</td>
+                                    <td>@Html.Raw(resultQuestion.answerText) (@Html.Raw((decimal)resultQuestion.totalTime /1000) s)</td>
                                 }
 
                             }
@@ -56,7 +56,8 @@
             }
         </tbody>
     </table>
-    <button onclick="showBar()">Bar Chart</button>
+    <button class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Results", "Participants", new { id = Model.idParticipant }) + "'");"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
+    <button onclick="showBar()" class="btn btn-default">Bar chart</button>
     <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
 <script src="~/Scripts/Chart.js"></script>

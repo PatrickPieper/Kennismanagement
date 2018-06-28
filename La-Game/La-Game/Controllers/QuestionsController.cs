@@ -146,7 +146,6 @@ namespace La_Game.Controllers
 
                         // Add the anwseroption to the database and increase the count
                         db.AnswerOptions.Add(option);
-                        db.SaveChanges();
                         count++;
                     }
 
@@ -179,7 +178,6 @@ namespace La_Game.Controllers
                     
                         // Add the anwseroption to the database and increase the count
                         db.AnswerOptions.Add(answerOption);
-                        db.SaveChanges();
                         count++;
                     }
                 }
