@@ -127,11 +127,19 @@ namespace La_Game.Controllers
         /// <param name="questionList"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idQuestionList,Lesson_idLesson,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
+        public ActionResult Create([Bind(Include = "questionListName,questionListDescription")] QuestionList questionList)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(questionList.questionListName) || string.IsNullOrEmpty(questionList.questionListDescription))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(questionList);
+                }
+
                 // If valid, add it to the database
                 db.QuestionLists.Add(questionList);
                 db.SaveChanges();
@@ -185,11 +193,19 @@ namespace La_Game.Controllers
         /// <param name="questionList"> The data that has to be saved. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idQuestionList,Lesson_idLesson,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
+        public ActionResult Edit([Bind(Include = "idQuestionList,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(questionList.questionListName) || string.IsNullOrEmpty(questionList.questionListDescription))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(questionList);
+                }
+
                 // If valid, save it to the database
                 db.Entry(questionList).State = EntityState.Modified;
                 db.SaveChanges();
