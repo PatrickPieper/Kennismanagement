@@ -10,12 +10,11 @@ namespace La_Game.Controllers
 {
     public class BlobsController : Controller
     {
-        // GET: Blobs
-        public ActionResult Index()
-        {
-            return View();
-        }
-
+        /// <summary>
+        /// Retrieves BlobContainer by given name
+        /// </summary>
+        /// <param name="containerName">Name of the container to find</param>
+        /// <returns>the found blobContainer</returns>
         public CloudBlobContainer GetCloudBlobContainer(String containerName = "")
         {
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(
@@ -25,16 +24,13 @@ namespace La_Game.Controllers
             return container;
         }
 
-        public ActionResult CreateBlobContainer(String name)
-        {
-            CloudBlobContainer container = GetCloudBlobContainer(name);
-
-            ViewBag.Success = container.CreateIfNotExists();
-            ViewBag.BlobContainerName = container.Name;
-
-            return View();
-        }
-
+        /// <summary>
+        /// Uploads blobs to folder of the questions
+        /// </summary>
+        /// <param name="fileName">Name of the file to write in folder</param>
+        /// <param name="inputStream">blobData to write to storage</param>
+        /// <param name="questionNumber">Name of the folder in which the file has to be set</param>
+        /// <returns> a string with message in it</returns>
         public string UploadBlob(String fileName, Stream inputStream, String questionNumber)
         {
             CloudBlobContainer container = GetCloudBlobContainer("questions");
@@ -62,40 +58,6 @@ namespace La_Game.Controllers
 
             blob.UploadFromStream(inputStream);
 
-            return "success!";
-        }
-
-        public ActionResult ListBlobs()
-        {
-            CloudBlobContainer container = GetCloudBlobContainer();
-            List<String> blobs = new List<String>();
-            foreach (IListBlobItem item in container.ListBlobs(useFlatBlobListing: true))
-            {
-                if (item.GetType() == typeof(CloudBlockBlob))
-                {
-                    CloudBlockBlob blob = (CloudBlockBlob)item;
-                    blobs.Add(blob.Name);
-                    
-                }
-            }
-
-            return View(blobs);
-        }
-
-        public CloudBlockBlob GetCloudBlockBlob(String fileName)
-        {
-            CloudBlobContainer container = GetCloudBlobContainer();
-            CloudBlockBlob blockBlob = container.GetBlockBlobReference(fileName);
-            blockBlob.Properties.ContentType = "image/jpg";
-            blockBlob.SetProperties();
-            return blockBlob;
-        }
-
-        public string DeleteBlob()
-        {
-            CloudBlobContainer container = GetCloudBlobContainer();
-            CloudBlockBlob blob = container.GetBlockBlobReference("myBlob");
-            blob.Delete();
             return "success!";
         }
     }
