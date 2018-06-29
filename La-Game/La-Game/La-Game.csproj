@@ -608,9 +608,7 @@
     <Content Include="Views\Lessons\Index.cshtml" />
     <Content Include="Views\Shared\_AddQuestionListLessonTable.cshtml" />
     <Content Include="Views\Lessons\ParticipantLessonOverview.cshtml" />
-    <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\Lessons\QuestionResultParticipantOverview.cshtml" />
-    <Content Include="Views\Dashboard\_LanguageOverview.cshtml" />
+    <Content Include="Views\Dashboard\Index.cshtml" />    <Content Include="Views\Dashboard\_LanguageOverview.cshtml" />
     <Content Include="Views\Languages\Create.cshtml" />
     <Content Include="Views\Languages\Delete.cshtml" />
     <Content Include="Views\Languages\Details.cshtml" />
