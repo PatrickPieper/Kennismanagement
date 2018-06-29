@@ -584,7 +584,6 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Authentication\Register.cshtml" />
     <Content Include="Views\Authentication\ChangePassword.cshtml" />
     <Content Include="Views\Authentication\AccountDetails.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
@@ -639,7 +638,6 @@
     <Content Include="Views\Lessons\ManageLists.cshtml" />
     <Content Include="Views\Lessons\_AddQuestionListTable.cshtml" />
     <Content Include="Views\Authentication\Login.cshtml" />
-    <Content Include="Views\Authentication\AccountOverview.cshtml" />
     <Content Include="Views\Participants\QuestionlistResult.cshtml" />
     <Content Include="Views\StudentTest\_TestEntryForm.cshtml" />
     <Content Include="Views\StudentTest\_TestForm.cshtml" />
