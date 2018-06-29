@@ -25,27 +25,33 @@
 
 @using (Html.BeginForm("QuestionListStatistics", "Statistics", FormMethod.Post))
 {
-    if (ViewBag.questionListInfo.Count != 0)
+    if (ViewBag.questionListInfo != null)
     {
-        <select onchange="this.form.submit()" name="attempt" class="form-control">
-            @for (int j = 0; j < ViewBag.questionListInfo[0].MaxAttempt; j++)
-            {
-                if (j == ViewBag.attempt - 1)
+        if (ViewBag.questionListInfo.Count != 0)
+        {
+            <select onchange="this.form.submit()" name="attempt" class="form-control">
+                @for (int j = 0; j < ViewBag.questionListInfo[0].MaxAttempt; j++)
                 {
-                    <option selected value="@(j + 1)">attempt @(j + 1)</option>
+                    if (j == ViewBag.attempt - 1)
+                    {
+                        <option selected value="@(j + 1)">attempt @(j + 1)</option>
+                    }
+                    else
+                    {
+                        <option value="@(j + 1)">attempt @(j + 1)</option>
+                    }
                 }
-                else
-                {
-                    <option value="@(j + 1)">attempt @(j + 1)</option>
-                }
-            }
-        </select>
-        <input type="hidden" name="questionListId" value="@ViewBag.questionListInfo[0].IdQuestionList" />
+            </select>
+            <input type="hidden" name="questionListId" value="@ViewBag.questionListInfo[0].IdQuestionList" />
+        }
     }
 }
 
 @{
-   <p>Total questions: @ViewBag.questionListInfo[0].QuestionCount</p>
+    if (ViewBag.questionList != null)
+    {
+        <p>Total questions: @ViewBag.questionListInfo[0].QuestionCount</p>
+    }
 }
 
 <table id="participantsResult" class="table table table-striped table-hover">
@@ -81,21 +87,23 @@
         </tr>
     </thead>
     <tbody>
-
-        @for (int i = 0; i < ViewBag.questionListStatistics.Count; i++)
+        @if (ViewBag.questionListStatistics != null)
         {
-            <tr>
-                <td>@ViewBag.questionListStatistics[i].FirstName</td>
-                <td>@ViewBag.questionListStatistics[i].LastName</td>
-                <td>@ViewBag.questionListStatistics[i].StartTime</td>
-                <td>@ViewBag.questionListStatistics[i].EndTime</td>
-                <td>@(ViewBag.questionListStatistics[i].TotalTime / 1000)</td>
-                <td>@ViewBag.questionListStatistics[i].CorrectCount</td>
-                <td>@ViewBag.questionListStatistics[i].WrongCount</td>
-                <td>@(ViewBag.questionListInfo[0].QuestionCount - ViewBag.questionListStatistics[i].CorrectCount - ViewBag.questionListStatistics[i].WrongCount)</td>
-                @*<td><button class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionlistResults","Participants",new { participantId=@ViewBag.questionListStatistics[i].IdParticipant, questionlistId=@ViewBag.questionListId}) )"><span class="glyphicon glyphicon-list"></span> Results</button></td>*@
-                <td>@Html.RouteLink("Result", "ParticipantResultQuestionList", new { participantId = @ViewBag.questionListStatistics[i].IdParticipant, questionlistId = @ViewBag.questionListId }, new { @class = "btn btn-default" })</td>
-            </tr>
+            for (int i = 0; i < ViewBag.questionListStatistics.Count; i++)
+            {
+                <tr>
+                    <td>@ViewBag.questionListStatistics[i].FirstName</td>
+                    <td>@ViewBag.questionListStatistics[i].LastName</td>
+                    <td>@ViewBag.questionListStatistics[i].StartTime</td>
+                    <td>@ViewBag.questionListStatistics[i].EndTime</td>
+                    <td>@(ViewBag.questionListStatistics[i].TotalTime / 1000)</td>
+                    <td>@ViewBag.questionListStatistics[i].CorrectCount</td>
+                    <td>@ViewBag.questionListStatistics[i].WrongCount</td>
+                    <td>@(ViewBag.questionListInfo[0].QuestionCount - ViewBag.questionListStatistics[i].CorrectCount - ViewBag.questionListStatistics[i].WrongCount)</td>
+                    @*<td><button class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionlistResults","Participants",new { participantId=@ViewBag.questionListStatistics[i].IdParticipant, questionlistId=@ViewBag.questionListId}) )"><span class="glyphicon glyphicon-list"></span> Results</button></td>*@
+                    <td>@Html.RouteLink("Result", "ParticipantResultQuestionList", new { participantId = @ViewBag.questionListStatistics[i].IdParticipant, questionlistId = @ViewBag.questionListId }, new { @class = "btn btn-default" })</td>
+                </tr>
+            }
         }
     </tbody>
 
