@@ -12,7 +12,6 @@
             <h2>Language Details</h2>
             <hr />
             <div class="row">
-                <div class="col-md-6 col-md-offset-3">
                     <dl class="dl-horizontal">
                         <dt>
                             Language
@@ -25,7 +24,6 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
                     <h3>
                         Active Members
                         @if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
