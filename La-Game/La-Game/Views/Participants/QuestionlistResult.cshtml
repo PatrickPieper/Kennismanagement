@@ -12,11 +12,12 @@
     int count = 0;
 }
 
-<h2>Answers from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName) for questionlist @qlist</h2>
-<hr />
+
 
 
 <div class="container">
+    <h2>Answers from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName) for questionlist @qlist</h2>
+    <hr />
     <table class="table table-responsive">
         <thead>
         <th></th>
@@ -42,11 +43,11 @@
                                 if (resultQuestion.idQuestion == question.idQuestion)
                                 {
                                     answer = true;
-                                    <td>@Html.Raw(resultQuestion.answerText) (@Html.Raw((decimal)resultQuestion.totalTime /1000) s)</td>
+                                    <td>@Html.Raw(resultQuestion.answerText) (@Html.Raw((decimal)resultQuestion.totalTime / 1000) s)</td>
                                 }
 
                             }
-                        }   
+                        }
                         if (answer == false)
                         {
                             <td> - </td>
