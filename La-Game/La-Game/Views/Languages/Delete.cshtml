@@ -4,51 +4,52 @@
     ViewBag.Title = "Delete";
 }
 
-@if (Model.isHidden == 1)
-{
-    <h2>Activate Language</h2>
-
-    <h3>Do you want to reactivate this language?</h3>
-}
-else
-{
-    <h2>Remove Language</h2>
-
-    <h3>Are you sure you want to remove this?</h3>
-}
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Language
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.languageName)
-        </dd>
-
-    </dl>
-
-    @using (Html.BeginForm())
+<div class="container">
+    @if (Model.isHidden == 1)
     {
-        @Html.AntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Languages") + "'");">
-                <span class="glyphicon glyphicon-chevron-left"></span> Back
-            </button>
-            @if (Model.isHidden == 1)
-            {
-                <button type="submit" value="Delete" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus"></span> Reactivate
-                </button>
-            }
-            else
-            {
-                <button type="submit" value="Delete" class="btn btn-default">
-                    <span class="glyphicon glyphicon-remove"></span> Remove
-                </button>
-            }
-        </div>
+        <h2>Activate Language</h2>
+        <hr />
+        <h3>Do you want to reactivate this language?</h3>
     }
+    else
+    {
+        <h2>Remove Language</h2>
+        <hr />
+        <h3>Are you sure you want to remove this?</h3>
+    }
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                Language
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.languageName)
+            </dd>
+
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <div class="form-actions no-color">
+                <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Languages") + "'");">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Back
+                </button>
+                @if (Model.isHidden == 1)
+                {
+                    <button type="submit" value="Delete" class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus"></span> Reactivate
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" value="Delete" class="btn btn-default">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                }
+            </div>
+        }
+    </div>
 </div>

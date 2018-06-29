@@ -4,45 +4,44 @@
     ViewBag.Title = "Details";
 }
 
-
-<h2>Details</h2>
-
-<div>
-    <h4>Question</h4>
+<div class="container">
+    <h2>Details</h2>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.LabelFor(model => model.picture, "Picture")
-        </dt>
+    <div>
+        <h4>Question</h4>
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.LabelFor(model => model.picture, "Picture")
+            </dt>
 
-        <dd>
-            <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" class="img-responsive" />
-        </dd>
+            <dd>
+                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" class="img-responsive" />
+            </dd>
 
-        <dt>
-            @Html.LabelFor(model => model.audio, "Audio")
-        </dt>
+            <dt>
+                @Html.LabelFor(model => model.audio, "Audio")
+            </dt>
 
-        <dd>
-            <audio controls
-                   src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)"></audio>
-        </dd>
+            <dd>
+                <audio controls
+                       src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)"></audio>
+            </dd>
 
-        <dt>
-            @Html.LabelFor(model => model.questionText, "Question")
-        </dt>
+            <dt>
+                @Html.LabelFor(model => model.questionText, "Question")
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.questionText)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.questionText)
+            </dd>
 
-    </dl>
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestion }, new { @class = "btn btn-default" }) 
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default"})
+    </p>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.idQuestion }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/ValidateFileUpload.js")

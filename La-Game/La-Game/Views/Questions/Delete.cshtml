@@ -3,71 +3,72 @@
 @{
     ViewBag.Title = "Delete";
 }
-
-@if (Model.isHidden == 1)
-{
-    <h2>Activate Question</h2>
-
-    <h3>Do you want to reactivate this question?</h3>
-}
-else
-{
-    <h2>Remove Question</h2>
-
-    <h3>Are you sure you want to remove this?</h3>
-    <h4>This cannot be undone unless you contact an admin.</h4>
-}
-<div>
-    <h4>Question</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Question
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.questionText)
-        </dd>
-
-        <dt>
-            Picture
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.picture)
-        </dd>
-
-        <dt>
-            Audio
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.audio)
-        </dd>
-    </dl>
-
-    @using (Html.BeginForm())
+<div class="container">
+    @if (Model.isHidden == 1)
     {
-        @Html.AntiForgeryToken()
-
-
-        <div class="form-actions no-color">
-            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Questions") + "'");">
-                <span class="glyphicon glyphicon-chevron-left"></span> Back
-            </button>
-
-            @if (Model.isHidden == 1)
-            {
-                <button type="submit" value="Delete" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus"></span> Reactivate
-                </button>
-            }
-            else
-            {
-                <button type="submit" value="Delete" class="btn btn-default">
-                    <span class="glyphicon glyphicon-remove"></span> Remove
-                </button>
-            }
-        </div>
+        <h2>Activate Question</h2>
+        <hr/>
+        <h3>Do you want to reactivate this question?</h3>
     }
+    else
+    {
+        <h2>Remove Question</h2>
+        <hr/>
+        <h3>Are you sure you want to remove this?</h3>
+        <h4>This cannot be undone unless you contact an admin.</h4>
+    }
+    <div>
+        <h4>Question</h4>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Question
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.questionText)
+            </dd>
+
+            <dt>
+                Picture
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.picture)
+            </dd>
+
+            <dt>
+                Audio
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.audio)
+            </dd>
+        </dl>
+
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+
+            <div class="form-actions no-color">
+                <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Questions") + "'");">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Back
+                </button>
+
+                @if (Model.isHidden == 1)
+                {
+                    <button type="submit" value="Delete" class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus"></span> Reactivate
+                    </button>
+                }
+                else
+                {
+                    <button type="submit" value="Delete" class="btn btn-default">
+                        <span class="glyphicon glyphicon-remove"></span> Remove
+                    </button>
+                }
+            </div>
+        }
+    </div>
 </div>

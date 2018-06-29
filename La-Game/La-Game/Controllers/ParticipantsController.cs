@@ -164,6 +164,7 @@ namespace La_Game.Controllers
         }
 
         /// <summary>
+        /// GET: /participants/questionlistresult/[participantId]/[questionlistId]
         ///  Shows all data for a specific participant and questionlist
         /// </summary>
         /// <param name="participantId">id of the participant to use in retrieving data</param>
