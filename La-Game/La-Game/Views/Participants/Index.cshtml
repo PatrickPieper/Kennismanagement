@@ -7,71 +7,79 @@
 @Styles.Render("~/Content/dataTables")
 <div class="container">
     <h2>Participant overview</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Participants") + "'");">
+                <span class="glyphicon glyphicon-plus"></span> Create new
+            </button>
+        </div>
+    </div>
+    <div class="row top-buffer">
+        <div class="col-md-12">
+            <table id="participants" class="table table table-striped table-hover table-responsive">
+                <thead>
+                    <tr>
+                        <th>
+                            Firstname
+                        </th>
+                        <th>
+                            Lastname
+                        </th>
+                        <th>
+                            Date of Birth
+                        </th>
+                        <th>
+                            Studentcode
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
 
-    <p>
-        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Participants") + "'");">
-            <span class="glyphicon glyphicon-plus"></span> Create new
-        </button>
-    </p>
-    <table id="participants" class="table table table-striped table-hover table-responsive">
-        <thead>
-            <tr>
-                <th>
-                    Firstname
-                </th>
-                <th>
-                    Lastname
-                </th>
-                <th>
-                    Date of Birth
-                </th>
-                <th>
-                    Studentcode
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var item in Model)
-            {
-                var link = Url.Action("Details", "Participants", new { id = item.idParticipant });
-                <tr>
-                    <td onclick="Redirect('@link')">
-                        @Html.DisplayFor(modelItem => item.firstName)
-                    </td>
-                    <td onclick="Redirect('@link')">
-                        @Html.DisplayFor(modelItem => item.lastName)
-                    </td>
-                    <td onclick="Redirect('@link')">   
-                        @{
-                            String date = item.birthDate.ToShortDateString();
-                        }
-                        @Html.DisplayFor(modelItem => date)                  
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.studentCode)
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + Url.Action("Results","Participants", new { id = item.idParticipant }) +"'");">
-                            <span class="glyphicon glyphicon-list"></span> Results
-                        </button>
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = item.idParticipant }) + "'");">
-                            <span class="glyphicon glyphicon-wrench"></span> Edit
-                        </button>
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Participants", new { id = item.idParticipant }) + "'");">
-                            <span class="glyphicon glyphicon-remove"></span> Remove
-                        </button>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <p>
-        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
-            <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
-        </button>
-    </p>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var link = Url.Action("Details", "Participants", new { id = item.idParticipant });
+                        <tr>
+                            <td onclick="Redirect('@link')">
+                                @Html.DisplayFor(modelItem => item.firstName)
+                            </td>
+                            <td onclick="Redirect('@link')">
+                                @Html.DisplayFor(modelItem => item.lastName)
+                            </td>
+                            <td onclick="Redirect('@link')">
+                                @{
+                                    String date = item.birthDate.ToShortDateString();
+                                }
+                                @Html.DisplayFor(modelItem => date)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.studentCode)
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + Url.Action("Results","Participants", new { id = item.idParticipant }) +"'");">
+                                    <span class="glyphicon glyphicon-list"></span> Results
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = item.idParticipant }) + "'");">
+                                    <span class="glyphicon glyphicon-wrench"></span> Edit
+                                </button>
+                                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Participants", new { id = item.idParticipant }) + "'");">
+                                    <span class="glyphicon glyphicon-remove"></span> Remove
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
+                <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
+            </button>
+        </div>
+    </div>
 </div>
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
