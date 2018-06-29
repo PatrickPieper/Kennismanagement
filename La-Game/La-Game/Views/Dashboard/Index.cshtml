@@ -1,0 +1,80 @@
+﻿@model La_Game.Models.Member
+
+@{
+    ViewBag.Title = "Dashboard";
+}
+<div class="container">
+<div class="jumbotron">
+    <h1>Welcome, @Html.DisplayFor(model => model.firstname) @Html.DisplayFor(model => model.lastname) </h1>
+    <p class="lead"> From this page you will be able to access all the functions of the application.</p>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="table-responsive col-md-4">
+            @{ if (Model.isAdmin == 1)
+                {
+                    <div>
+                        <h2>Members</h2>
+                        <p>
+                            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Members") + "'");">
+                                <span class="glyphicon glyphicon-list-alt"></span> Member Overview
+                            </button>
+                        </p>
+                    </div>
+                }
+            }
+
+            <h2>
+                Your Languages
+                @if (Model.isAdmin == 1)
+                {
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Languages") + "'");">
+                        <span class="glyphicon glyphicon-list-alt"></span> Overview
+                    </button>
+                }
+            </h2>
+            @{Html.RenderAction("GetLanguageOverview", "Dashboard", new { memberId = Model.idMember });}
+        </div>
+        <div class="col-md-4">
+            <div>
+                <h2>Questions and Lists</h2>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+                            <span class="glyphicon glyphicon-list-alt"></span> Questionlist Overview
+                        </button>
+                    </div>
+                </div>
+                <div class="row top-buffer">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Questions") + "'");">
+                            <span class="glyphicon glyphicon-list-alt"></span> Question Overview
+                        </button>
+                    </div>  
+                </div>
+            </div>
+            <div>
+                <h2>Participants</h2>
+                <div class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
+                            <span class="glyphicon glyphicon-list-alt"></span> Participant  Overview
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <h2>Statistics</h2>
+            <div class="row">
+                <div class="col-md-12">
+                    <button type="button" class="btn btn-default btn-lg" onclick="@("window.location.href='" + @Url.Action("Index", "Statistics") + "'");">
+                        <span class="glyphicon glyphicon-stats"></span> Statistics
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>

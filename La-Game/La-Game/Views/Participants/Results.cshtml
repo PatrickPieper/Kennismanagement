@@ -6,60 +6,43 @@
     var results = ViewBag.questionslist;
     var answersids = ViewBag.answerids;
     var answers = ViewBag.answers;
-    int correct = 0;
-    int count = 0;
-    int qlistId = 0;
 }
+<div class="container">
+    <h2>Results from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName)</h2>
+    <hr />
+    @foreach (var item in results)
+    {
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h4>@Html.Raw(item.questionListName)</h4>
+            </div>
 
-<h2>Results from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName)</h2>
-
-@foreach (var item in results)
-{
-    <div class="panel panel-default">
-        @foreach (var kvPair in @item)
-        {
-            if(kvPair.Key == "ID")
-            {
-                qlistId = kvPair.Value;
-            }
-            if (kvPair.Key == "Name")
-            {
-                <div class="panel-heading">
-                    <h3 class="panel-title">@Html.Raw(kvPair.Value)</h3>
-                </div>
-            }
-        }
-
-                <div class="panel-body">
-
-                    @foreach (var kvPair in @item)
-                    {
-
-                        if (kvPair.Key == "countQuestions")
-                        {
-                            count = kvPair.Value;
-                        }
-
-                        if (kvPair.Key == "correctAnswerCount")
-                        {
-                            correct = kvPair.Value;
-                        }
+            <div class="panel-body">
 
 
-                    }
-                    <div class="row">
+                <div class="row">
+                    <div class="col-md-12">
                         <div class="col-md-4">
-                            <p>Questions in questionlist:</p>
-                            <div class="well col-md-8">
-                                <h2 style="text-align: center">@count</h2>
+                            <div class="well">
+                                <p style="text-align:center">Questions in questionlist</p>
+                                <h2 style="text-align: center">@Html.Raw(item.QuestionCount)</h2>
                             </div>
                         </div>
                         <div class="col-md-4">
-                            @Html.RouteLink("Details", "ParticipantResultQuestionList", new { participantId = Model.idParticipant, questionlistId = qlistId, }, new { @class = "btn btn-default" })
+                            <div class="well ">
+                                <p style="text-align:center">Number of attempts</p>
+                                <h2 style="text-align: center">@Html.Raw(item.HighestAttempt)</h2>
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        @Html.RouteLink("Details", "ParticipantResultQuestionList", new { participantId = Model.idParticipant, questionlistId = item.questionListId, }, new { @class = "btn btn-default" })
+                    </div>
                 </div>
+            </div>
 
-        
-    </div>
-}
+
+        </div>
+    }
+    <button class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
+</div>

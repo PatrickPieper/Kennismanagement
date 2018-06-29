@@ -23,22 +23,27 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("La-Game", "Index", "StudentTest", new { area = "" }, new { @id= "indexlink", @class = "navbar-brand" })
+                @*@Html.ActionLink("La-Game", "Index", "StudentTest", new { area = "" }, new { @id = "indexlink", @class = "navbar-brand" })*@
+                <a href="@Url.Action("Index","StudentTest")" class="navbar-brand">
+                    <img src="https://lagame2.blob.core.windows.net/images/logo-maat-le.png" />
+                </a>
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     @if (Request.IsAuthenticated)
                     {
-                        <li>@Html.ActionLink("Dashboard", "Dashboard", "Home") </li>
+                        <li>@Html.ActionLink("Dashboard", "Index", "Dashboard") </li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
     </div>
-    <div class="container body-content">
-        <div class="alert" style="display:none" id="alertBox">Test</div>
-        @RenderBody()
+    <div class="container-fluid">
+        <div class="alert" style="display:none" id="alertBox"></div>
+        <div class="col-md-12">
+            @RenderBody()
+        </div>
     </div>
 
     @Scripts.Render("~/bundles/jquery")

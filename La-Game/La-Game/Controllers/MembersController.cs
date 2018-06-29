@@ -6,9 +6,13 @@ using System.Linq;
 using System.Net;
 using System.Web.Mvc;
 using La_Game.Models;
+using System.Web.Helpers;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Member Controller
+    /// </summary>
     [AuthorizeAdmin]
     public class MembersController : Controller
     {
@@ -69,12 +73,18 @@ namespace La_Game.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Register([Bind(Include = "email,password,firstname,lastname,isAdmin")] Member member)
         {
+            var test = member.isAdmin;
+
             // Check if the data is valid
             if (ModelState.IsValid)
             {
                 try
                 {
-                    // If valid, add it to the database
+                    // Hash the password and activate the member
+                    member.password = Crypto.HashPassword(member.password);
+                    member.isActive = 1;
+
+                    // If everything is valid, add it to the database
                     db.Members.Add(member);
                     db.SaveChanges();
 
@@ -89,7 +99,7 @@ namespace La_Game.Controllers
             }
 
             // If not valid, stay on the register page with the current data
-            return View(member);
+            return View();
         }
 
         /// <summary>
@@ -201,6 +211,9 @@ namespace La_Game.Controllers
         }
         #endregion
 
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

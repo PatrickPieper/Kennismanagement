@@ -7,13 +7,17 @@
     var results = ViewBag.results;
     var attempts = ViewBag.attempts;
     var attemptCount = ViewBag.attemptCount;
+    var questions = ViewBag.questions;
+    var numOfQuestions = ViewBag.numOfQuestions;
+    int count = 0;
 }
 
-<h2>@qlist</h2>
-<hr />
 
 
-<div class="container-fluid">
+
+<div class="container">
+    <h2>Answers from @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName) for questionlist @qlist</h2>
+    <hr />
     <table class="table table-responsive">
         <thead>
         <th></th>
@@ -23,45 +27,48 @@
         }
         </thead>
         <tbody>
-            @foreach (var result in results)
+            @foreach (var question in questions)
             {
                 <tr>
-                    <td> </td>
+                    <td>@Html.Raw(question.questionText)</td>
                     @for (int i = 1; i <= attemptCount; i++)
                     {
-                        if (result.ContainsKey(i))
+                        bool answer = false;
+
+                        foreach (var result in results)
                         {
-                            var value = result[i];
-                            <td>@Html.Raw(value.answerText)</td>
+                            if (result.ContainsKey(i))
+                            {
+                                var resultQuestion = result[i];
+                                if (resultQuestion.idQuestion == question.idQuestion)
+                                {
+                                    answer = true;
+                                    <td>@Html.Raw(resultQuestion.answerText) (@Html.Raw((decimal)resultQuestion.totalTime / 1000) s)</td>
+                                }
+
+                            }
                         }
-                        else
+                        if (answer == false)
                         {
-                            <td>-</td>
+                            <td> - </td>
                         }
                     }
-
                 </tr>
             }
         </tbody>
     </table>
-    <button onclick="showBar()">Bar Chart</button>
+    <button class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Results", "Participants", new { id = Model.idParticipant }) + "'");"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
+    <button onclick="showBar()" class="btn btn-default">Line chart</button>
     <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
 <script src="~/Scripts/Chart.js"></script>
-<script src="~/Scripts/Common.js"></script>
 <script>
     var labels = @Html.Raw(Json.Encode(ViewBag.attempts));
     var max = @Html.Raw(Json.Encode(ViewBag.numOfQuestions));
     var results = @Html.Raw(Json.Encode(ViewBag.correctAnswers));
-    var colors = [];
-    var i = 0;
+    var color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
 
-        while (i < labels.length)
-        {
-            colors.push('#' + (Math.random() * 0xFFFFFF << 0).toString(16));
-            i++
-        }
-        bar();
+     bar();
 
     function showBar() {
 
@@ -76,18 +83,28 @@
 
     function bar() {
         new Chart(document.getElementById("barChart"), {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: [
                     {
                         label: "Correct answers",
-                        backgroundColor: colors,
+                        borderColor: color,
+                        backgroundColor: color,
+                        fill: false,
                         data: results,
                     }
                 ]
             },
             options: {
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
                 scales: {
                     yAxes: [{
                         ticks: {

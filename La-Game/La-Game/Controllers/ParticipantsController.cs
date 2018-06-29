@@ -5,14 +5,17 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Participant Controller
+    /// </summary>
     public class ParticipantsController : Controller
     {
+        // Database context
         private LaGameDBContext db = new LaGameDBContext();
 
         // GET: Participants
@@ -54,6 +57,14 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(participant.firstName) || string.IsNullOrEmpty(participant.lastName) || string.IsNullOrEmpty(participant.birthDate.ToString()))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(participant);
+                }
+
                 // Get a unique studentId
                 int studentId;
                 Random rng = new Random();
@@ -73,7 +84,7 @@ namespace La_Game.Controllers
                 participant.studentCode = studentId;
                 db.Participants.Add(participant);
                 db.SaveChanges();
-                
+
                 // Redirect to list  
                 return RedirectToAction("Index", "Participants");
             }
@@ -106,6 +117,15 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(participant.firstName) || string.IsNullOrEmpty(participant.lastName) || string.IsNullOrEmpty(participant.birthDate.ToString()))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(participant);
+                }
+
+                // If valid and not empty, save it to the database
                 db.Entry(participant).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -139,99 +159,76 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Display all questionlists made by the participant, the number of questions in them and the total amount of attempts for the participant.
+        /// </summary>
+        /// <param name="id">Id of the participant we want to see the lists from</param>
+        /// <returns>returns a view with all data needed for the page</returns>
         public ActionResult Results(int id)
         {
             Participant participant = db.Participants.Find(id);
-            List<List<KeyValuePair<String, object>>> questionlists = new List<List<KeyValuePair<String, object>>>();
-            List<int> listIds = this.GetLists(id);
-            foreach (int questionlistId in listIds)
-            {
-                String qListName = db.QuestionLists.Where(q => q.idQuestionList.Equals(questionlistId)).Select(q => q.questionListName).Single();
-                List<KeyValuePair<String, object>> questionList = new List<KeyValuePair<String, object>>();
-                questionList.Add(new KeyValuePair<string, object>("ID", questionlistId));
-                questionList.Add(new KeyValuePair<string, object>("Name", qListName));
-                List<String> questions = new List<String>();
-                List<int> answerIds = GetAnswerIds(participant.idParticipant, questionlistId);
-                List<int> question_ids = GetQuestionIds(questionlistId);
-                int numOfQuestions = question_ids.Count();
-                questionList.Add(new KeyValuePair<string, object>("countQuestions", numOfQuestions));
+            string getQuestionListSummary = "select DISTINCT(ql.idQuestionList) as 'questionListId', ql.questionListDescription, ql.questionListName," +
+        " (SELECT max(qr.attempt) FROM QuestionResult as qr WHERE qr.QuestionList_idQuestionList = ql.idQuestionList and qr.Participant_idParticipant = " + participant.idParticipant + ") as 'HighestAttempt'," +
+        " (SELECT COUNT(*) FROM QuestionList_Question as qlq WHERE qlq.QuestionList_idQuestionList = ql.idQuestionList) as 'QuestionCount' from QuestionList as ql" +
+        " JOIN QuestionResult Result on ql.idQuestionList = Result.QuestionList_idQuestionList AND Result.Participant_idParticipant =" + participant.idParticipant;
 
-                int correctAnswerCount = 0;
-                List<AnswerOption> answers = new List<AnswerOption>();
-                foreach (var answerid in answerIds)
-                {
-                    short? correct = db.AnswerOptions.Where(a => a.idAnswer.Equals(answerid)).Select(a => a.correctAnswer).Single();
-                    if (correct == 1)
-                    {
-                        correctAnswerCount++;
-                    }
-                }
+            List<QuestionListsummary> questionListsummaries = db.Database.SqlQuery<QuestionListsummary>(getQuestionListSummary).ToList();
 
-
-
-                foreach (int question_id in question_ids)
-                {
-                    IEnumerable<AnswerOption> correctAnswer = db.AnswerOptions.Where(ao => ao.Question_idQuestion.Equals(question_id) && ao.correctAnswer == 1);
-                    IEnumerable<String> question = db.Questions.Where(q => q.idQuestion.Equals(question_id)).Select(q => q.questionText);
-                    IEnumerable<Question> list_questions = db.Questions.Where(q => q.idQuestion.Equals(question_id));
-
-                    questions.Add(question.Single().ToString());
-                }
-                questionList.Add(new KeyValuePair<string, object>("correctAnswerCount", correctAnswerCount));
-                questionList.Add(new KeyValuePair<string, object>("Questions", questions));
-                questionlists.Add(questionList);
-            }
-            //ViewBag.answers = answers;
-            ViewBag.questionslist = questionlists;
+            ViewBag.questionslist = questionListsummaries;
 
 
             return View(participant);
         }
-        
-        public List<int> GetLists(int participantId)
-        {
-            List<int> listIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId)).Select(q => q.QuestionList_idQuestionList).Distinct().ToList();
-            return listIds;
-        }
 
-        public List<int> GetQuestionIds(int questionListId)
-        {
-            List<int> questionIds = db.QuestionList_Question.Where(q => q.QuestionList_idQuestionList.Equals(questionListId)).Select(q => q.Question_idQuestion).ToList();
-            return questionIds;
-        }
-
-        public List<int> GetAnswerIds(int participantId, int questionlistId)
-        {
-            List<int> answerIds = db.QuestionResults.Where(q => q.Participant_idParticipant.Equals(participantId) && q.QuestionList_idQuestionList.Equals(questionlistId)).Select(q => q.AnswerOption_idAnswer).ToList();
-            return answerIds;
-        }
-
+        /// <summary>
+        /// GET: /participants/questionlistresult/[participantId]/[questionlistId]
+        ///  Shows all data for a specific participant and questionlist
+        /// </summary>
+        /// <param name="participantId">id of the participant to use in retrieving data</param>
+        /// <param name="questionlistId">id of the questionlist to get data from</param>
+        /// <returns>Returns a view with viewbags containing all data needed to display data on page</returns>
         public ActionResult QuestionlistResult(int participantId, int questionlistId)
         {
-            
+            //Get Participant model by id
             Participant participant = db.Participants.Find(participantId);
+
+            //Get QuestionList model by id
             QuestionList qlist = db.QuestionLists.Find(questionlistId);
             ViewBag.questionListName = qlist.questionListName;
 
+            //Query for finding the amount of questions in questionlist
             string getNumOfQuestions = "SELECT COUNT(Question_idQuestion) as numQuestions FROM QuestionList_Question WHERE QuestionList_idQuestionList =" + qlist.idQuestionList;
             int numOfQuestions = db.Database.SqlQuery<int>(getNumOfQuestions).Single();
+
+            //Set the number of questions in a viewbag to use in the view
             ViewBag.numOfQuestions = numOfQuestions;
 
-            List <QuestionListResult> results = new List<QuestionListResult>();
+            //Query for finding questions from specific QuestionList 
+            string getQuestions = "SELECT * FROM Question JOIN QuestionList_Question Q2 on Question.idQuestion = Q2.Question_idQuestion WHERE Q2.QuestionList_idQuestionList = " + qlist.idQuestionList;
+            List<Question> questionslist = db.Database.SqlQuery<Question>(getQuestions).ToList();
+            Dictionary<int, Question> list = new Dictionary<int, Question>();
+            ViewBag.questions = questionslist;
+
+
+            List<QuestionListResult> results = new List<QuestionListResult>();
             StringBuilder sqlQueryString = new StringBuilder();
 
-            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt from QuestionResult as qr" +
+            sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt, datediff(ms, qr.startTime, qr.endTime) as totalTime from QuestionResult as qr" +
                 " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
                 " join Question as q on q.idQuestion = ao.Question_idQuestion" +
-                " where qr.QuestionList_idQuestionList = " +  questionlistId +
+                " where qr.QuestionList_idQuestionList = " + questionlistId +
                 " and qr.Participant_idParticipant = " + participantId);
             results = db.Database.SqlQuery<QuestionListResult>(sqlQueryString.ToString()).OrderBy(qr => qr.idQuestion).OrderBy(qr => qr.attempt).ToList();
 
             var questions = results.Select(r => r.idQuestion).Distinct().ToList();
             List<Dictionary<int, QuestionListResult>> sortedList = new List<Dictionary<int, QuestionListResult>>();
+
+            //Create a list with all unique attempts
             List<int> attempts = results.Select(r => r.attempt).Distinct().ToList();
 
             List<int> correctAnswers = new List<int>();
+
+            //Get all correct answer for each attempt made by a participant
             foreach (int attempt in attempts)
             {
                 int correctPerAttempt = results.Where(r => r.attempt == attempt && r.correctAnswer == 1).Count();
@@ -241,31 +238,44 @@ namespace La_Game.Controllers
 
 
             ViewBag.attempts = attempts;
-            ViewBag.attemptCount = attempts.Last();
-            foreach(var question in questions)
+            if (!attempts.Count().Equals(0))
+            {
+                ViewBag.attemptCount = attempts.Last();
+            }
+            else
+            {
+                ViewBag.attemptCount = 0;
+            }
+
+            foreach (var question in questions)
             {
                 List<QuestionListResult> questionListResults = results.Where(qr => qr.idQuestion.Equals(question)).ToList();
                 Dictionary<int, QuestionListResult> dict = new Dictionary<int, QuestionListResult>();
 
+                // Check if the question has a result for each attempt, if so add it to an dictionary
                 foreach (int attempt in attempts)
                 {
-                    if(!questionListResults.Where(qr => qr.attempt == attempt).Count().Equals(0)) { 
-                    QuestionListResult attemptQuestion = questionListResults.Where(qr => qr.attempt == attempt).Single();
-                    if (attemptQuestion != null)
+                    if (!questionListResults.Where(qr => qr.attempt == attempt).Count().Equals(0))
                     {
-                        dict.Add(attempt, attemptQuestion);
-                    }
+                        QuestionListResult attemptQuestion = questionListResults.Where(qr => qr.attempt == attempt).Single();
+                        if (attemptQuestion != null)
+                        {
+                            dict.Add(attempt, attemptQuestion);
+                        }
                     }
                 }
 
                 sortedList.Add(dict);
             }
             ViewBag.results = sortedList;
-            
+
 
             return View(participant);
         }
 
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

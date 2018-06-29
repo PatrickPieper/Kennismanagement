@@ -4,51 +4,54 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+<div class="container">
+    <h2>Participant Details - @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName) </h2>
 
-<h2>Participant Details - @Html.DisplayFor(model => model.firstName) @Html.DisplayFor(model => model.lastName) </h2>
+    <div>
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Firstname
+            </dt>
 
-<div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Firstname
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.firstName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.firstName)
-        </dd>
+            <dt>
+                Lastname
+            </dt>
 
-        <dt>
-            Lastname
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.lastName)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.lastName)
-        </dd>
+            <dt>
+                Date of Birth
+            </dt>
 
-        <dt>
-            Date of Birth
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.birthDate)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.birthDate)
-        </dd>
+            <dt>
+                Studentcode
+            </dt>
 
-        <dt>
-            Studentcode
-        </dt>
+            <dd>
+                @Html.DisplayFor(model => model.studentCode)
+            </dd>
 
-        <dd>
-            @Html.DisplayFor(model => model.studentCode)
-        </dd>
-
-    </dl>
+        </dl>
+    </div>
+    <div class="row">
+        <div class="col-md-8 col-md-offset-1">
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
+                <span class="glyphicon glyphicon-chevron-left"></span> Back
+            </button>
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = Model.idParticipant }) + "'");">
+                <span class="glyphicon glyphicon-wrench"></span> Edit
+            </button>
+        </div>
+    </div>
 </div>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back
-    </button>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Participants", new { id = Model.idParticipant }) + "'");">
-        <span class="glyphicon glyphicon-wrench"></span> Edit
-    </button>
-</p>

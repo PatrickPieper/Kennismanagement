@@ -3,55 +3,54 @@
 @{
     ViewBag.Title = "Edit";
 }
+<div class="container">
+    <h2>Edit Questionlist</h2>
+    <hr />
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-<h2>Edit Questionlist</h2>
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.idQuestionList)
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+            <div class="form-group">
+                @Html.LabelFor(model => model.questionListName, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.questionListName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.questionListName, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.idQuestionList)
+            <div class="form-group">
+                @Html.LabelFor(model => model.questionListDescription, "Description", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.questionListDescription, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.questionListDescription, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.questionListName, "Name", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.questionListName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.questionListName, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <input type="hidden" name="participationCode" value="@Model.participationCode" />
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="isActive" value="@Model.isActive" />
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
+                        <span class="glyphicon glyphicon-chevron-left"></span> Back
+                    </button>
+                    <button type="submit" value="Save" class="btn btn-default">
+                        <span class="glyphicon glyphicon-floppy-disk"></span> Save
+                    </button>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.questionListDescription, "Description", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.questionListDescription, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.questionListDescription, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <input type="hidden" name="participationCode" value="@Model.participationCode" />
-        </div>
-
-        <div class="form-group">
-            <input type="hidden" name="isActive" value="@Model.isActive" />
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "QuestionLists") + "'");">
-                    <span class="glyphicon glyphicon-chevron-left"></span> Back
-                </button>
-                <button type="submit" value="Save" class="btn btn-default">
-                    <span class="glyphicon glyphicon-floppy-disk"></span> Save
-                </button>
-            </div>
-        </div>
-    </div>
-}
-
+    }
+</div>
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

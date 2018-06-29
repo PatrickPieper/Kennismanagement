@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using System.Net;
 using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Studenttest Controller.
+    /// </summary>
     public class StudentTestController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -16,76 +17,6 @@ namespace La_Game.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-            //ViewBag.participant = TempData["participant"];
-            //if (index == null)
-            //{
-            //    ViewBag.index = 0;
-
-            //}
-            //else
-            //{
-            //    index++;
-            //    ViewBag.index = index;
-            //}
-
-
-            //if (TempData["questionListData"] != null && TempData["questionData"] != null)
-            //{ 
-            //    ViewBag.questionListData = TempData["questionListData"];
-            //    ViewBag.questionData = TempData["questionData"];
-            //}
-
-            //if (TempData["answerOptions"] == null)
-            //{
-            //    string selectQuery = "SELECT * FROM AnswerOption INNER JOIN Question on AnswerOption.Question_idQuestion=Question.idQuestion;";
-            //    List<AnswerOption> answerOptions = db.AnswerOptions.SqlQuery(selectQuery).ToList<AnswerOption>();
-            //    ViewBag.answerOptions = answerOptions;
-            //}
-            //else
-            //{
-            //    ViewBag.answerOptions = TempData["answerOptions"];
-            //}
-
-            //if (studentAnswerId != 0 && TempData["startTime"] != null)
-            //{
-            //    string endTime = DateTime.Now.ToString("yyyy:MM:dd HH:mm:ss:fff");
-            //    DateTime startTime = DateTime.ParseExact((string)TempData["startTime"], "yyyy:MM:dd HH:mm:ss:fff", null);
-            //    int questionListId = ViewBag.questionListData[0].idQuestionList;
-            //    int questionId = db.AnswerOptions.Find(studentAnswerId).Question_idQuestion;
-            //    Participant participant = (Participant)TempData["participant"];
-            //    // when I have the id from participant set it here
-            //    string questionResultAttempt = "select qr.* from QuestionResult as qr" +
-            //                                            " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
-            //                                            " where ao.Question_idQuestion =" + questionId +  
-            //                                            " and qr.Participant_idParticipant = " + participant.idParticipant +
-            //                                            " and qr.QuestionList_idQuestionList = "+ questionListId +
-            //                                            " order by qr.attempt";
-            //    IEnumerable < QuestionResult > questionResults = db.Database.SqlQuery<QuestionResult>(questionResultAttempt);
-            //   int? lastAttempt = questionResults.Count() != 0 ? questionResults.Last().attempt : null;
-
-
-            //    QuestionResult questionResult = new QuestionResult()
-            //    {
-            //        QuestionList_idQuestionList = questionListId,
-            //        AnswerOption_idAnswer = studentAnswerId,
-            //        Participant_idParticipant = participant.idParticipant,
-            //        startTime = startTime,
-            //        endTime = DateTime.ParseExact(endTime, "yyyy:MM:dd HH:mm:ss:fff", null),
-            //        attempt = lastAttempt.HasValue ? lastAttempt.Value+1 : 1
-            //    };
-            //    db.QuestionResults.Add(questionResult);
-            //    db.SaveChanges();
-
-            //}
-
-            //if (ViewBag.questionData.Count <= ViewBag.index)
-            //{
-            //    TempData["doneMessage"] = "your have completed the test";
-            //    return RedirectToAction("Index", "Home");
-            //}
-
-            ////to do: when we have a boolean for LikertScale or MultipleChoice return the right view
-            //return View("MultipleChoice");
             return View();
         }
 
@@ -94,6 +25,11 @@ namespace La_Game.Controllers
         {
             return PartialView("_TestEntryForm");
         }
+        /// <summary>
+        /// Partial view which contains a single question
+        /// </summary>
+        /// <param name="index">A counter to keep track of progress</param>
+        /// <returns>Partial view containing a Question</returns>
         [AllowAnonymous]
         public PartialViewResult TestQuestionForm(int? index)
         {
@@ -101,7 +37,7 @@ namespace La_Game.Controllers
             TempData.Keep();
             if(index < testQuestionData.Count() || !index.HasValue)
             {
-                TestQuestionData questionData = testQuestionData[index.HasValue ? index.Value : 0];
+                TestQuestionData questionData = testQuestionData[index ?? 0];
                 ViewBag.idQuestionList = questionData.idQuestionList;
                 ViewBag.idParticipant = questionData.idParticipant;
                 return PartialView("_TestQuestionForm", questionData);
@@ -111,6 +47,11 @@ namespace La_Game.Controllers
                 return PartialView("_TestCompleted");
             }
         }
+        /// <summary>
+        /// Partial view for entering the test
+        /// </summary>
+        /// <param name="model">Model containing participation code and student code</param>
+        /// <returns></returns>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -127,16 +68,6 @@ namespace La_Game.Controllers
                 // If both the codes are valid, continue
                 if (questionList.Count() != 0 && participant.Count() != 0)
                 {
-                    // Get the questions
-                    //int questionListID = questionListData[0].idQuestionList;
-                    //sqlString = "SELECT q.* FROM Question AS q JOIN QuestionOrder AS qo on qo.Question_idQuestion = q.idQuestion" +
-                    //" JOIN QuestionList AS ql on ql.idQuestionList = qo.QuestionList_idQuestionList WHERE ql.participationCode = '" + model.Participationcode + "' ORDER BY qo.[order]";
-                    //List<Question> questionData = db.Questions.SqlQuery(sqlString).ToList<Question>();
-
-                    //// Set the tempdata and redirect to the questionlist
-                    //TempData["questionListData"] = questionListData;
-                    //TempData["questionData"] = questionData;
-                    //TempData["participant"] = participant;
                     return TestForm(model, questionList.First().idQuestionList);
                 }
                 else
@@ -154,20 +85,22 @@ namespace La_Game.Controllers
             // Stay on the page with the current data
             return PartialView("_TestEntryForm", model);
         }
-        [AllowAnonymous]
-        public ActionResult MultipleChoice()
-        {
-            return View();
-
-        }
+        /// <summary>
+        /// Partial view which contains each question as they're loaded
+        /// </summary>
+        /// <param name="model">Model containing participation code and student code </param>
+        /// <param name="idQuestionList">Questionlist to get</param>
+        /// <returns></returns>
         [AllowAnonymous]
         public PartialViewResult TestForm(StartListModel model, int idQuestionList)
         {
+            //Get questions for the questionlist
             string sqlStringQuestions = "select q.* from Question as q join QuestionOrder as qo on qo.Question_idQuestion = q.idQuestion " +
                                         " join QuestionList as ql on ql.idQuestionList = qo.QuestionList_idQuestionList " +
                                         " where ql.participationCode = '" + model.Participationcode + "' order by qo.[order] ";
             var questionData = db.Database.SqlQuery<Question>(sqlStringQuestions);
 
+            //Get all matchin answeroptions
             string sqlStringAnswerOptions = "select ao.* from AnswerOption as ao " +
                                             "join Question as q on q.idQuestion = ao.Question_idQuestion " +
                                             "join QuestionList_Question as qlq on qlq.Question_idQuestion = q.idQuestion " +
@@ -176,6 +109,7 @@ namespace La_Game.Controllers
 
             int idParticipant = db.Participants.Where(p => p.studentCode == model.Studentcode).First().idParticipant;
 
+            //Get the last attempt value, used to increment attempt count
             string getLastAttempt = "SELECT MAX(Q2.attempt) as lastAttempt FROM AnswerOption as ao" +
                         " join QuestionResult Q2 on ao.idAnswer = Q2.AnswerOption_idAnswer" +
                         " WHERE ao.Question_idQuestion = " + questionData.First().idQuestion +
@@ -185,6 +119,7 @@ namespace La_Game.Controllers
             int? lastAttempt = db.Database.SqlQuery<int?>(getLastAttempt).Single();
             ViewBag.attempt = lastAttempt;
 
+            //List containing TestQuestionData models, used to combine all of the question data in one place
             List<TestQuestionData> testQuestionData = new List<TestQuestionData>();
             foreach (Question question in questionData)
             {
@@ -197,12 +132,20 @@ namespace La_Game.Controllers
                 });
             }
 
+            //Store the questionlist data in the tempdata
             TempData["testQuestionData"] = testQuestionData;
             TempData["attempt"] = lastAttempt + 1;
             TempData.Keep();
 
             return PartialView("_TestForm");
         }
+        /// <summary>
+        /// Controller action to submit questionresults
+        /// </summary>
+        /// <param name="idAnswer">Chosen answer</param>
+        /// <param name="idParticipant">Participant who answered</param>
+        /// <param name="idQuestionList">Questionlist</param>
+        /// <param name="startTime">The time the question was started</param>
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
@@ -221,12 +164,17 @@ namespace La_Game.Controllers
             db.QuestionResults.Add(questionResult);
             db.SaveChanges();
         }
-        [AllowAnonymous]
-        public ActionResult LikertScale(int? index)
+
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
+        protected override void Dispose(bool disposing)
         {
-            return View();
-
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
-
     }
 }

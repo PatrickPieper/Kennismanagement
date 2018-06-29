@@ -22,12 +22,13 @@ select,
 textarea {
     max-width: 280px;
 }
+
 .table tr:hover td {
     background-color: #f2e8da;
 }
 
-.container-code{
-    padding-top:50px;
+.container-code {
+    padding-top: 50px;
 }
 
 p {
@@ -35,14 +36,69 @@ p {
 }
 
 .input {
-    width : 300px;
+    width: 300px;
     font-size: 20px;
     background-color: aliceblue;
     color: darkblue;
 }
 
-.submit{
+.submit {
     width: 300px;
-    background-color:aqua;
-    
+    background-color: aqua;
+}
+
+.navbar {
+    background-color: #91BC06;
+}
+
+.navbar li a {
+    color: #000000 !important;
+}
+
+.navbar li a:hover{
+    color: dimgray !important;
+}
+
+.navbar-inverse {
+    border-color: #91BC06;
+}
+.jumbotron {
+    border-bottom-left-radius: 6px !important;
+    border-bottom-right-radius: 6px !important;
+    border-top-right-radius: 0px !important;
+    border-top-left-radius: 0px !important;
+}
+
+    .jumbotron h1 {
+        color: #1D81C3;
+        text-shadow: 0.8px 1px 1px #000;
+    }
+
+    .jumbotron p {
+        color: #000;
+        
+    }
+
+.navbar-inverse .navbar-toggle:hover, .navbar-inverse .navbar-toggle:focus {
+    background-color: #1D81C3;
+}
+
+.navbar-inverse .navbar-toggle {
+    border-color: white;
+}
+
+.navbar-inverse .navbar-collapse, .navbar-inverse .navbar-form {
+    border-color: white;
+}
+
+.navbar-brand {
+    padding-top: 0;
+}
+
+.top-buffer {
+    margin-top: 2%;
+}
+
+.panel-heading {
+    background-color: #eee;
 }

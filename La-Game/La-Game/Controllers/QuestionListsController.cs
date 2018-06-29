@@ -9,6 +9,9 @@ using La_Game.Models;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Questionlist Controller
+    /// </summary>
     public class QuestionListsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -124,12 +127,20 @@ namespace La_Game.Controllers
         /// <param name="questionList"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idQuestionList,Lesson_idLesson,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
+        public ActionResult Create([Bind(Include = "questionListName,questionListDescription")] QuestionList questionList)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // If valid, add it to the database
+                // Check the data
+                if (string.IsNullOrEmpty(questionList.questionListName) || string.IsNullOrEmpty(questionList.questionListDescription))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(questionList);
+                }
+
+                // If valid and not empty, save it to the database
                 db.QuestionLists.Add(questionList);
                 db.SaveChanges();
 
@@ -182,12 +193,20 @@ namespace La_Game.Controllers
         /// <param name="questionList"> The data that has to be saved. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "idQuestionList,Lesson_idLesson,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
+        public ActionResult Edit([Bind(Include = "idQuestionList,questionListName,questionListDescription,participationCode,isActive")] QuestionList questionList)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // If valid, save it to the database
+                // Check the data
+                if (string.IsNullOrEmpty(questionList.questionListName) || string.IsNullOrEmpty(questionList.questionListDescription))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(questionList);
+                }
+
+                // If valid and not empty, save it to the database
                 db.Entry(questionList).State = EntityState.Modified;
                 db.SaveChanges();
 
@@ -239,7 +258,7 @@ namespace La_Game.Controllers
 
                 // See if the questionlist has already been used by a participant
                 var results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
-                if (results.Count() == 0)
+                if (results.Count() >= 1)
                 {
                     if (questionList.isHidden == 1)
                     {
@@ -263,14 +282,14 @@ namespace La_Game.Controllers
                     db.Entry(questionList).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-                else
+                else if (results.Count == 0)
                 {
                     // Remove the questionorder
-                    string deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    string deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE QuestionList_idQuestionList = " + idQuestionList + ";";
                     db.Database.ExecuteSqlCommand(deleteQuestionOrder);
 
                     // Remove the questions from the list
-                    string deleteQuestions = "DELETE FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    string deleteQuestions = "DELETE FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + idQuestionList + ";";
                     db.Database.ExecuteSqlCommand(deleteQuestions);
 
                     // After removing the order and the questions, delete the list
@@ -496,7 +515,7 @@ namespace La_Game.Controllers
         {
             // Get the lists from the database
             String selectQuery = "SELECT * FROM QuestionList WHERE idQuestionList IN(SELECT QuestionList_idQuestionList FROM Lesson_QuestionList WHERE Lesson_idLesson = " + idLesson + ");";
-            IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery);
+            IEnumerable<QuestionList> data = db.Database.SqlQuery<QuestionList>(selectQuery).Where(q => q.isHidden != 1);
 
             // Set the lessonId and return the PartialView
             ViewBag.lessonID = idLesson;
@@ -568,6 +587,9 @@ namespace La_Game.Controllers
             }
         }
 
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -3,57 +3,57 @@
 @{
     ViewBag.Title = "Edit";
 }
+<div class="container">
+    <h2>Edit</h2>
+    <hr />
 
-<h2>Edit</h2>
+    @using (Html.BeginForm("Edit", "Questions", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
 
+        <div class="form-horizontal">
+            <h4>Question</h4>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.idQuestion)
 
-@using (Html.BeginForm("Edit", "Questions", FormMethod.Post, new { enctype = "multipart/form-data" }))
-{
-    @Html.AntiForgeryToken()
-
-    <div class="form-horizontal">
-        <h4>Question</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.idQuestion)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-3">
-                <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" id="impPrev"  class="img-responsive"/>
-                <input name="image" type="file" id="fileImage" accept=".jpg,.jpeg,.png" onchange="readURL(this)" />
-              </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.audio, "Audio", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <audio controls
-                       src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)"></audio>
-                <input type="file" id="FileAudio" name="FileAudio" accept=".mp3,,wav" />
+            <div class="form-group">
+                @Html.LabelFor(model => model.picture, "Picture", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-3">
+                    <img src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.picture)" width="250" height="250" id="impPrev" class="img-responsive" />
+                    <input name="image" type="file" id="fileImage" accept=".jpg,.jpeg,.png" onchange="readURL(this)" />
+                </div>
             </div>
 
-        </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.audio, "Audio", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <audio controls
+                           src="https://lagame2.blob.core.windows.net/questions/@Html.Raw(@Model.idQuestion)/@Html.Raw(@Model.audio)"></audio>
+                    <input type="file" id="FileAudio" name="FileAudio" accept=".mp3,,wav" />
+                </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.questionText, "Question", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.questionText, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.questionText, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.questionText, "Question", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.questionText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.questionText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index", null, new { @class = "btn btn-default" })
     </div>
-}
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/ValidateFileUpload.js")

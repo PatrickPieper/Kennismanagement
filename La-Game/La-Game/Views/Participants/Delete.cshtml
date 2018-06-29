@@ -4,59 +4,59 @@
     ViewBag.Title = "Delete";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
-<h2>Delete Participant</h2>
-
-<h3>Are you sure you want to delete this?</h3>
-<h4>This cannot be undone unless you contact an admin.</h4>
-<div>
+<div class="container">
+    <h2>Delete Participant</h2>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            Firstname
-        </dt>
+    <h3>Are you sure you want to delete this?</h3>
+    <h4>This cannot be undone unless you contact an admin.</h4>
+    <div>
+        <dl class="dl-horizontal">
+            <dt>
+                Firstname
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.firstName)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.firstName)
+            </dd>
 
-        <dt>
-            Lastname
-        </dt>
+            <dt>
+                Lastname
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.lastName)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.lastName)
+            </dd>
 
-        <dt>
-            Date of Birth
-        </dt>
+            <dt>
+                Date of Birth
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.birthDate)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.birthDate)
+            </dd>
 
-        <dt>
-            Studentcode
-        </dt>
+            <dt>
+                Studentcode
+            </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.studentCode)
-        </dd>
+            <dd>
+                @Html.DisplayFor(model => model.studentCode)
+            </dd>
 
-    </dl>
+        </dl>
 
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
 
-        <div class="form-actions no-color">
-            <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
-                <span class="glyphicon glyphicon-chevron-left"></span> Back
-            </button>
-            <button type="submit" value="Delete" class="btn btn-default">
-                <span class="glyphicon glyphicon-trash"></span> Delete
-            </button>
-        </div>
-    }
+            <div class="form-actions no-color">
+                <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Back
+                </button>
+                <button type="submit" value="Delete" class="btn btn-default">
+                    <span class="glyphicon glyphicon-trash"></span> Delete
+                </button>
+            </div>
+        }
+    </div>
 </div>

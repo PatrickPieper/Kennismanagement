@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Effectiveness Lessons";
+}
+<div class="container">
+    <h2> Effectiveness Lessons </h2>
+    <hr />
+    <div>
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="form-group">
+                    <h4>Percentage correct per Lesson</h4>
+                    @{Html.RenderAction("EffectivenessLessonSelection", "Statistics", new { });}
+                    <canvas id="lineChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("LessonStatistics", "Statistics") + "'");">
+            <span class="glyphicon glyphicon-menu-left"></span> Back to Lesson Statistics
+        </button>
+    </div>
+</div>
+@section scripts {
+    <script src="~/Scripts/Chart.js"></script>
+    <script src="~/Scripts/Common.js"></script>
+    <script>
+        var myLineChart;
+        createChart();
+        updateChart();
+
+        function createChart() {
+            var c = document.getElementById("lineChart");
+            var ctx = c.getContext("2d");
+            myLineChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: null,
+                    datasets: null,
+                },
+                options: {
+                    tooltips: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                suggestedMax: 100
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+        function updateChart(idLanguage) {
+            var tData = $.getValues('/Statistics/LineChartDataEffectivenessLesson?idLanguage=' + idLanguage);
+            if (tData !== null) {
+                //Loop through the datasets to change the 0.0001 placeholder to NaN, circumvents NaN not being valid JSON
+                for (x = 0; x < tData.datasets.length; x++)
+                {
+                    for (y = 0; y < tData.datasets[x].data.length; y++)
+                    {
+                        if (tData.datasets[x].data[y] == 0.0001)
+                        {
+                            tData.datasets[x].data[y] = NaN;
+                        }
+                    }
+                }
+                myLineChart.data = tData;
+            }
+            else {
+                myLineChart.data.datasets = [];
+                myLineChart.data.labels = [];
+            }
+            myLineChart.update();
+        }
+    </script>
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/effectivenesslessonselect.js")
+}

@@ -10,6 +10,9 @@ using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace La_Game.Controllers
 {
+    /// <summary>
+    /// Question Controller
+    /// </summary>
     public class QuestionsController : Controller
     {
         private LaGameDBContext db = new LaGameDBContext();
@@ -19,7 +22,6 @@ namespace La_Game.Controllers
         private Stream imageStream;
         private string containerName;
         BlobsController blobsController = new BlobsController();
-        AnswerOptionsController answerOptionsController = new AnswerOptionsController();
         private string fileUpdateName;
         private byte likert;
         
@@ -75,15 +77,14 @@ namespace La_Game.Controllers
         }
 
         // POST: Questions/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idQuestion,picture,audio,questionText")] Question question, HttpPostedFileBase FileImage, HttpPostedFileBase FileAudio)
         {
             var max = 1;
             if (ModelState.IsValid)
             {
+                bool imagePresent = false;
+                bool audioPresent = false;
 
                 String answerType = Request.Form["answerType"];
                 // If likert scale is selected get the value of the choosing option for likert scale and write it to the database.
@@ -92,14 +93,6 @@ namespace La_Game.Controllers
                     byte scaleOption = byte.Parse(Request.Form["likertOption"]);
                     likert = scaleOption;                   
                 }
-                if (db.Questions.Count() != 0)
-                {
-                    max = db.Questions.Max(q => q.idQuestion) + 1;
-                } 
-                                
-                CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
-                containerName = container.Name;
-                
 
                 // Checks if there is a image uploaded.
                 // If there is a image upload it to the blob and write the filename to the database.
@@ -109,7 +102,7 @@ namespace La_Game.Controllers
                     fileName = Path.GetFileName(FileImage.FileName);
                     imageStream = FileImage.InputStream;
 
-                    blobsController.UploadBlob(fileName, imageStream, containerName);
+                    imagePresent = true;
                     question.picture = fileName;
 
                 }
@@ -121,16 +114,33 @@ namespace La_Game.Controllers
                 {
                     audioName = Path.GetFileName(FileAudio.FileName);
                     audioStream = FileAudio.InputStream;
-
-                    //Use questionnumber as last parameter to search right container.
-                    blobsController.UploadBlob(audioName, audioStream, containerName);
+                    
+                    audioPresent = true;
                     question.audio = audioName;
                 }
 
                 // Get the question Text from the from and add it to the database with Multilingual.
                 string qText = question.questionText;
-                string queryText = "INSERT INTO Question(questionText, picture, audio, likertScale) VALUES (N'" + qText +"', '" + fileName +"','" + audioName +"','" + likert +"')";
+                string queryText = "INSERT INTO Question(questionText, picture, audio, likertScale) VALUES (N'" + qText + "', '" + fileName + "','" + audioName + "','" + likert + "')";
                 db.Database.ExecuteSqlCommand(queryText);
+
+                if (db.Questions.Count() != 0)
+                {
+                    max = db.Questions.Max(q => q.idQuestion);
+                } 
+                                
+                CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
+                containerName = container.Name;
+
+                if(imagePresent)
+                {
+                    blobsController.UploadBlob(fileName, imageStream, containerName);
+                }
+                if(audioPresent)
+                {
+                    blobsController.UploadBlob(audioName, audioStream, containerName);
+                }
+
 
                 // If the Question option is likert write 5 anwser to the database with values -2 to 2.
                 if (answerType == "likert")
@@ -144,21 +154,22 @@ namespace La_Game.Controllers
                         option.answerText = text;
                         option.correctAnswer = 1;
                         option.Question_idQuestion = max;
-                        answerOptionsController.Create(option);
+
+                        // Add the anwseroption to the database and increase the count
+                        db.AnswerOptions.Add(option);
                         count++;
                     }
 
                 }
+
                 // If multiple choice is selected put the anwsers in a array and write it to the database.
-                
                 else if (answerType == "multiplechoice")
                 {
                     string text = Request.Form["answerText"];
                     string[] answers = text.Split(',');
                     string correct = Request.Form["correctAnswer"];
                     string[] bools = correct.Split(',');
-
-
+                    
                     int count = 0;
 
                     while (count <= answers.Length - 1)
@@ -175,8 +186,9 @@ namespace La_Game.Controllers
                         {
                             answerOption.correctAnswer = 0;
                         }
-
-                        answerOptionsController.Create(answerOption);
+                    
+                        // Add the anwseroption to the database and increase the count
+                        db.AnswerOptions.Add(answerOption);
                         count++;
                     }
                 }
@@ -221,11 +233,18 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(question.questionText))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to give a name.");
+                    return View(question);
+                }
+
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(question.idQuestion.ToString());
                 int id = question.idQuestion;
                 containerName = container.Name;
-
-
+                
                 // Checks if there is a image uploaded.
                 // If there is a image upload it to the blob and update the filename in the database.
                 ImageUpdate = Request.Files[0];
@@ -276,16 +295,16 @@ namespace La_Game.Controllers
         /// Find the question that has to be removed/activated and redirect to a seperate page for confirmation.
         /// </summary>
         /// <param name="idQuestion"> Id of the question. </param>
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int? idQuestion)
         {
             // Check if id was given
-            if (id == null)
+            if (idQuestion == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
             // Try to find the question, if it does not exist return 404
-            Question question = db.Questions.Find(id);
+            Question question = db.Questions.Find(idQuestion);
             if (question == null)
             {
                 return HttpNotFound();
@@ -332,6 +351,17 @@ namespace La_Game.Controllers
             return RedirectToAction("Index");
         }
 
+        /// <summary>
+        /// Add new answeroption partialview
+        /// </summary>
+        public ActionResult AddAnswerOption()
+        {
+            return PartialView("_QuestionPartial");
+        }
+
+        /// <summary>
+        /// Dispose of the database connection.
+        /// </summary>
         protected override void Dispose(bool disposing)
         {
             if (disposing)

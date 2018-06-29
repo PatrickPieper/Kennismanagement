@@ -7,15 +7,17 @@
 @Styles.Render("~/Content/dataTables")
 
 <div>
-    <h2>
-        Add/Remove Question
-        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
-            <span class="glyphicon glyphicon-chevron-left"></span> Back to list
-        </button>
-    </h2>
+    
 
     <div class="container">
+        <h2>Add/Remove Question</h2>
+        <hr />
         <div class="row">
+            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "QuestionLists", new { id = ViewBag.listId }) + "'");">
+                <span class="glyphicon glyphicon-chevron-left"></span> Back to list
+            </button>
+        </div>
+        <div class="row top-buffer">
             <div class="table-responsive col-md-6">
                 <table id="removeQuestion" class="table table table-striped table-hover">
                     <thead>

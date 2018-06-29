@@ -1,23 +1,36 @@
 ﻿@{
     ViewBag.Title = "Index";
 }
+<div class="container">
+    <h2> Statistics Overview </h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3">
+            <div class="row">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-default btn-sm col-md-12" onclick="@("window.location.href='" + @Url.Action("QuestionStatistics", "Statistics") + "'");">
+                        <span class="glyphicon glyphicon-stats"></span> Question Statistics
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-default btn-sm col-md-12" onclick="@("window.location.href='" + @Url.Action("LessonStatistics", "Statistics") + "'");">
+                        <span class="glyphicon glyphicon-stats"></span> Lesson Statistics
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-default btn-sm col-md-12" onclick="@("window.location.href='" + @Url.Action("QuestionListStatistics", "Statistics") + "'");">
+                        <span class="glyphicon glyphicon-stats"></span> Questionlist Statistics
+                    </button>
+                </div>
+            </div>
+            <div class="row top-buffer">
+                <div class="col-md-4">
+                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
+                        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
 
-<h2> Statistics Overview </h2>
-
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionStatistics", "Statistics") + "'");">
-        <span class="glyphicon glyphicon-stats"></span> Question Statistics
-    </button>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("LessonStatistics", "Statistics") + "'");">
-        <span class="glyphicon glyphicon-stats"></span> Lesson Statistics
-    </button>
-</p>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionListChoice", "Statistics") + "'");">
-        <span class="glyphicon glyphicon-stats"></span> Questionlist Statistics
-    </button>
-</p><p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
-    </button>
-</p>
+    </div>
+</div>

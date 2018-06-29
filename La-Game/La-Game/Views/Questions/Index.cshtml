@@ -5,18 +5,22 @@
     ViewBag.Title = "Index";
 }
 @Styles.Render("~/Content/dataTables")
-
-<h2>
-    Question Overview
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Questions") + "'");">
-        <span class="glyphicon glyphicon-plus"></span> Create New
-    </button>
-</h2>
-
-@if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
-{
-    using (Html.BeginForm("Index", "Questions", FormMethod.Get))
+<div class="container">
+    <h2>
+        Question Overview
+        
+    </h2>
+    <hr />
+    <div class="row col-md-12">
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Create", "Questions") + "'");">
+            <span class="glyphicon glyphicon-plus"></span> Create New
+        </button>
+    </div>
+    @if (((ClaimsIdentity)User.Identity).Claims.First(u => u.Type == ClaimTypes.Role).Value.ToString() == "1")
     {
+        using (Html.BeginForm("Index", "Questions", FormMethod.Get))
+        {
+    <div class="row col-md-12 top-buffer">
         <div class="form-inline">
             <select name="filter" class="form-control input-sm">
                 <option value="active">Show active</option>
@@ -25,67 +29,69 @@
             </select>
             <button type="submit" value="filter" class="btn btn-default btn-sm"> Filter </button>
         </div>
-    }
-}
-
-<table id="questionOverview" class="table table table-striped table-hover">
-    <thead>
-        <tr>
-            <th>
-                Question
-            </th>
-            <th>
-                Picture
-            </th>
-            <th>
-                Audio
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var item in Model)
-        {
-            var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
-            <tr>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.questionText)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.picture)
-                </td>
-                <td onclick="Redirect('@link')">
-                    @Html.DisplayFor(modelItem => item.audio)
-                </td>
-                <td>
-                    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Questions", new { id = item.idQuestion }) + "'");">
-                        <span class="glyphicon glyphicon-wrench"></span> Edit
-                    </button>
-                    @if (item.isHidden == 1)
-                    {
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questionss", new { idQuestion = item.idQuestion }) + "'");">
-                            <span class="glyphicon glyphicon-plus"></span> Activate
-                        </button>
-                    }
-                    else
-                    {
-                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questions", new { idQuestion = item.idQuestion }) + "'");">
-                            <span class="glyphicon glyphicon-remove"></span> Remove
-                        </button>
-                    }
-                </td>
-            </tr>
+    </div>
         }
-    </tbody>
+    }
+            <div class="row col-md-12 top-buffer">
+    <table id="questionOverview" class="table table table-striped table-hover table-responsive">
+        <thead>
+            <tr>
+                <th>
+                    Question
+                </th>
+                <th>
+                    Picture
+                </th>
+                <th>
+                    Audio
+                </th>
+                <th></th>
+            </tr>
+        </thead>
 
-</table>
-<p>
-    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Dashboard", "Home") + "'");">
-        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
-    </button>
-</p>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var link = Url.Action("Details", "Questions", new { id = item.idQuestion });
+                <tr>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.questionText)
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.picture)
+                    </td>
+                    <td onclick="Redirect('@link')">
+                        @Html.DisplayFor(modelItem => item.audio)
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Edit", "Questions", new { id = item.idQuestion }) + "'");">
+                            <span class="glyphicon glyphicon-wrench"></span> Edit
+                        </button>
+                        @if (item.isHidden == 1)
+                        {
+                            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questions", new { idQuestion = item.idQuestion }) + "'");">
+                                <span class="glyphicon glyphicon-plus"></span> Activate
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Delete", "Questions", new { idQuestion = item.idQuestion }) + "'");">
+                                <span class="glyphicon glyphicon-remove"></span> Remove
+                            </button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
 
+    </table>
+    </div>
+    <div class="row col-md-12">
+        <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
+            <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
+        </button>
+    </div>
+</div>
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
 

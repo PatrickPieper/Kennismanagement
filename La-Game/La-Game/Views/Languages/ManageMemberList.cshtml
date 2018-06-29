@@ -1,0 +1,96 @@
+﻿@model IEnumerable<La_Game.Models.Member>
+
+@{
+    ViewBag.Title = "Manage Memberlist";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@Styles.Render("~/Content/dataTables")
+
+<div>
+    <div class="container">
+        <h2>Manage Members</h2>
+        <hr />
+        <div class="row">
+            <div class="table-responsive col-md-6">
+                <table id="currentMembers" class="table table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                Email
+                            </th>
+                            <th>
+                                Name
+                            </th>
+                            <th></th>
+                        </tr>
+                    <thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            var link = Url.Action("Details", "Members", new { idMember = item.idMember });
+                            <tr>
+                                <td onclick="Redirect('@link')">
+                                    @Html.DisplayFor(modelItem => item.email)
+                                </td>
+                                <td onclick="Redirect('@link')">
+                                    @Html.DisplayFor(modelItem => item.firstname) @Html.DisplayFor(modelItem => item.lastname)
+                                </td>
+                                <td>
+                                    @using (Html.BeginForm("ManageMembers", "Languages", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" value="Remove" class="btn btn-default btn-sm">
+                                            <span class="glyphicon glyphicon-remove"></span> Remove
+                                        </button>
+                                        <input type="hidden" name="Language_idLanguage" value="@Html.Raw(ViewBag.idLanguage)" />
+                                        <input type="hidden" name="Member_idMember" value="@Html.Raw(item.idMember)" />
+                                        <input type="hidden" name="OptionString" value="Remove" />
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class="table-responsive col-md-6">
+                @{Html.RenderAction("GetUnlistedMembers", "Languages");}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Details", "Languages", new { id = ViewBag.idLanguage }) + "'");">
+                    <span class="glyphicon glyphicon-chevron-left"></span> Back to language
+                </button>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/dataTables")
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#currentMembers').DataTable(
+                {
+                    "pagingType": "simple",
+                    "bLengthChange": false,
+                    "columnDefs": [{ targets: [2], orderable: false }]
+                }
+            );
+        });
+
+        $(document).ready(function () {
+            $('#unlistedMembers').DataTable(
+                {
+                    "pagingType": "simple",
+                    "bLengthChange": false,
+                    "columnDefs": [{ targets: [2], orderable: false }]
+                }
+            );
+        });
+    </script>
+}

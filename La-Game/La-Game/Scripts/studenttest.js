@@ -6,13 +6,11 @@ $(function () {
         e.preventDefault();
         var _this = $(this);
         var _form = _this.closest("form");
+        //Check if form is valid
+        var isvalid = _form.valid();
 
-        var isvalid = _form.valid();  // Tells whether the form is valid
-
+        //If valid, replacepartial container with new partial container and disable login and home url
         if (isvalid) {
-            //$.post(_form.attr("action"), _form.serialize(), function (data) {
-            //    //check the result and do whatever you want
-            //})
             $("#btntestentry").text('Loading..');
             $("#btntestentry").prop('disabled', true);
             $.ajax({

@@ -6,51 +6,48 @@
 }
 
 <h2>Create Participant</h2>
+<hr />
+<div class="col-md-6 col-md-offset-3">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.firstName, "First name", htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.firstName, "Firstname", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.firstName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.firstName, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.lastName, "Last name", htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.birthDate, "Date of Birth", htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.birthDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.birthDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group col-md-12">
+                <div class="col-md-offset-3 col-md-9">
+                    <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
+                        <span class="glyphicon glyphicon-chevron-left"></span> Back
+                    </button>
+                    <button type="submit" value="Create" class="btn btn-default">
+                        <span class="glyphicon glyphicon-plus"></span> Create
+                    </button>
+                </div>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.lastName, "Lastname", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.lastName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.lastName, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.birthDate, "Date of Birth", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.birthDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.birthDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <input type="hidden" name="studentCode" value="" />
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <button type="button" class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Index", "Participants") + "'");">
-                    <span class="glyphicon glyphicon-chevron-left"></span> Back
-                </button>
-                <button type="submit" value="Create" class="btn btn-default">
-                    <span class="glyphicon glyphicon-plus"></span> Create
-                </button>
-            </div>
-        </div>
-    </div>
-}
+    }
+</div>
