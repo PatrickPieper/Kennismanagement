@@ -5,7 +5,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Text;
-using System.Web;
 using System.Web.Mvc;
 using La_Game.Models;
 
@@ -16,6 +15,7 @@ namespace La_Game.Controllers
     /// </summary>
     public class ParticipantsController : Controller
     {
+        // Database context
         private LaGameDBContext db = new LaGameDBContext();
 
         // GET: Participants
@@ -125,6 +125,7 @@ namespace La_Game.Controllers
                     return View(participant);
                 }
 
+                // If valid and not empty, save it to the database
                 db.Entry(participant).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");

@@ -103,7 +103,7 @@ namespace La_Game.Controllers
                     return View(language);
                 }
 
-                // If valid and not empty, add it to the database
+                // If valid and not empty, save it to the database
                 db.Languages.Add(language);
                 db.SaveChanges();
 
@@ -161,7 +161,7 @@ namespace La_Game.Controllers
                     return View(language);
                 }
 
-                // If valid, save it to the database
+                // If valid and not empty, save it to the database
                 db.Entry(language).State = EntityState.Modified;
                 db.SaveChanges();
 

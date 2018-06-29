@@ -13,6 +13,7 @@ namespace La_Game.Controllers
     /// </summary>
     public class LessonsController : Controller
     {
+        // Database context
         private LaGameDBContext db = new LaGameDBContext();
 
         /// <summary>
@@ -95,12 +96,20 @@ namespace La_Game.Controllers
         /// <param name="lesson"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idLesson,Language_idLanguage,lessonName,description")] Lesson lesson)
+        public ActionResult Create([Bind(Include = "Language_idLanguage,lessonName,description")] Lesson lesson)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // If valid, add it to the database
+                // Check the data
+                if (string.IsNullOrEmpty(lesson.lessonName) || string.IsNullOrEmpty(lesson.description))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(lesson);
+                }
+
+                // If valid and not empty, save it to the database
                 db.Lessons.Add(lesson);
                 db.SaveChanges();
 
@@ -148,7 +157,15 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // If valid, save it to the database
+                // Check the data
+                if (string.IsNullOrEmpty(lesson.lessonName) || string.IsNullOrEmpty(lesson.description))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(lesson);
+                }
+
+                // If valid and not empty, save it to the database
                 db.Entry(lesson).State = EntityState.Modified;
                 db.SaveChanges();
 
