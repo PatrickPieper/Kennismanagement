@@ -38,17 +38,17 @@
                 if (selects[i].value == 1) {
                     count++;
                 }
-                if (count < 1) {
-                    alertbox.addClass("alert-danger");
-                    alertbox.html("<p>You have not chosen a correct answer!</p>");
-                    alertbox.show();
-                    window.scrollTo(0, 0);
-                    selects[i].value = 0;
-                    e.preventDefault();
-                }
-                else if (count > 1) {
-                    alertbox.hide();
-                }
+                
+            }
+            if (count < 1) {
+                alertbox.addClass("alert-danger");
+                alertbox.html("<p>You have not chosen a correct answer!</p>");
+                alertbox.show();
+                window.scrollTo(0, 0);
+                e.preventDefault();
+            }
+            if (count > 1) {
+                alertbox.hide();
             }
         }
 
