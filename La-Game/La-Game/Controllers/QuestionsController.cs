@@ -83,6 +83,8 @@ namespace La_Game.Controllers
             var max = 1;
             if (ModelState.IsValid)
             {
+                bool imagePresent = false;
+                bool audioPresent = false;
 
                 String answerType = Request.Form["answerType"];
                 // If likert scale is selected get the value of the choosing option for likert scale and write it to the database.
@@ -91,14 +93,6 @@ namespace La_Game.Controllers
                     byte scaleOption = byte.Parse(Request.Form["likertOption"]);
                     likert = scaleOption;                   
                 }
-                if (db.Questions.Count() != 0)
-                {
-                    max = db.Questions.Max(q => q.idQuestion) + 1;
-                } 
-                                
-                CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
-                containerName = container.Name;
-                
 
                 // Checks if there is a image uploaded.
                 // If there is a image upload it to the blob and write the filename to the database.
@@ -108,7 +102,7 @@ namespace La_Game.Controllers
                     fileName = Path.GetFileName(FileImage.FileName);
                     imageStream = FileImage.InputStream;
 
-                    blobsController.UploadBlob(fileName, imageStream, containerName);
+                    imagePresent = true;
                     question.picture = fileName;
 
                 }
@@ -120,16 +114,33 @@ namespace La_Game.Controllers
                 {
                     audioName = Path.GetFileName(FileAudio.FileName);
                     audioStream = FileAudio.InputStream;
-
-                    //Use questionnumber as last parameter to search right container.
-                    blobsController.UploadBlob(audioName, audioStream, containerName);
+                    
+                    audioPresent = true;
                     question.audio = audioName;
                 }
 
                 // Get the question Text from the from and add it to the database with Multilingual.
                 string qText = question.questionText;
-                string queryText = "INSERT INTO Question(questionText, picture, audio, likertScale) VALUES (N'" + qText +"', '" + fileName +"','" + audioName +"','" + likert +"')";
+                string queryText = "INSERT INTO Question(questionText, picture, audio, likertScale) VALUES (N'" + qText + "', '" + fileName + "','" + audioName + "','" + likert + "')";
                 db.Database.ExecuteSqlCommand(queryText);
+
+                if (db.Questions.Count() != 0)
+                {
+                    max = db.Questions.Max(q => q.idQuestion);
+                } 
+                                
+                CloudBlobContainer container = blobsController.GetCloudBlobContainer(max.ToString());
+                containerName = container.Name;
+
+                if(imagePresent)
+                {
+                    blobsController.UploadBlob(fileName, imageStream, containerName);
+                }
+                if(audioPresent)
+                {
+                    blobsController.UploadBlob(audioName, audioStream, containerName);
+                }
+
 
                 // If the Question option is likert write 5 anwser to the database with values -2 to 2.
                 if (answerType == "likert")
