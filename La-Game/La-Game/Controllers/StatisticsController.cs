@@ -47,13 +47,20 @@ namespace La_Game.Controllers
             return View();
         }
 
-
+        /// <summary>
+        /// GET: QuestionListStatistics
+        /// </summary>
+        /// <param name="questionListId">Id of the questionlist</param>
+        /// <param name="attempt">Attempt of the questionlist</param>
+        /// <returns></returns>
         public ActionResult QuestionListStatistics(int? questionListId, int attempt = 1)
         {
+            //Get all questionlists
             string sqlString = "SELECT * FROM QuestionList";
             List<QuestionList> questionLists = db.QuestionLists.SqlQuery(sqlString).ToList<QuestionList>();
             ViewBag.questionLists = questionLists;
 
+            //If there is a questionList set it else return view
             if (questionListId == null)
             {
                 var questionList = db.QuestionLists.SqlQuery(sqlString).FirstOrDefault();
@@ -66,6 +73,8 @@ namespace La_Game.Controllers
                     return View();
                 }
             }
+
+            //GET participant data with the relevant questionListId and attempt and put this data in a list and viewbag to use in the view
             sqlString = "select p.idParticipant, p.firstName, p.lastName, min(qr.startTime) as 'startTime', max(qr.endTime) as 'endTime', sum(datediff(millisecond, qr.startTime,qr.endTime)) as 'totalTime',qr.attempt, count(cao.correctAnswer) as 'correctCount', count(wao.correctAnswer) as 'wrongCount' from QuestionResult as qr " +
                                 "left join AnswerOption as cao on qr.AnswerOption_idAnswer = cao.idAnswer and cao.correctAnswer = 1 " +
                                 "left join AnswerOption as wao on qr.AnswerOption_idAnswer = wao.idAnswer and wao.correctAnswer = 0 " +
@@ -78,6 +87,7 @@ namespace La_Game.Controllers
             List<QuestionListStatisticsModel> questionListStatistics = db.Database.SqlQuery<QuestionListStatisticsModel>(sqlString).ToList();
             ViewBag.questionListStatistics = questionListStatistics;
 
+            //Get the information of the questionList and put it in a viewbag
             sqlString = "SELECT QuestionList_idQuestionList as idQuestionList," +
                 " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = 28) as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
                 " join QuestionResult on QuestionList.idQuestionList = QuestionResult.QuestionList_idQuestionList" +
@@ -85,8 +95,11 @@ namespace La_Game.Controllers
                 " group by QuestionList_idQuestionList";
             ViewBag.questionListInfo = db.Database.SqlQuery<QuestionListInfoModel>(sqlString).ToList();
 
+            //Get the name of the questionList and put it in the viewbag
             sqlString = "Select questionListName FROM QuestionList where idQuestionList=" + questionListId;
             ViewBag.questionListName = db.Database.SqlQuery<string>(sqlString).First();
+
+            //set the attempt and questionListId and attempt in the viewbag
             ViewBag.attempt = attempt;
             ViewBag.questionListId = questionListId;
 
