@@ -90,12 +90,20 @@ namespace La_Game.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeAdmin]
-        public ActionResult Create([Bind(Include = "idLanguage,languageName")] Language language)
+        public ActionResult Create([Bind(Include = "languageName")] Language language)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
             {
-                // If valid, add it to the database
+                // Check the data
+                if (string.IsNullOrEmpty(language.languageName))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(language);
+                }
+
+                // If valid and not empty, add it to the database
                 db.Languages.Add(language);
                 db.SaveChanges();
 
@@ -145,6 +153,14 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(language.languageName))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(language);
+                }
+
                 // If valid, save it to the database
                 db.Entry(language).State = EntityState.Modified;
                 db.SaveChanges();

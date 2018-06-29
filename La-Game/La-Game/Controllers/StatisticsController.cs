@@ -89,7 +89,7 @@ namespace La_Game.Controllers
 
             //Get the information of the questionList and put it in a viewbag
             sqlString = "SELECT QuestionList_idQuestionList as idQuestionList," +
-                " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = 28) as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
+                " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = "+questionListId+") as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
                 " join QuestionResult on QuestionList.idQuestionList = QuestionResult.QuestionList_idQuestionList" +
                 " where QuestionList.idQuestionList = " + questionListId +
                 " group by QuestionList_idQuestionList";

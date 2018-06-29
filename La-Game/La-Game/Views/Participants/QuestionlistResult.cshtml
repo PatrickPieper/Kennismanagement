@@ -57,7 +57,7 @@
         </tbody>
     </table>
     <button class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Results", "Participants", new { id = Model.idParticipant }) + "'");"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
-    <button onclick="showBar()" class="btn btn-default">Bar chart</button>
+    <button onclick="showBar()" class="btn btn-default">Line chart</button>
     <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
 <script src="~/Scripts/Chart.js"></script>
@@ -82,18 +82,28 @@
 
     function bar() {
         new Chart(document.getElementById("barChart"), {
-            type: 'bar',
+            type: 'line',
             data: {
                 labels: labels,
                 datasets: [
                     {
                         label: "Correct answers",
+                        borderColor: color,
                         backgroundColor: color,
+                        fill: false,
                         data: results,
                     }
                 ]
             },
             options: {
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
                 scales: {
                     yAxes: [{
                         ticks: {
