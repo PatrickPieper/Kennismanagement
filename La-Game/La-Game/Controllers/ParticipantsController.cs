@@ -57,6 +57,14 @@ namespace La_Game.Controllers
             // Check if the data is valid
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(participant.firstName) || string.IsNullOrEmpty(participant.lastName) || string.IsNullOrEmpty(participant.birthDate.ToString()))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(participant);
+                }
+
                 // Get a unique studentId
                 int studentId;
                 Random rng = new Random();
@@ -109,6 +117,14 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(participant.firstName) || string.IsNullOrEmpty(participant.lastName) || string.IsNullOrEmpty(participant.birthDate.ToString()))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to fill all the fields.");
+                    return View(participant);
+                }
+
                 db.Entry(participant).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
