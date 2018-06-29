@@ -222,11 +222,18 @@ namespace La_Game.Controllers
         {
             if (ModelState.IsValid)
             {
+                // Check the data
+                if (string.IsNullOrEmpty(question.questionText))
+                {
+                    // One or more fields were empty
+                    ModelState.AddModelError(string.Empty, "You need to give a name.");
+                    return View(question);
+                }
+
                 CloudBlobContainer container = blobsController.GetCloudBlobContainer(question.idQuestion.ToString());
                 int id = question.idQuestion;
                 containerName = container.Name;
-
-
+                
                 // Checks if there is a image uploaded.
                 // If there is a image upload it to the blob and update the filename in the database.
                 ImageUpdate = Request.Files[0];

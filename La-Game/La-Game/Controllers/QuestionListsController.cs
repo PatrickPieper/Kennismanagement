@@ -140,7 +140,7 @@ namespace La_Game.Controllers
                     return View(questionList);
                 }
 
-                // If valid, add it to the database
+                // If valid and not empty, save it to the database
                 db.QuestionLists.Add(questionList);
                 db.SaveChanges();
 
@@ -206,7 +206,7 @@ namespace La_Game.Controllers
                     return View(questionList);
                 }
 
-                // If valid, save it to the database
+                // If valid and not empty, save it to the database
                 db.Entry(questionList).State = EntityState.Modified;
                 db.SaveChanges();
 
