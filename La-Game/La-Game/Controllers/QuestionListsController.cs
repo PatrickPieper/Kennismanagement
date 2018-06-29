@@ -258,7 +258,7 @@ namespace La_Game.Controllers
 
                 // See if the questionlist has already been used by a participant
                 var results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
-                if (results.Count() == 0)
+                if (results.Count() >= 1)
                 {
                     if (questionList.isHidden == 1)
                     {
@@ -282,14 +282,14 @@ namespace La_Game.Controllers
                     db.Entry(questionList).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-                else
+                else if (results.Count == 0)
                 {
                     // Remove the questionorder
-                    string deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    string deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE QuestionList_idQuestionList = " + idQuestionList + ";";
                     db.Database.ExecuteSqlCommand(deleteQuestionOrder);
 
                     // Remove the questions from the list
-                    string deleteQuestions = "DELETE FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + questionList + ";";
+                    string deleteQuestions = "DELETE FROM QuestionList_Question WHERE QuestionList_idQuestionList = " + idQuestionList + ";";
                     db.Database.ExecuteSqlCommand(deleteQuestions);
 
                     // After removing the order and the questions, delete the list
