@@ -52,7 +52,7 @@ namespace La_Game.Controllers
         /// <param name="participant"> The data that has to be added. </param>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idParticipant,firstName,lastName,birthDate,studentCode")] Participant participant)
+        public ActionResult Create([Bind(Include = "idParticipant,firstName,lastName,birthDate")] Participant participant)
         {
             // Check if the data is valid
             if (ModelState.IsValid)
@@ -195,7 +195,6 @@ namespace La_Game.Controllers
 
             List <QuestionListResult> results = new List<QuestionListResult>();
             StringBuilder sqlQueryString = new StringBuilder();
-            int i = 1;
             
             sqlQueryString.Append("select q.idQuestion, q.questionText,ao.answerText,ao.correctAnswer, qr.attempt, datediff(ms, qr.startTime, qr.endTime) as totalTime from QuestionResult as qr" +
                 " join AnswerOption as ao on qr.AnswerOption_idAnswer = ao.idAnswer" +
