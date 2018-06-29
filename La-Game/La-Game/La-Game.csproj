@@ -599,8 +599,6 @@
     <Content Include="Views\QuestionLists\Index.cshtml" />
     <Content Include="Views\Index.cshtml" />
     <Content Include="Views\StudentTest\Index.cshtml" />
-    <Content Include="Views\StudentTest\LikertScale.cshtml" />
-    <Content Include="Views\StudentTest\MultipleChoice.cshtml" />
     <Content Include="Views\QuestionLists\ModifyQuestionList.cshtml" />
     <Content Include="Views\Shared\_AddQuestionTable.cshtml" />
     <Content Include="Views\Lessons\Create.cshtml" />
@@ -625,11 +623,6 @@
     <Content Include="Views\Participants\Edit.cshtml" />
     <Content Include="Views\Participants\Index.cshtml" />
     <Content Include="Views\Participants\Results.cshtml" />
-    <Content Include="Views\QuestionResults\Create.cshtml" />
-    <Content Include="Views\QuestionResults\Delete.cshtml" />
-    <Content Include="Views\QuestionResults\Details.cshtml" />
-    <Content Include="Views\QuestionResults\Edit.cshtml" />
-    <Content Include="Views\QuestionResults\Index.cshtml" />
     <Content Include="Views\Shared\_QuestionPartial.cshtml" />
     <Content Include="Views\Statistics\Index.cshtml" />
     <Content Include="Views\Statistics\QuestionStatistics.cshtml" />
