@@ -1,6 +1,7 @@
 ﻿@{
     ViewBag.Title = "Common Wrong Answers";
 }
+
 <div class="container">
     <h2> Common Wrong Answers </h2>
     <hr />
@@ -19,6 +20,7 @@
         <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("QuestionStatistics", "Statistics") + "'");">
             <span class="glyphicon glyphicon-chevron-left"></span> Back to Question Statistics
         </button>
+        <button type="button" id="exportButton" class="btn btn-default btn-sm">Pdf</button>
     </p>
 </div>
 @section scripts {
@@ -47,6 +49,7 @@
                     }
                 }
             });
+
             $("#barChart").click(
                 function (evt) {
                     var activePoints = myBarChart.getElementsAtEvent(evt);
@@ -67,7 +70,19 @@
                     }
                 }
             );
+
+
+
+            $("#exportButton").click(function () {
+                var dataURL = c.toDataURL();
+                console.log(dataURL);
+
+                var pdf = new jsPDF('l','mm',[297,210]);
+                pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
+                pdf.save("download.pdf");
+            });
         }
+
         function updateChart(idLanguage, idLesson, idQuestionList)
         {
             var tData = $.getValues('/Statistics/BarChartDataCommonWrongAnswers?idLanguage=' + idLanguage + '&idLesson=' + idLesson + '&idQuestionList=' + idQuestionList);

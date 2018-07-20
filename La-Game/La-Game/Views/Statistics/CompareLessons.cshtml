@@ -19,6 +19,7 @@
         <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("LessonStatistics", "Statistics") + "'");">
             <span class="glyphicon glyphicon-menu-left"></span> Back to Lesson Statistics
         </button>
+        <button type="button" id="exportButton" class="btn btn-default btn-sm">Pdf</button>
     </div>
 </div>
 @section scripts {
@@ -49,7 +50,18 @@
                     }
                 }
             });
+
+            $("#exportButton").click(function () {
+                var dataURL = c.toDataURL();
+                console.log(dataURL);
+
+                var pdf = new jsPDF('l', 'mm', [297, 210]);
+                pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
+                pdf.save("download.pdf");
+            });
         }
+
+        
     </script>
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/lessonselectionrefresh.js")

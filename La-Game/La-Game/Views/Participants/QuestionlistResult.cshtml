@@ -59,10 +59,12 @@
     </table>
     <button class="btn btn-default" onclick="@("window.location.href='" + @Url.Action("Results", "Participants", new { id = Model.idParticipant }) + "'");"><span class="glyphicon glyphicon-chevron-left"></span> Back</button>
     <button onclick="showBar()" class="btn btn-default">Line chart</button>
+    <button type="button" id="exportButton" class="btn btn-default">Pdf</button>
     <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
-<script src="~/Scripts/Chart.js"></script>
-<script>
+@section scripts {
+    <script src="~/Scripts/Chart.js"></script>
+    <script>
     var labels = @Html.Raw(Json.Encode(ViewBag.attempts));
     var max = @Html.Raw(Json.Encode(ViewBag.numOfQuestions));
     var results = @Html.Raw(Json.Encode(ViewBag.correctAnswers));
@@ -126,6 +128,19 @@
                 }
             }
         });
-    }
-</script>
 
+        $("#exportButton").click(function () {
+            var c = document.getElementById("barChart");
+            var dataURL = c.toDataURL();
+            console.log(dataURL);
+
+            var pdf = new jsPDF('l', 'mm', [297, 210]);
+            pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
+            pdf.save("download.pdf");
+        });
+    }
+
+
+    </script>
+   
+}
