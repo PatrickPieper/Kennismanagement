@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -104,6 +105,28 @@ namespace La_Game.Controllers
             ViewBag.questionListId = questionListId;
 
             return View();
+        }
+
+        public ActionResult CompareAttempt(int? idQuestionList)
+        {
+            if(idQuestionList != null)
+            {
+                List<QuestionResultDto> results = db.QuestionLists
+                    .Where(x => x.idQuestionList == idQuestionList)
+                    .SelectMany(x => x.QuestionResults)
+                    .GroupBy(x => x.attempt)
+                    .Select(x => new QuestionResultDto
+                    {
+                        attempt = x.Key,
+                        participantsCount = x.GroupBy(g => g.Participant_idParticipant).Count(),
+                        totalTime = x.Sum(y => DbFunctions.DiffSeconds(y.startTime, y.endTime))
+                    })
+                    .ToList();
+                
+                return PartialView("_CompareAttempt", results);
+            }
+
+            return HttpNotFound();
         }
 
         #region Partial Views

@@ -7,7 +7,7 @@
       <Diagram DiagramId="8ba5e72855c546bc8207eb111cbac540" Name="Diagram1" ZoomLevel="101">
         <EntityTypeShape EntityType="Model.AnswerOption" Width="1.5" PointX="9.75" PointY="9.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Language" Width="1.5" PointX="0.75" PointY="4.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="Model.Language_Member" Width="1.5" PointX="3" PointY="3.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="Model.Language_Member" Width="1.5" PointX="7.625" PointY="2.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Lesson" Width="1.5" PointX="3" PointY="6.875" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Lesson_Participant" Width="1.875" PointX="5.5" PointY="6" IsExpanded="true" />
         <EntityTypeShape EntityType="Model.Member" Width="1.5" PointX="5.375" PointY="1" IsExpanded="true" />

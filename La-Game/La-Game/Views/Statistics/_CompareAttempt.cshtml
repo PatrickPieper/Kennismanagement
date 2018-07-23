@@ -1,0 +1,73 @@
+﻿@using System.Linq
+@using La_Game.Models
+@model List<QuestionResultDto>
+
+<script src="~/Scripts/Chart.js"></script>
+<script>
+        @{
+            double max = 0;
+            if (Model.Count > 0 )
+            {
+                max = Model.Max(x => x.AvarageTime);
+            }
+        }
+
+        var labels = @Html.Raw(Json.Encode(Model.Select(x => x.attempt)));
+        var max = @Html.Raw(Json.Encode(max));
+        var results = @Html.Raw(Json.Encode(Model.Select(x => x.AvarageTime)));
+        var color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
+
+    bar();
+
+    function bar() {
+
+        var canvas = document.getElementById("barChart");
+        console.log(canvas);
+
+        var c = new Chart(canvas,
+        {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [
+                    {
+                        label: "Average completion time per attempt",
+                        borderColor: color,
+                        backgroundColor: color,
+                        fill: false,
+                        data: results,
+                    }
+                ]
+            },
+            options: {
+                tooltips: {
+                    mode: 'index',
+                    intersect: false,
+                },
+                hover: {
+                    mode: 'nearest',
+                    intersect: true
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true,
+                            suggestedMax: max
+                        },
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Time (in seconds)"
+                        }
+                    }],
+                    xAxes: [{
+
+                        scaleLabel: {
+                            display: true,
+                            labelString: "Attempts"
+                        }
+                    }]
+                }
+            }
+        });
+    }
+</script>

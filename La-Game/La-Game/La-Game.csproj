@@ -232,6 +232,7 @@
     <Compile Include="Models\QuestionListResult.cs" />
     <Compile Include="Models\QuestionListStatisticsModel.cs" />
     <Compile Include="Models\QuestionListsummary.cs" />
+    <Compile Include="Models\QuestionResultDto.cs" />
     <Compile Include="Models\TestQuestionData.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
@@ -667,6 +668,7 @@
     <Content Include="Views\Members\Register.cshtml" />
     <Content Include="Views\Statistics\EffectivenessLesson.cshtml" />
     <Content Include="Views\Statistics\_EffectivenessLessonSelection.cshtml" />
+    <Content Include="Views\Statistics\_CompareAttempt.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
