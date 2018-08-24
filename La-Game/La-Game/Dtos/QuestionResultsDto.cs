@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace La_Game.Models
+namespace La_Game.Dtos
 {
     public class QuestionResultDto
     {
-        public Nullable<int> attempt { get; set; }
+        public int? attempt { get; set; }
 
         public int? totalTime { get; set; }
 

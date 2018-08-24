@@ -228,6 +228,7 @@
     <Compile Include="Dtos\ParticipantDto.cs" />
     <Compile Include="Dtos\ParticipantQuestionDto.cs" />
     <Compile Include="Dtos\QuestionIdDto.cs" />
+    <Compile Include="Dtos\QuestionResultsDto.cs" />
     <Compile Include="Dtos\SubmitedDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -245,7 +246,6 @@
     <Compile Include="Models\QuestionListResult.cs" />
     <Compile Include="Models\QuestionListStatisticsModel.cs" />
     <Compile Include="Models\QuestionListsummary.cs" />
-    <Compile Include="Models\QuestionResultDto.cs" />
     <Compile Include="Models\TestQuestionData.cs" />
     <Compile Include="Models\CommonWrongQuestionResult.cs" />
     <Compile Include="Models\Chart.cs" />
@@ -302,6 +302,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DashboardService.cs" />
+    <Compile Include="Services\StatisticsService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\BlobVM.cs" />
   </ItemGroup>

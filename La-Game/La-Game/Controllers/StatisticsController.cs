@@ -1,4 +1,5 @@
 ﻿using La_Game.Models;
+using La_Game.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -90,7 +91,7 @@ namespace La_Game.Controllers
 
             //Get the information of the questionList and put it in a viewbag
             sqlString = "SELECT QuestionList_idQuestionList as idQuestionList," +
-                " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = "+questionListId+") as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
+                " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = " + questionListId + ") as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
                 " join QuestionResult on QuestionList.idQuestionList = QuestionResult.QuestionList_idQuestionList" +
                 " where QuestionList.idQuestionList = " + questionListId +
                 " group by QuestionList_idQuestionList";
@@ -109,20 +110,13 @@ namespace La_Game.Controllers
 
         public ActionResult CompareAttempt(int? idQuestionList)
         {
-            if(idQuestionList != null)
+            if (idQuestionList != null)
             {
-                List<QuestionResultDto> results = db.QuestionLists
-                    .Where(x => x.idQuestionList == idQuestionList)
-                    .SelectMany(x => x.QuestionResults)
-                    .GroupBy(x => x.attempt)
-                    .Select(x => new QuestionResultDto
-                    {
-                        attempt = x.Key,
-                        participantsCount = x.GroupBy(g => g.Participant_idParticipant).Count(),
-                        totalTime = x.Sum(y => DbFunctions.DiffSeconds(y.startTime, y.endTime))
-                    })
-                    .ToList();
-                
+                StatisticsService service = new StatisticsService();
+
+
+                var results = service.QuestionResults(idQuestionList.Value);
+
                 return PartialView("_CompareAttempt", results);
             }
 
