@@ -228,11 +228,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Hubs\LiveHub.cs" />
     <Compile Include="Models\AuthenticationViewModels.cs" />
     <Compile Include="Models\AnswerOption.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\CompareLessonResult.cs" />
+    <Compile Include="Models\LiveTableViewModel.cs" />
+    <Compile Include="Models\LiveViewModel.cs" />
     <Compile Include="Models\ParticipantLessonWrongCorrect.cs" />
     <Compile Include="Models\QuestionListInfoModel.cs" />
     <Compile Include="Models\QuestionListResult.cs" />
@@ -295,6 +298,7 @@
     </Compile>
     <Compile Include="Pdf\ComparePdf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DashboardService.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Models\BlobVM.cs" />
   </ItemGroup>
@@ -572,6 +576,7 @@
     <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
+    <Content Include="Scripts\filterql.js" />
     <Content Include="Scripts\filterrefresh.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -587,6 +592,7 @@
     <Content Include="Scripts\effectivenesslessonselect.js" />
     <Content Include="Scripts\lessonselectionrefresh.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\signalRLive.js" />
     <Content Include="Scripts\studenttest.js" />
     <Content Include="Scripts\ValidateFileUpload.js" />
     <Content Include="Web.config" />
@@ -677,6 +683,8 @@
     <Content Include="Views\Statistics\EffectivenessLesson.cshtml" />
     <Content Include="Views\Statistics\_EffectivenessLessonSelection.cshtml" />
     <Content Include="Views\Statistics\_CompareAttempt.cshtml" />
+    <Content Include="Views\Dashboard\Live.cshtml" />
+    <Content Include="Views\Dashboard\_Live.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

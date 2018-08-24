@@ -1,0 +1,31 @@
+﻿@model  La_Game.Models.LiveViewModel
+@{
+    ViewBag.Title = "Live";
+}
+
+@Styles.Render("~/Content/dataTables")
+
+<div class="container">
+    <h2>Live exam view</h2>
+    <hr />
+
+    @using (Html.BeginForm())
+    {
+        <div class="row col-md-12 top-buffer">
+            @Html.AntiForgeryToken()
+            <div class="form-inline">
+                @Html.DropDownList("filter", Model.QuestionList, "No filter", htmlAttributes: new { @class = "form-control input-sm", @id = "questionListDropdown" })
+
+            </div>
+        </div>
+    }
+
+    <div id="filterql">
+
+    </div>
+</div>
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/Scripts/jquery.signalR-2.3.0.min.js")
+@Scripts.Render("~/signalr/hubs")
+@Scripts.Render("~/Scripts/signalRLive.js")
+@Scripts.Render("~/Scripts/filterql.js")

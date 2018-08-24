@@ -1,4 +1,5 @@
 ﻿using La_Game.Models;
+using La_Game.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,14 @@ namespace La_Game.Controllers
             return View(member);
         }
 
+        public ActionResult Live()
+        {
+            DashboardService service = new DashboardService();
+
+            var viewModel = service.CreateLiveViewModel();
+            return View(viewModel);
+        }
+
         /// <summary>
         /// GET: /Dashboard/GetLanguageOverview?memberId=[memberId]
         /// Return a PartialView containing a list of all languages that the member belongs to.
@@ -39,6 +48,23 @@ namespace La_Game.Controllers
             // Return the partialview containing the language table
             return PartialView("_LanguageOverview", data.ToList());
         }
+
+        public PartialViewResult Participants(int? idQuestionlist)
+        {
+            if (!idQuestionlist.HasValue)
+            {
+                return null;
+            }
+
+            DashboardService service = new DashboardService();
+            var viewModel = service.CreateLiveTableViewModel(idQuestionlist.Value);
+
+            return PartialView("_Live", viewModel);
+
+            
+        }
+
+        
 
         /// <summary>
         /// Dispose of the database connection.

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using La_Game.Hubs;
 using La_Game.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace La_Game.Controllers
 {
@@ -163,7 +166,28 @@ namespace La_Game.Controllers
             TempData.Keep();
             db.QuestionResults.Add(questionResult);
             db.SaveChanges();
+
+            questionResult = db.QuestionResults.Include(x => x.AnswerOption).Include(x=> x.Participant).FirstOrDefault(x => x.idQuestionResult == questionResult.idQuestionResult);
+
+            int idQuestion = questionResult.AnswerOption.Question_idQuestion;
+            string fullName = questionResult.Participant.fullName;
+
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<LiveHub>();
+            hubContext.Clients.Group("Members").SubmitedAnswer(new SubmitedDto { IdAnswer = idAnswer, IdQuestionList = idQuestionList, IdQuestion = idQuestion, IdParticipant = idParticipant, FullName = fullName });
         }
+
+        public class SubmitedDto
+        {
+            public string FullName { get; set; }
+            public int IdParticipant { get; set; }
+            public int IdQuestionList { get; set; }
+            public int IdAnswer { get; set; }
+            public int IdQuestion { get; set; }
+
+            
+        }
+
+       
 
         /// <summary>
         /// Dispose of the database connection.
