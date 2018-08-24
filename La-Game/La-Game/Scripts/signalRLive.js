@@ -1,10 +1,7 @@
 ﻿var connection = $.hubConnection();
 var hub = connection.createHubProxy("LiveHub");
 hub.on("SubmitedAnswer", function (dto) {
-
-    console.log(dto);
-    console.log(questions);
-
+        
     if (questionListId && questionListId === dto.IdQuestionList) {
 
         let index = questions.indexOf(dto.IdQuestion);
