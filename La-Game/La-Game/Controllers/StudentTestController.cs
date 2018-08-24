@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web.Mvc;
+using La_Game.Dtos;
 using La_Game.Hubs;
 using La_Game.Models;
 using Microsoft.AspNet.SignalR;
@@ -176,16 +177,7 @@ namespace La_Game.Controllers
             hubContext.Clients.Group("Members").SubmitedAnswer(new SubmitedDto { IdAnswer = idAnswer, IdQuestionList = idQuestionList, IdQuestion = idQuestion, IdParticipant = idParticipant, FullName = fullName });
         }
 
-        public class SubmitedDto
-        {
-            public string FullName { get; set; }
-            public int IdParticipant { get; set; }
-            public int IdQuestionList { get; set; }
-            public int IdAnswer { get; set; }
-            public int IdQuestion { get; set; }
 
-            
-        }
 
        
 

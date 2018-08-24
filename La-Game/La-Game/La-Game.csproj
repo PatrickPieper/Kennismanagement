@@ -225,6 +225,10 @@
     <Compile Include="Controllers\QuestionsController.cs" />
     <Compile Include="Controllers\StatisticsController.cs" />
     <Compile Include="Controllers\StudentTestController.cs" />
+    <Compile Include="Dtos\ParticipantDto.cs" />
+    <Compile Include="Dtos\ParticipantQuestionDto.cs" />
+    <Compile Include="Dtos\QuestionIdDto.cs" />
+    <Compile Include="Dtos\SubmitedDto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -296,7 +300,6 @@
     <Compile Include="Models\QuestionResult.cs">
       <DependentUpon>DatabaseModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Pdf\ComparePdf.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DashboardService.cs" />
     <Compile Include="Startup.cs" />

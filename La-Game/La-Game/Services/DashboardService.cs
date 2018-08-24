@@ -1,4 +1,5 @@
-﻿using La_Game.Models;
+﻿using La_Game.Dtos;
+using La_Game.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,27 +53,7 @@ namespace La_Game.Services
             return result;
         }
 
-        public class ParticipantQuestionDto
-        {
-            public ParticipantDto Participant { get; set; }
-
-            public QuestionIdDto CurrentQuestion { get; set; }
-        }
-
-        public class QuestionIdDto
-        {
-            public int Id { get; set; }
-        }
-
-        public class ParticipantDto
-        {
-            public int Id { get; set; }
-            public string FirstName { get; set; }
-            public string LastName { get; set; }
-
-            public string FullName => string.Format("{0} {1}", FirstName, LastName);
-
-        }
+    
     }
 
 
