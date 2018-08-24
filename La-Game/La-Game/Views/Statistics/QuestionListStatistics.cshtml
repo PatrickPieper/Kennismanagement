@@ -116,11 +116,28 @@
     <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Statistics") + "'");">
         <span class="glyphicon glyphicon-chevron-left"></span> Back to Statistics
     </button>
+    <button onclick="showBar()" class="btn btn-default">Avarage time chart</button>
+    <button type="button" id="exportButton" class="btn btn-default">Pdf</button>
+    <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
 @section scripts {
     @Scripts.Render("~/bundles/dataTables")
 
+    @{
+        Html.RenderAction("CompareAttempt", new { idQuestionList = ViewBag.questionListId });
+    }
+
     <script type="text/javascript">
+        function showBar() {
+
+            var x = document.getElementById("barChart")
+
+            if (x.style.display === "none") {
+                x.style.display = "inline";
+            } else {
+                x.style.display = "none";
+            }
+        }
 
         $(document).ready(function () {
             $('#participantsResult').DataTable(
@@ -131,6 +148,16 @@
                     ]
                 }
             );
+
+            $("#exportButton").click(function () {
+                var c = document.getElementById("barChart");
+                var dataURL = c.toDataURL();
+                console.log(dataURL);
+
+                var pdf = new jsPDF('l', 'mm', [297, 210]);
+                pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
+                pdf.save("download.pdf");
+            });
         });
     </script>
 }

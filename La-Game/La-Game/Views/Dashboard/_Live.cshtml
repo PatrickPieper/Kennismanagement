@@ -1,0 +1,58 @@
+﻿@model La_Game.Models.LiveTableViewModel
+
+<div class="row top-buffer">
+    <div class="col-md-12">
+
+        @if (Model.Participants.Count == 0)
+        {
+            <div id="no-participants-result">No people are meaking the test</div>
+        }
+
+        <table id="participants" class="table table table-striped table-hover table-responsive">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Question
+                    </th>
+                </tr>
+            </thead>
+
+            <tbody id="participants_body">
+                @foreach (var item in Model.Participants)
+                {
+                    var found = Model.Questions.Find(x => x.Id == item.CurrentQuestion.Id);
+                    var index = Model.Questions.IndexOf(found);
+                    index++;
+
+                    <tr id="Participant_@item.Participant.Id">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Participant.FullName)
+                        </td>
+
+                        <td id="Value_@item.Participant.Id">
+                            @Html.DisplayFor(modelItem => index)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<p>
+    <button type="button" class="btn btn-default btn-sm" onclick="@("window.location.href='" + @Url.Action("Index", "Dashboard") + "'");">
+        <span class="glyphicon glyphicon-chevron-left"></span> Back to dashboard
+    </button>
+</p>
+
+<script>
+    var questions = @Html.Raw(Json.Encode(Model.Questions.Select(x => x.Id)));
+    var questionListId = @Html.Raw(Json.Encode(Model.QuestionListId));
+
+</script>
+
+

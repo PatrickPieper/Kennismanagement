@@ -257,8 +257,8 @@ namespace La_Game.Controllers
                 QuestionList questionList = db.QuestionLists.Find(idQuestionList);
 
                 // See if the questionlist has already been used by a participant
-                var results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
-                if (results.Count() >= 1)
+                List<QuestionResult> results = db.QuestionResults.Where(r => r.QuestionList_idQuestionList == questionList.idQuestionList).ToList();
+                if (results.Count >= 1)
                 {
                     if (questionList.isHidden == 1)
                     {
@@ -282,7 +282,7 @@ namespace La_Game.Controllers
                     db.Entry(questionList).State = EntityState.Modified;
                     db.SaveChanges();
                 }
-                else if (results.Count == 0)
+                else
                 {
                     // Remove the questionorder
                     string deleteQuestionOrder = "DELETE FROM QuestionOrder WHERE QuestionList_idQuestionList = " + idQuestionList + ";";

@@ -1,7 +1,9 @@
 ﻿using La_Game.Models;
+using La_Game.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -89,7 +91,7 @@ namespace La_Game.Controllers
 
             //Get the information of the questionList and put it in a viewbag
             sqlString = "SELECT QuestionList_idQuestionList as idQuestionList," +
-                " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = "+questionListId+") as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
+                " (select count(*) FROM QuestionList JOIN QuestionList_Question on QuestionList.idQuestionList = QuestionList_Question.QuestionList_idQuestionList where QuestionList.idQuestionList = " + questionListId + ") as QuestionCount, MAX(attempt) as MaxAttempt FROM QuestionList" +
                 " join QuestionResult on QuestionList.idQuestionList = QuestionResult.QuestionList_idQuestionList" +
                 " where QuestionList.idQuestionList = " + questionListId +
                 " group by QuestionList_idQuestionList";
@@ -104,6 +106,21 @@ namespace La_Game.Controllers
             ViewBag.questionListId = questionListId;
 
             return View();
+        }
+
+        public ActionResult CompareAttempt(int? idQuestionList)
+        {
+            if (idQuestionList != null)
+            {
+                StatisticsService service = new StatisticsService();
+
+
+                var results = service.QuestionResults(idQuestionList.Value);
+
+                return PartialView("_CompareAttempt", results);
+            }
+
+            return HttpNotFound();
         }
 
         #region Partial Views

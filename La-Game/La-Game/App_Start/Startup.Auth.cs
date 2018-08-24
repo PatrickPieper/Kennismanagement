@@ -17,7 +17,7 @@ namespace La_Game
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString("/Authentication/Login"),
                 LogoutPath = new PathString("/Authentication/LogOff"),
-                ExpireTimeSpan = TimeSpan.FromMinutes(15.0)
+                ExpireTimeSpan = /*TimeSpan.FromMinutes(15.0)*/ TimeSpan.FromDays(1)
             });
         }
     }
