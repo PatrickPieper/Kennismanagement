@@ -161,7 +161,15 @@
                 var pdf = new jsPDF('l', 'mm', [297, 210]);
                 pdf.text(20, 20, text)
                 pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
-                pdf.save("Questionliststat.pdf");
+                //pdf.save("Questionliststat.pdf");
+
+                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    var blob = pdf.output();
+                    window.open(URL.createObjectURL(blob));
+                }
+                else {
+                    pdf.save('Questionliststat.pdf');
+                }
             });
         });
     </script>
