@@ -25,12 +25,12 @@
 @section scripts {
     <script src="~/Scripts/Chart.js"></script>
     <script src="~/Scripts/Common.js"></script>
+    <script src="~/Scripts/jspdf.debug.js"></script>
     <script>
         var myBarChart;
         createChart();
 
-        function createChart()
-        {
+        function createChart() {
             var c = document.getElementById("barChart");
             var ctx = c.getContext("2d");
             myBarChart = new Chart(ctx, {
@@ -61,7 +61,7 @@
             });
         }
 
-        
+
     </script>
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/lessonselectionrefresh.js")

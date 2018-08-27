@@ -121,6 +121,7 @@
     <canvas id="barChart" width="800" height="250" style="display:none"></canvas>
 </div>
 @section scripts {
+    <script src="~/Scripts/jspdf.debug.js"></script>
     @Scripts.Render("~/bundles/dataTables")
 
     @{
@@ -152,7 +153,8 @@
             $("#exportButton").click(function () {
 
                 var select = document.getElementById('question-list-select');
-                var text = select.options[select.selectedIndex].text;
+                var selectetext = select.options[select.selectedIndex].text;
+                var text = selectetext + " hello";
 
                 var c = document.getElementById("barChart");
                 var dataURL = c.toDataURL();
@@ -161,15 +163,16 @@
                 var pdf = new jsPDF('l', 'mm', [297, 210]);
                 pdf.text(20, 20, text)
                 pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
-                //pdf.save("Questionliststat.pdf");
+                pdf.save("Questionliststat.pdf");
 
-                if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                    var blob = pdf.output();
-                    window.open(URL.createObjectURL(blob));
-                }
-                else {
-                    pdf.save('Questionliststat.pdf');
-                }
+                //if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))
+                //{
+                //    var blob = pdf.output();
+                //    window.open(URL.createObjectURL(blob));
+                //}
+                //else {
+                //    pdf.save('Questionliststat.pdf');
+                //}
             });
         });
     </script>

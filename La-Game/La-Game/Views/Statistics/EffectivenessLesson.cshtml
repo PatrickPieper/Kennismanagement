@@ -9,7 +9,9 @@
             <div class="row">
                 <div class="form-group">
                     <h4>Percentage correct per Lesson</h4>
-                    @{Html.RenderAction("EffectivenessLessonSelection", "Statistics", new { });}
+                    <div id="test-select">
+                        @{Html.RenderAction("EffectivenessLessonSelection", "Statistics", new { });}
+                    </div>
                     <canvas id="lineChart" width="400" height="150"></canvas>
                 </div>
             </div>
@@ -25,6 +27,7 @@
 @section scripts {
     <script src="~/Scripts/Chart.js"></script>
     <script src="~/Scripts/Common.js"></script>
+    <script src="~/Scripts/jspdf.debug.js"></script>
     <script>
         var myLineChart;
         createChart();
@@ -60,10 +63,16 @@
             });
 
             $("#exportButton").click(function () {
+               
+                var select = document.getElementById('ddlanguages');
+                
+                var selectedtext = select.options[select.selectedIndex].text;
+                var text = "Effectiveness for the lessons " + selectedtext;
                 var dataURL = c.toDataURL();
                 console.log(dataURL);
 
                 var pdf = new jsPDF('l', 'mm', [297, 210]);
+                pdf.text(20, 20, text);
                 pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
                 pdf.save("Lesson_effectiveness.pdf");
             });
@@ -73,12 +82,9 @@
             var tData = $.getValues('/Statistics/LineChartDataEffectivenessLesson?idLanguage=' + idLanguage);
             if (tData !== null) {
                 //Loop through the datasets to change the 0.0001 placeholder to NaN, circumvents NaN not being valid JSON
-                for (x = 0; x < tData.datasets.length; x++)
-                {
-                    for (y = 0; y < tData.datasets[x].data.length; y++)
-                    {
-                        if (tData.datasets[x].data[y] == 0.0001)
-                        {
+                for (x = 0; x < tData.datasets.length; x++) {
+                    for (y = 0; y < tData.datasets[x].data.length; y++) {
+                        if (tData.datasets[x].data[y] == 0.0001) {
                             tData.datasets[x].data[y] = NaN;
                         }
                     }
@@ -92,7 +98,7 @@
             myLineChart.update();
         }
 
-        
+
     </script>
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/Scripts/effectivenesslessonselect.js")

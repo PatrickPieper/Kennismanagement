@@ -26,6 +26,7 @@
 @section scripts {
     <script src="~/Scripts/Chart.js"></script>
     <script src="~/Scripts/Common.js"></script>
+    <script src="~/Scripts/jspdf.debug.js"></script>
     <script>
         var myBarChart;
         createChart();
@@ -74,10 +75,20 @@
 
 
             $("#exportButton").click(function () {
+                var selectLanguage = document.getElementById('ddlanguages');
+                var selectLesson = document.getElementById('ddlessons');
+                var selectQuestionList = document.getElementById('ddquestionLists');
+
+                var selectedLanguage = selectLanguage.options[selectLanguage.selectedIndex].text;
+                var selectedLesson = selectLesson.options[selectLesson.selectedIndex].text;
+                var selectedQuestionList = selectQuestionList.options[selectQuestionList.selectedIndex].text;
+                var text = "Language: " + selectedLanguage + " | " + "Lesson: " + selectedLesson + " | Question list: " + selectedQuestionList;
                 var dataURL = c.toDataURL();
                 console.log(dataURL);
+                
 
-                var pdf = new jsPDF('l','mm',[297,210]);
+                var pdf = new jsPDF('l', 'mm', [297, 210]);
+                pdf.text(20, 20, text);
                 pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
                 pdf.save("Common_wrong_answer.pdf");
             });
