@@ -10,7 +10,7 @@
     @using (Html.BeginForm("QuestionListStatistics", "Statistics", FormMethod.Post))
     {
 
-        <select onchange="this.form.submit()" name="questionListId" class="form-control">
+        <select id="question-list-select" onchange="this.form.submit()" name="questionListId" class="form-control">
             @for (int z = 0; z < ViewBag.questionLists.Count; z++)
             {
                 if (ViewBag.questionLists[z].idQuestionList == ViewBag.questionListId)
@@ -150,11 +150,16 @@
             );
 
             $("#exportButton").click(function () {
+
+                var select = document.getElementById('question-list-select');
+                var text = select.options[select.selectedIndex].text;
+
                 var c = document.getElementById("barChart");
                 var dataURL = c.toDataURL();
                 console.log(dataURL);
 
                 var pdf = new jsPDF('l', 'mm', [297, 210]);
+                pdf.text(20, 20, text)
                 pdf.addImage(dataURL, 'PNG', 20, 50, 250, 105);
                 pdf.save("Questionliststat.pdf");
             });
