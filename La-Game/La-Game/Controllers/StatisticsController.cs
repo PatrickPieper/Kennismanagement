@@ -107,7 +107,7 @@ namespace La_Game.Controllers
 
             return View();
         }
-
+        //Data ophalen voor vergelijking voor het gemiddelde
         public ActionResult CompareAttempt(int? idQuestionList)
         {
             if (idQuestionList != null)

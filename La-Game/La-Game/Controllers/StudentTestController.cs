@@ -153,6 +153,8 @@ namespace La_Game.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+
+        //method for when a question is submitted
         public void SubmitQuestionAnswer(int idAnswer, int idParticipant, int idQuestionList, string startTime )
         {
             QuestionResult questionResult = new QuestionResult()
